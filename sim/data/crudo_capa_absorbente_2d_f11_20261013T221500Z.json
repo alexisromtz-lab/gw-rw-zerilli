@@ -1,0 +1,270 @@
+{
+ "R_dB": -45.931354463740675,
+ "R_dB_unidad": "energia",
+ "UMBRAL_R_DB": -40.0,
+ "argv": [
+  "--estricto",
+  "--json",
+  "sim/data/crudo_capa_absorbente_2d_f11_20261013T221500Z.json"
+ ],
+ "banco": [
+  {
+   "control": "C0",
+   "diff": 0.0,
+   "dt": 0.04885735582160892,
+   "esperado": "diff == 0.0 exacto",
+   "nr0_prueba": 96,
+   "nsteps": 40,
+   "nt0": 33,
+   "ok": true,
+   "que": "reduccion al arnes certificado (gamma==0, v0==0)",
+   "rc": 0
+  },
+  {
+   "A": 0.0,
+   "E_sal": 5118.941988047162,
+   "E_vuelta": 5118.941972180399,
+   "T_obs_C1": 131.8746736292428,
+   "control": "C1",
+   "esperado": "|R_dB| <= 1.0 (reflexion total); NO -90.66 dB de Mur-1",
+   "mur1": false,
+   "ok": true,
+   "pared_dirichlet_en": 98.0,
+   "que": "pared reflectante presente y atenuacion NO del esquema espacial",
+   "rc": 0,
+   "rdb_C1": -1.3461469019746655e-08,
+   "umbral_dB": 1.0
+  },
+  {
+   "control": "C2",
+   "ok": true,
+   "pasos_captura": [
+    262,
+    787
+   ],
+   "que": "no contaminacion interior (ON vs OFF, mismo dt)",
+   "rc": 0,
+   "ref": "corrida con la capa APAGADA (A = 0), mismo dt y misma malla",
+   "residuo_interior": [
+    8.110793853111824e-72,
+    2.3773902065522737e-14
+   ],
+   "t_capturas": [
+    11.975102901692395,
+    35.97101520470196
+   ],
+   "umbral": 1e-13
+  },
+  {
+   "2L_sobre_ancho": 1.1,
+   "causa": "C3 FAIL-CLOSED: solape de capa: 2*L = 105.600000000000009 >= ancho = 96.000000000000000 (guarda anti-solape del pre-registro §B.3; no se rebaja el umbral, se corrige L_frac)",
+   "control": "C3",
+   "ok": true,
+   "provocado_con_L_frac": 0.55,
+   "que": "guarda de solape (2*L >= ancho)",
+   "rc": 0
+  },
+  {
+   "E_entrante": 0.031133265491450915,
+   "E_sal": 5118.941988047162,
+   "control": "C4",
+   "ok": true,
+   "que": "dato saliente puro (flujo entrante en la ventana de ida)",
+   "ratio": 6.081972713140283e-06,
+   "rc": 0,
+   "si_no_cumple": "NO MEDIBLE",
+   "umbral": 0.001
+  },
+  {
+   "control": "C6",
+   "ok": true,
+   "que": "simetria angular (rama l = 0)",
+   "rc": 0,
+   "variacion_theta_max": 0.0
+  },
+  {
+   "banda": [
+    2.0,
+    14.0
+   ],
+   "control": "C7",
+   "eco_max": 0.0030774451728989636,
+   "max_inc": 1.0,
+   "ok": true,
+   "que": "eco prematuro en la banda de testigos (AMPLITUD)",
+   "ratio": 0.0030774451728989636,
+   "rc": 0,
+   "umbral": 0.01,
+   "unidad": "amplitud"
+  },
+  {
+   "6sigma": 12.0,
+   "6sigma_le_p_menos_rsmin": true,
+   "control": "C8",
+   "ok": true,
+   "p_efectivo_menos_rs_min": 48.12532637075718,
+   "p_en_soporte": false,
+   "que": "contencion interior (fail-closed)",
+   "rc": 0,
+   "soporte_en_interior": true
+  }
+ ],
+ "comparacion_1D": {
+  "D": 25.0,
+  "R_1d": 0.0011133161709754493,
+  "comparable": true,
+  "dominio_validez_D": [
+   12.0,
+   64.0
+  ],
+  "lectura_amplitud_dB": -59.0676296547148,
+  "lectura_energia_dB": -29.5338148273574,
+  "nota": "se reporta la bifurcacion energia/amplitud; NO se elige",
+  "rdb_2d": -45.931354463740675,
+  "regla": "R_t = 9.880700e-02 * D^(-1.3936)",
+  "rotulo_amplitud": "DIVERGE",
+  "rotulo_energia": "DIVERGE",
+  "se_elige": false,
+  "tolerancia_dB": 3.0
+ },
+ "escalera": {
+  "E1": {
+   "A": 25.0,
+   "L_frac": 0.25,
+   "n": 3
+  },
+  "E2": {
+   "A": 100.0,
+   "L_frac": 0.25,
+   "n": 3
+  },
+  "E3": {
+   "A": 400.0,
+   "L_frac": 0.25,
+   "n": 3
+  },
+  "E4": {
+   "A": 400.0,
+   "L_frac": 0.3,
+   "n": 3
+  }
+ },
+ "fallos": [],
+ "geometria": {
+  "A": 25.0,
+  "L": 24.0,
+  "L_frac": 0.25,
+  "ancho": 96.0,
+  "c": 26.0,
+  "gamma_max": 4.166666666666667,
+  "integral_gamma": 25.0,
+  "interior_util_frac": 0.75,
+  "n": 3,
+  "p": 50.0,
+  "regla_anticolape": "2*L < ancho  =>  C3 INACTIVA POR CONSTRUCCION",
+  "rs_max": 98.0,
+  "rs_min": 2.0,
+  "rs_sponge": 74.0,
+  "solape": 48.0
+ },
+ "hora_utc": "2026-10-13T22:39:44Z",
+ "huella": "HUELLA-ARNES-CAPA-ABSORBENTE-2D-F11-20261013",
+ "identidad_self": {
+  "bytes": 32310,
+  "cabezas": 46,
+  "encabezados": 47,
+  "huella_en_self": 1,
+  "huella_verbo": "HUELLA-ARNES-CAPA-ABSORBENTE-2D-F11-20261013",
+  "lineas": 703,
+  "ruta": "/Users/marlene/gw-rw-zerilli/sim/arnes_capa_absorbente_2d_f11.py",
+  "sha256": "fb054652c315e43838143d86c176ca5e5dcf65e8eec84eb5f964386b4956e67b"
+ },
+ "ip": 192,
+ "malla": {
+  "cfl": 0.5,
+  "dt": 0.045706499624780135,
+  "dt_cota": 0.045706499624780135,
+  "hr": 0.2506527415143603,
+  "hth": 0.04908738521234052,
+  "nivel": 0,
+  "nr0": 384,
+  "nsteps": 1836,
+  "nsteps_off": 2886,
+  "nt0": 33
+ },
+ "max_inc": 1.0,
+ "medidor": {
+  "E_entrante": 0.031133265491450915,
+  "E_muerta": 1.085079060375478e-13,
+  "E_sal": 5118.941988047162,
+  "E_vuelta": 0.13063055181894048,
+  "P": "-r^2*hth*suma_theta (d_t u)(d_r u) sin(theta) (2*pi suprimido)",
+  "ratio_E_vuelta_sobre_E_sal": 2.5519052984770208e-05,
+  "unidad": "energia"
+ },
+ "p_efectivo": 50.12532637075718,
+ "piezas_citadas": {
+  "arnes_v3": "sim/arnes_richardson_2d_f2_v3.py",
+  "huella_preregistro": "HUELLA-PREREGISTRO-GATE-2D-F11-20261013",
+  "huella_v3": "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013",
+  "preregistro": "sim/PREREGISTRO_GATE_2D_F11_20261013.md",
+  "sha256_preregistro": "f4b50bb764f82492f4f0a6fbab7bb7d622dc213e627aaf987cdea12eac3abaab",
+  "sha256_v3": "2efba187cbb6a03842c76ffa52190df127324bb736571eb5993647c6ffc65529"
+ },
+ "prescripcion_1D_1.1lambda": {
+  "2L_prescripcion_1D": 13.823007675795091,
+  "D_prescripcion_1D": 6.911503837897546,
+  "ancho": 96.0,
+  "deficit": -82.1769923242049,
+  "motivo": "2*L_prescripcion_1D > ancho: la prescripcion 1D no cabe en el dominio anti-solape; no se hereda el exponente",
+  "rotulo": "DIVERGE"
+ },
+ "rung": "E1",
+ "sellos": {
+  "CFL_SELLADO": 0.5,
+  "UMBRAL_R_DB": -40.0,
+  "arranque": "Cauchy exacto (v^0 != 0 soportado)",
+  "familia_n": [
+   2,
+   3
+  ],
+  "pared": "Dirichlet reflexiva sin Mur-1",
+  "pico": "M1 gamma_max = (n+1)*A/L",
+  "unidad_umbral": "energia"
+ },
+ "universo_declarado": {
+  "arnes": "/Users/marlene/gw-rw-zerilli/sim/arnes_capa_absorbente_2d_f11.py",
+  "fisica": "M = 0.0 estricto, Zerilli APAGADO, (r*, theta), l = 0 radial",
+  "importa": "arnes_richardson_2d_f2_v3 (acel, d2r, L2_theta, simula, Malla2D)",
+  "no_hereda_1d": "exponente -1.3936 PROHIBIDO (pre-registro §C)"
+ },
+ "ventanas": {
+  "T_c1": 131.8746736292428,
+  "T_obs": 83.87467362924282,
+  "t_1": 24.12532637075718,
+  "t_3": 71.87467362924282,
+  "t_4": 120.0,
+  "t_a": 36.12532637075718,
+  "t_ret": 59.87467362924282,
+  "t_ret_c1": 107.87467362924282,
+  "t_s": 36.0,
+  "t_s_max": 60.0,
+  "ventana_ida": [
+   0.0,
+   36.12532637075718
+  ],
+  "ventana_muerta": [
+   36.12532637075718,
+   59.87467362924282
+  ],
+  "ventana_vuelta": [
+   59.87467362924282,
+   83.87467362924282
+  ],
+  "ventana_vuelta_C1": [
+   107.87467362924282,
+   131.8746736292428
+  ]
+ },
+ "veredicto": "VERDE"
+}
