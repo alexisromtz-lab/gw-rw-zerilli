@@ -1,11 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# HUELLA-ARNES-RICHARDSON-2D-F2-V2-20261013
+# HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013
 """
-ARNES INDEPENDIENTE -- GATE 2D-F2 v2: AUTOCONVERGENCIA DE RICHARDSON EN 2D AXISIMETRICO
+ARNES INDEPENDIENTE -- GATE 2D-F2 v3: AUTOCONVERGENCIA DE RICHARDSON EN 2D AXISIMETRICO
 ========================================================================================
 
-HUELLA-ARNES-RICHARDSON-2D-F2-V2-20261013
+HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013
+
+V3 = V2 + UNA LINEA (el ancla de la ventana). Causa MEDIDA del cambio: en las DOS ternas corridas con el
+v2 (nr0 = 64 y nr0 = 128) el control C6 de contencion salio FALSO NEGATIVO por aritmetica EXACTA, no por
+el motor: el offset off = 7*Delta_0/24 = 0.185185 se sumaba DENTRO del ancla, de modo que el primer nodo
+de evaluacion caia en lo + off y quedaba a (7 - 6)*Delta_0/24 = Delta_0/24 = 0.026455 MAS ALLA de la
+tolerancia dr = 6*Delta_0/24 del propio control (nr0 = 64: primer nodo 8.185185 contra borde 8.000000;
+nr0 = 128: 8.091864 contra 8.000000). La seccion 2.2 de la orden del dueno ("Ajustar la ventana de
+medicion a las coordenadas reales del paquete para evitar falsos negativos en los controles de borde") se
+aplica en su termino: el ancla se corre hacia afuera por off (lo = rc - T - 3 sigma - off) y el primer
+nodo cae EXACTAMENTE en el borde declarado de la banda del paquete. El techo hi, el paso dr y los offsets
+nodo-a-nodo NO se tocan; UMBRAL_P = 0.05 y CFL_SELLADO = 0.50 quedan INMUTABLES. El v2 NO se parchea: se
+cita, y su corrida queda como foto previa (su copia byte-identica es el commit 6a186ed de este arbol).
 
 ORDEN QUE AUTORIZA ESTA PIEZA (dueno, 13-Oct-2026, contrato A2.1, seccion 2): «Se autoriza la
 modificacion de sim/arnes_richardson_2d_f2.py (o la emision de su version corregida
@@ -67,7 +79,8 @@ from fractions import Fraction
 
 import numpy as np
 
-HUELLA = "HUELLA-ARNES-RICHARDSON-2D-F2-V2-20261013"
+HUELLA = "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013"
+HUELLA_V2_CITADA = "HUELLA-ARNES-RICHARDSON-2D-F2-V2-20261013"   # v2: foto previa (commit 6a186ed)
 HUELLA_V1 = "HUELLA-ARNES-RICHARDSON-2D-F2-20261013"
 
 EPS = 2.220446049250313e-16
@@ -84,6 +97,7 @@ SITIOS_CORREGIDOS = [
     "malla_evaluacion(): ancla rs_min -> ancla en las coordenadas reales del paquete (rc -+ T -+ 3 sigma)",
     "main(): escritor de crudo JSON real (el v1 declaraba un crudo que no escribia)",
     "main(): control C6 de contencion ventana <-> paquete (el v1 no lo tenia)",
+    "malla_evaluacion(): DELTA 4 -- el ancla INCLUYE el offset (lo = rc - T - 3 sigma - off): el primer nodo cae EXACTO en el borde declarado de la banda del paquete (en v2 quedaba a Delta_0/24 fuera)",
 ]
 
 
@@ -320,14 +334,19 @@ def malla_evaluacion(rs_min, rs_max, nr0, nt0, rc, sigma, T):
     hi = rc + 3 sigma; la ventana efectiva caia en [2.09, 13.98] (nr0 = 128) y NO contenia al
     paquete: el observable medido no era el declarado. Aqui el ancla es lo = rc - T - 3 sigma y el
     techo hi = rc + T + 3 sigma. El offset 7*Delta_0/24 y el paso dr = Delta_0/4 se conservan.
+
+    DELTA 4 (v3): el offset off = 7*Delta_0/24 se aplica FUERA del ancla (lo = rc - T - 3 sigma - off), de
+    modo que rs_e[0] = lo + off = rc - T - 3 sigma EXACTO: el primer nodo cae sobre el borde declarado del
+    paquete y el criterio de C6 (tolerancia dr) se mide contra la construccion, no contra ella misma corrida
+    por Delta_0/24. El v2 aplicaba el offset dentro del ancla y su C6 salia falso negativo en las dos ternas.
     """
     d0 = (rs_max - rs_min) / float(nr0 - 1)
     dr = d0 / 4.0
     off = 7.0 * d0 / 24.0                                    # 7/24: no coincide con 0, 1/3, 2/3
-    lo = rc - T - 3.0 * sigma
+    lo = rc - T - 3.0 * sigma - off                         # DELTA 4: el ancla INCLUYE el offset
     hi = rc + T + 3.0 * sigma
     nq = int(math.floor((hi - lo - off) / dr)) + 1
-    rs_e = lo + off + dr * np.arange(nq)
+    rs_e = lo + off + dr * np.arange(nq)                    # rs_e[0] = rc - T - 3 sigma EXACTO
     th_e = (0.5 * np.pi / float(nt0 - 1)) * np.arange(nt0)    # nodos de la malla GRUESA (exactos en las finas)
     return rs_e, th_e, dr, 0.5 * np.pi / float(nt0 - 1), lo, hi
 
@@ -450,12 +469,12 @@ def diagnostico_transferencia():
 # ------------------------------------------------------------------------------------------------
 
 def main():
-    ap = argparse.ArgumentParser(description="Gate 2D-F2 v2: Richardson 2D axisimetrico no anidado")
+    ap = argparse.ArgumentParser(description="Gate 2D-F2 v3: Richardson 2D axisimetrico no anidado")
     ap.add_argument("--estricto", action="store_true")
     ap.add_argument("--stamp", default=None, help="instante (UTC compacto) para nombrar el crudo")
     ap.add_argument("--json", default=None,
                     help="ruta del crudo JSON de salida, o 'auto' para "
-                         "sim/data/crudo_2d_f2_richardson_post_arranque_nr0_<nr0>_<stamp>.json")
+                         "sim/data/crudo_2d_f2_richardson_post_arranque_v3_nr0_<nr0>_<stamp>.json")
     ap.add_argument("--cfl", type=float, default=CFL_SELLADO)
     ap.add_argument("--T", type=float, default=8.0)
     ap.add_argument("--nr0", type=int, default=64)
@@ -480,7 +499,7 @@ def main():
     if args.json:
         if args.json == "auto":
             ruta_json = os.path.join("sim", "data",
-                                     "crudo_2d_f2_richardson_post_arranque_nr0_%d_%s.json"
+                                     "crudo_2d_f2_richardson_post_arranque_v3_nr0_%d_%s.json"
                                      % (args.nr0, stamp))
         else:
             ruta_json = args.json
@@ -489,7 +508,7 @@ def main():
             raise SystemExit("FAIL-CLOSED: el directorio del crudo no existe: %s" % padre)
 
     print("=" * 96)
-    print("ARNES RICHARDSON 2D-F2 v2 -- AUTOCONVERGENENCIA NO ANIDADA (GATE 2D-F2)")
+    print("ARNES RICHARDSON 2D-F2 v3 -- AUTOCONVERGENENCIA NO ANIDADA (GATE 2D-F2)")
     print("=" * 96)
     print("HUELLA DEL ARNES : %s" % HUELLA)
     print("HUELLA v1 CITADA : %s (CONGELADO, NO mutado)" % HUELLA_V1)
@@ -513,10 +532,11 @@ def main():
     print("NULO/CONTROLES     : C1 piso UMBRAL_F3 = %.15e | C2 reduccion l = 0 | C3a radial 1er orden"
           % UMBRAL_F3)
     print("                     | C3b angular 1er orden | C4 la cota debe REFUSAR CFL > 0.50 | C5 margen > T")
-    print("                     | C6 contencion ventana-paquete (NUEVO en v2).")
+    print("                     | C6 contencion ventana-paquete (NUEVO en v2; ancla corregida en v3).")
     print("DELTA 1 ARRANQUE   : v^{-1/2} desde u^{-1} = u^0 + 0.5 dt^2 a(u^0)  [v1: v^{+1/2}, orden 1]")
     print("DELTA 2 VENTANA    : ancla lo = rc - T - 3 sigma, hi = rc + T + 3 sigma  [v1: lo = rc - 3 sigma]")
     print("DELTA 3 CRUDO      : %s" % (ruta_json if ruta_json else "(sin --json: no se escribira crudo)"))
+    print("DELTA 4 ANCLA v3   : lo = rc - T - 3 sigma - off  [primer nodo EXACTO en el borde del paquete]")
     print()
 
     # ---- diagnostico de la transferencia (v1 citado vs v2 emitido) ----
@@ -525,11 +545,11 @@ def main():
     if dt_info["existe_v1"]:
         print("   v1: %d l | sha256 %s | huella v1 presente %d veces"
               % (dt_info["lineas_v1"], (dt_info["sha256_v1"] or "?")[:16], dt_info["huella_v1_en_v1"]))
-        print("   patron del defecto 1 (arranque v^{+1/2}) en v1 = %d | en v2 = %d (1 = solo la propia sonda)"
+        print("   patron del defecto 1 (arranque v^{+1/2}) en v1 = %d | en este arnes = %d (1 = solo la propia sonda)"
               % (dt_info["defecto_1_en_v1"], dt_info["defecto_1_en_v2"]))
-        print("   patron del defecto 2 (ancla en rs_min)   en v1 = %d | en v2 = %d (1 = solo la propia sonda)"
+        print("   patron del defecto 2 (ancla en rs_min)   en v1 = %d | en este arnes = %d (1 = solo la propia sonda)"
               % (dt_info["defecto_2_en_v1"], dt_info["defecto_2_en_v2"]))
-        print("   correccion 1 (Cauchy simetrica) en v2 = %d | correccion 2 (ancla paquete) en v2 = %d | escritor en v2 = %d"
+        print("   correccion 1 (Cauchy simetrica) = %d | correccion 2 (ancla paquete) = %d | escritor de crudo = %d"
               % (dt_info["correccion_1_en_v2"], dt_info["correccion_2_en_v2"], dt_info["escritor_en_v2"]))
     for s in SITIOS_CORREGIDOS:
         print("   DELTA: %s" % s)
@@ -594,7 +614,7 @@ def main():
     bandas = ventana_declarada(args.rc, args.sigma, args.T)
     ext = [nodos_exactos_radiales(args.rs_min, args.rs_max, args.nr0, k, args.modo_offset)[0] for k in (0, 1, 2)]
     coh_th = [coherencia_theta(m, th_e, args.nt0) for m in mall_demo]
-    print("[EVAL] malla de evaluacion ANCLADA AL PAQUETE: %d nodos r* en [%.6f, %.6f] (paso %.6f, offset 7*Delta_0/24)"
+    print("[EVAL] malla de evaluacion ANCLADA AL PAQUETE: %d nodos r* en [%.6f, %.6f] (paso %.6f; offset 7*Delta_0/24 FUERA del ancla)"
           % (rs_e.size, float(rs_e[0]), float(rs_e[-1]), dr_e))
     print("       banda DECLARADA por el v1 (condicion inicial) = [%.6f, %.6f]"
           % (bandas["declarada"][0], bandas["declarada"][1]))
@@ -726,6 +746,7 @@ def main():
         crudo = {
             "huella": HUELLA,
             "huella_v1_citada": HUELLA_V1,
+            "huella_v2_citada": HUELLA_V2_CITADA,
             "hora_utc": utc_now(),
             "stamp": stamp,
             "identidad_self": ident,

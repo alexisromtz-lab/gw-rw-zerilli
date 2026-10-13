@@ -1,0 +1,311 @@
+{
+ "arranque": "exacto: u^{-1} = u^0 + 0.5 dt^2 a(u^0), v = (u^0 - u^{-1})/dt",
+ "c4": "REFUSADA: R2 FAIL-CLOSED: CFL = 0.7500000000 > sellado 0.5000000000 (la cota no se rebaja)",
+ "c5": {
+  "T": 8.0,
+  "margen_min": 11.79002624671916,
+  "ok": true
+ },
+ "c6": {
+  "banda_declarada": [
+   16.0,
+   28.0
+  ],
+  "banda_entrante": [
+   8.0,
+   20.0
+  ],
+  "banda_paquete": [
+   8.0,
+   36.0
+  ],
+  "cubre_declarada": true,
+  "cubre_entrante": true,
+  "cubre_paquete": true,
+  "tolerancia": 0.07874015748031496
+ },
+ "celdas": {
+  "C2 REDUCCION": {
+   "causa": "ok",
+   "d1": 0.15940532238463367,
+   "d2": 0.03982026000947566,
+   "d2_rel_exacto_sonda": 94.26118370034433,
+   "d2_rel_piso_v1": 3.682829268356977,
+   "dt": [
+    0.04678362573099415,
+    0.024539877300613498,
+    0.01282051282051282
+   ],
+   "e_interp": 7.00204646591912e-07,
+   "etiqueta": "C2 REDUCCION",
+   "interp_ok": true,
+   "max_abs": 0.5282624658289745,
+   "nY": [
+    33.40096176852062,
+    33.40572821459471,
+    33.4069197087277
+   ],
+   "p": 2.001125253889283,
+   "p_rel": 2.0011252538892834,
+   "pasos": [
+    171,
+    326,
+    624
+   ],
+   "piso": 1.172978305217175e-14,
+   "razon": 4.003121083255143,
+   "veredicto": "VERDE"
+  },
+  "C3a RADIAL ORDEN 1": {
+   "causa": "C1: senal por debajo del piso de redondeo (ORDEN NO MEDIBLE)",
+   "d1": 1.9223050791026965e+28,
+   "d2": 1.872865918603615e+72,
+   "d2_rel_exacto_sonda": 4.4333853761276355e+75,
+   "d2_rel_piso_v1": 1.732144747196615e+74,
+   "dt": [
+    0.04678362573099415,
+    0.024539877300613498,
+    0.01282051282051282
+   ],
+   "e_interp": 2.36535897675376e+70,
+   "etiqueta": "C3a RADIAL ORDEN 1",
+   "interp_ok": false,
+   "max_abs": 2.1871611470506075e+71,
+   "nY": [
+    3069283.397132782,
+    1.9223050791026965e+28,
+    1.872865918603615e+72
+   ],
+   "p": null,
+   "p_rel": null,
+   "pasos": [
+    171,
+    326,
+    624
+   ],
+   "piso": 4.856473328042305e+57,
+   "razon": 1.0263975973976519e-44,
+   "veredicto": "NO MEDIBLE"
+  },
+  "C3b ANGULAR ORDEN 1": {
+   "causa": "ok",
+   "d1": 0.144181672966962,
+   "d2": 0.06483202601288172,
+   "d2_rel_exacto_sonda": 153.4681971491782,
+   "d2_rel_piso_v1": 5.996075436732581,
+   "dt": [
+    0.04678362573099415,
+    0.024539877300613498,
+    0.01282051282051282
+   ],
+   "e_interp": 9.652837316534229e-07,
+   "etiqueta": "C3b ANGULAR ORDEN 1",
+   "interp_ok": true,
+   "max_abs": 0.6416649255071395,
+   "nY": [
+    13.922692955075721,
+    13.915043252945345,
+    13.910582381548728
+   ],
+   "p": 1.1531092310352502,
+   "p_rel": 1.1531092310352502,
+   "pasos": [
+    171,
+    326,
+    624
+   ],
+   "piso": 1.4247823487848244e-14,
+   "razon": 2.2239266892309364,
+   "veredicto": "ROJO"
+  },
+  "F2 PRINCIPAL": {
+   "causa": "ok",
+   "d1": 0.07415187378755417,
+   "d2": 0.01852378277280914,
+   "d2_rel_exacto_sonda": 43.84887718858538,
+   "d2_rel_piso_v1": 1.713196481895261,
+   "dt": [
+    0.04678362573099415,
+    0.024539877300613498,
+    0.01282051282051282
+   ],
+   "e_interp": 9.615724292802594e-07,
+   "etiqueta": "F2 PRINCIPAL",
+   "interp_ok": true,
+   "max_abs": 0.6307027198196434,
+   "nY": [
+    13.902976230995485,
+    13.904959448933147,
+    13.905455267480741
+   ],
+   "p": 2.0011044055918528,
+   "p_rel": 2.0011044055918528,
+   "pasos": [
+    171,
+    326,
+    624
+   ],
+   "piso": 1.4004413624749545e-14,
+   "razon": 4.003063234816212,
+   "veredicto": "VERDE"
+  }
+ },
+ "comando": [
+  "sim/arnes_richardson_2d_f2_v3.py",
+  "--estricto",
+  "--nr0",
+  "128",
+  "--json",
+  "auto"
+ ],
+ "cotejo_L2": [
+  {
+   "error_ecuador_rel": 0.0005519359681562808,
+   "error_polo_rel": 0.0008029324607622771,
+   "residuo_rel_max": 0.001400145498341369
+  },
+  {
+   "error_ecuador_rel": 0.0001380322653958821,
+   "error_polo_rel": 0.00020078148835178666,
+   "residuo_rel_max": 0.0003510556662956373
+  },
+  {
+   "error_ecuador_rel": 3.45110841593795e-05,
+   "error_polo_rel": 5.019839515322625e-05,
+   "residuo_rel_max": 8.782769240278654e-05
+  }
+ ],
+ "deltas": [
+  "simula(): arranque v^{+1/2} -> v^{-1/2} por Cauchy simetrica (u^{-1} = u^0 + 0.5 dt^2 a0)",
+  "malla_evaluacion(): ancla rs_min -> ancla en las coordenadas reales del paquete (rc -+ T -+ 3 sigma)",
+  "main(): escritor de crudo JSON real (el v1 declaraba un crudo que no escribia)",
+  "main(): control C6 de contencion ventana <-> paquete (el v1 no lo tenia)",
+  "malla_evaluacion(): DELTA 4 -- el ancla INCLUYE el offset (lo = rc - T - 3 sigma - off): el primer nodo cae EXACTO en el borde declarado de la banda del paquete (en v2 quedaba a Delta_0/24 fuera)"
+ ],
+ "hora_utc": "2026-10-13T20:36:19Z",
+ "huella": "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013",
+ "huella_v1_citada": "HUELLA-ARNES-RICHARDSON-2D-F2-20261013",
+ "huella_v2_citada": "HUELLA-ARNES-RICHARDSON-2D-F2-V2-20261013",
+ "identidad_self": {
+  "bytes": 42099,
+  "cabezas": 27,
+  "encabezados": 28,
+  "huella_en_self": 3,
+  "lineas": 800,
+  "ruta": "/Users/marlene/gw-rw-zerilli/sim/arnes_richardson_2d_f2_v3.py",
+  "sha256": "2efba187cbb6a03842c76ffa52190df127324bb736571eb5993647c6ffc65529"
+ },
+ "mallas": [
+  {
+   "delta": 0.0,
+   "dt_cota": 0.04686352228078061,
+   "dtheta": 0.04908738521234052,
+   "hr": 0.31496062992125984,
+   "nivel": 0,
+   "nr": 128,
+   "nt": 33,
+   "r_max": 42.0,
+   "r_min": 2.0
+  },
+  {
+   "delta": 0.10498687664041995,
+   "dt_cota": 0.024544958354447956,
+   "dtheta": 0.02454369260617026,
+   "hr": 0.15748031496062992,
+   "nivel": 1,
+   "nr": 254,
+   "nt": 65,
+   "r_max": 41.94750656167979,
+   "r_min": 2.10498687664042
+  },
+  {
+   "delta": 0.2099737532808399,
+   "dt_cota": 0.012821045087298437,
+   "dtheta": 0.01227184630308513,
+   "hr": 0.07874015748031496,
+   "nivel": 2,
+   "nr": 506,
+   "nt": 129,
+   "r_max": 41.973753280839894,
+   "r_min": 2.20997375328084
+  }
+ ],
+ "no_anidamiento": {
+  "ratificado": {
+   "compartidos_01_02_12": [
+    0,
+    0,
+    0
+   ],
+   "offsets": [
+    "0.000000",
+    "0.104987",
+    "0.209974"
+   ]
+  },
+  "sellado": {
+   "compartidos_01_02_12": [
+    0,
+    0,
+    254
+   ],
+   "offsets": [
+    "0.000000",
+    "0.052493",
+    "0.052493"
+   ]
+  }
+ },
+ "parametros": {
+  "T": 8.0,
+  "mix4": 0.35,
+  "modo_offset": "ratificado",
+  "nr0": 128,
+  "nt0": 33,
+  "rc": 22.0,
+  "rs_max": 42.0,
+  "rs_min": 2.0,
+  "sigma": 2.0,
+  "tilt": 0.35
+ },
+ "rojos": [],
+ "segundos": 1.9958298206329346,
+ "stamp": "20261013T203617Z",
+ "transferencia": {
+  "correccion_1_en_v2": 2,
+  "correccion_2_en_v2": 2,
+  "defecto_1_en_v1": 1,
+  "defecto_1_en_v2": 1,
+  "defecto_2_en_v1": 1,
+  "defecto_2_en_v2": 1,
+  "escritor_en_v2": 2,
+  "existe_v1": true,
+  "huella_v1_en_v1": 3,
+  "lineas_v1": 576,
+  "ruta_v1": "/Users/marlene/gw-rw-zerilli/sim/arnes_richardson_2d_f2.py",
+  "sha256_v1": "89b51857c76b918de0da23bd79e260f0239832f51793e1ed208cce8a329efaf6"
+ },
+ "umbrales": {
+  "c1_umbral_f3": 2.220446049250313e-14,
+  "cfl_sellado": 0.5,
+  "p_esperado": 2.0,
+  "ref_d2_exacto_sonda": 0.000422446,
+  "ref_piso_f2": 0.01081241,
+  "umbral_p": 0.05
+ },
+ "ventana": {
+  "coherencia_theta": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "dr": 0.07874015748031496,
+  "hi": 36.0,
+  "lo": 7.908136482939632,
+  "n_theta": 33,
+  "nq": 356,
+  "rs_e_fin": 35.95275590551181,
+  "rs_e_ini": 8.0
+ },
+ "veredicto": "VERDE"
+}
