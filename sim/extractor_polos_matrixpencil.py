@@ -192,7 +192,14 @@ def build_hankel(y, L):
 
 
 def mpm(y, dt, K, L=None):
-    """Matrix Pencil Method. Devuelve autovalores z y diagnostico."""
+    """Matrix Pencil Method. Devuelve autovalores z y diagnostico.
+
+    Declarado (medido 2026-10-13T11:00Z): Z = (Ur^H Y1 Vr)/sr es REAL porque
+    Y0, Y1 y la SVD de una matriz real son reales => np.linalg.eigvals(Z)
+    devuelve pares conjugados EXACTOS => residuo_conjugado es 0.0 por
+    construccion. F5 mide coherencia del apareamiento, NO realidad de la
+    serie: se declara INERTE por construccion y no se lee como evidencia.
+    """
     N = int(y.size)
     if L is None:
         L = N // 2
@@ -216,16 +223,35 @@ def mpm(y, dt, K, L=None):
                           else float("inf")),
         "cond_Z": float(np.linalg.cond(Z)),
         "residuo_conjugado": 0.0,
+        "residuo_conjugado_evaluado": False,
+        "residuo_conjugado_pares": [],
     }
+    # F5 — apareamiento conjugado: distancia de conj(z_i) al polo MAS CERCANO
+    # DISTINTO de z_i mismo, normalizada por |z_i|.
+    # El termino propio |z_i - conj(z_i)| = 2|Im z_i| NO es un residuo de
+    # apareamiento y se excluye por INDICE (dist[i] = inf). El filtro
+    # "dist > 0.0" de la V1 borraba al socio exacto (Z real => autovalores
+    # conjugados bit a bit) y dejaba medido el termino propio.
     if z.size > 1:
         res = 0.0
-        for zi in z:
-            if zi.imag > 0.0:
-                dist = np.abs(z - np.conj(zi))
-                dist = dist[dist > 0.0]
-                if dist.size:
-                    res = max(res, float(np.min(dist)) / max(abs(zi), 1e-300))
-        d["residuo_conjugado"] = res
+        pares = []
+        for i in range(z.size):
+            zi = z[i]
+            if zi.imag <= 0.0:
+                continue
+            dist = np.abs(z - np.conj(zi))
+            dist[i] = float("inf")
+            j = int(np.argmin(dist))
+            if not np.isfinite(dist[j]):
+                continue
+            rel = float(dist[j]) / max(abs(zi), 1e-300)
+            pares.append({"i": int(i), "j": j, "dist_abs": float(dist[j]),
+                          "dist_rel": rel})
+            res = max(res, rel)
+        if pares:
+            d["residuo_conjugado"] = res
+            d["residuo_conjugado_evaluado"] = True
+            d["residuo_conjugado_pares"] = pares
     return z, d
 
 
@@ -300,7 +326,19 @@ def extraer(y, dt, K, metodo="mpm", L=None):
     else:
         raise ValueError("metodo desconocido: %s" % metodo)
     reps = reps_de_z(z, dt)
-    amplitudes(y, reps)
+    reps, coef, Vb = amplitudes(y, reps)
+    # Diagnostico declarado (no es corte sellado): quien SI prueba que la serie
+    # se leyo como real es este residuo sobre la base real [Re z^m, Im z^m].
+    # Dominio: sin ruido ~ piso numerico; con ruido ~ nivel de ruido. No se
+    # convierte en corte: el pre-registro sellado no tiene umbral para el.
+    if coef is not None:
+        rv = Vb @ coef - np.asarray(y, dtype=float)
+        nr = float(np.linalg.norm(rv))
+        diag["residuo_reconstruccion_abs"] = nr
+        diag["residuo_reconstruccion_rel"] = nr / max(float(np.linalg.norm(y)), 1e-300)
+    else:
+        diag["residuo_reconstruccion_abs"] = None
+        diag["residuo_reconstruccion_rel"] = None
     for d in reps:
         d["abs_s"] = abs(d["s"])
         d["abs_s_dt"] = abs(d["s"]) * dt
@@ -402,13 +440,22 @@ def cortes(caso):
     """
     e = caso["mpm"]["resumen"]["err_s_rel_max"]
     sin_ruido = caso["entrada"]["snr_objetivo"] is None
+    conj_eval = bool(caso["mpm"].get("residuo_conjugado_evaluado", False))
+    conj_val = caso["mpm"]["residuo_conjugado"]
     return {
         "C1": bool(sin_ruido and e is not None and e <= UMBRAL_C1),
         "F1": bool(sin_ruido and e is not None and e > UMBRAL_F1),
-        "F2": bool(caso["mpm"]["rank_rel_1e-12"] != caso["mpm"]["rango_declarado"]),
+        # F2 sellado dice "sin ruido": con ruido el conteo de valores singulares
+        # mide el piso de ruido, no el rango del objeto. Defecto de dominio
+        # medido en la V1 (lo evaluaba siempre); se aplica la letra del sello.
+        "F2": bool(sin_ruido and caso["mpm"]["rank_rel_1e-12"]
+                   != caso["mpm"]["rango_declarado"]),
         "F3": bool(caso["mpm"]["gap_sv_2K_2K1"] < UMBRAL_F3_GAP),
         "F4": bool(caso["mpm"]["cond_Z"] > UMBRAL_F4_COND),
-        "F5": bool(caso["mpm"]["residuo_conjugado"] > UMBRAL_F5_CONJ),
+        # F5 con GUARDA: un residuo 0.0 SIN pares medidos no es un verde, es un
+        # cero sin objeto (la identidad se satisface sola). F5_evaluado lo dice.
+        "F5": bool(conj_eval and conj_val is not None and conj_val > UMBRAL_F5_CONJ),
+        "F5_evaluado": conj_eval,
         "F7": bool(caso["entrada"]["W_periodos_lento"] < UMBRAL_F7_PERIODOS),
     }
 
@@ -460,15 +507,20 @@ def correr_caso(K, dt, N, snr_db=None, W=None, seed=SEMILLA_RUIDO, L=None,
         out[clave] = blq
 
     # discrepancia entre rutas (misma serie, mismo contrato, algebra distinta)
+    # Orientacion declarada de emparejar(rec, ref): asign[i] = (j, ds) con i
+    # indexando ref y j indexando rec. Aqui rec = polos de MPM y ref = polos de
+    # Prony => polo_prony = i + 1, polo_mpm = j + 1. Se declara porque una
+    # etiqueta invertida se lee como hallazgo y no lo es.
+    polos_mpm = [{"s": complex(p["s_re"], p["s_im"])} for p in out["mpm"]["polos"]]
+    polos_prony = [{"s_ref": complex(p["s_re"], p["s_im"]), "n": i + 1}
+                   for i, p in enumerate(out["prony"]["polos"])]
     disc = []
-    a_asig, _ = emparejar(out["mpm"]["polos"] and
-                          [{"s": complex(p["s_re"], p["s_im"])} for p in out["mpm"]["polos"]],
-                          [{"s_ref": complex(p["s_re"], p["s_im"]), "n": i + 1}
-                           for i, p in enumerate(out["prony"]["polos"])])
+    a_asig = emparejar(polos_mpm, polos_prony)[0] if polos_mpm else {}
     for i in sorted(a_asig):
         j, ds = a_asig[i]
         disc.append({"polo_prony": i + 1, "polo_mpm": j + 1, "ds_abs": float(ds)})
     out["discrepancia_MPM_vs_Prony"] = {
+        "orientacion": "polo_prony = indice en prony (ref); polo_mpm = indice en mpm (rec)",
         "pares": disc,
         "n_pares": len(disc),
         "n_prony": len(out["prony"]["polos"]),
@@ -739,6 +791,20 @@ def cabecera(args):
         "unidad_declarada": "linea | polo | valor singular | muestra | decibelio",
         "ventana_declarada": "reloj UTC de esta cabecera",
         "no_finitos": "los valores no finitos se imprimen como null, NUNCA como 0",
+        "defectos_del_metro_declarados": {
+            "F5_inertes_por_construccion": ("Z es real => eigvals devuelve pares "
+                                            "conjugados exactos => residuo_conjugado "
+                                            "= 0.0 siempre; F5 no puede diferir. "
+                                            "Medido en los tres casos limpios."),
+            "F2_dominio": ("el sello dice 'sin ruido'; la V1 lo evaluaba tambien con "
+                           "ruido, donde el conteo de valores singulares mide el piso "
+                           "de ruido. Corregido a la letra del sello: sin ruido."),
+            "F7_frontera": "W menor que 20 periodos del modo mas lento: FRONTERA, no falla.",
+            "ventana_del_sello": ("el barrido sellado (20..320 periodos del modo mas "
+                                  "lento) implica T ~ 337.6 unidades de tiempo, donde "
+                                  "el polo 1 vale ~1e-13 y no hay objeto que extraer. Se "
+                                  "declara en dominio_del_sello; no se baja el umbral."),
+        },
         "argv": sys.argv,
         "modo": args.modo,
         "sha256_self_16": sha256_file(self_p)[:16],
