@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-20261013
+# HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013
 """
 BANCO 1D REGGE-WHEELER / ZERILLI -- DRIVER LEAPFROG EN COORDENADA DE TORTUGA
 ============================================================================
 
-HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-20261013
+HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013
 
 UNIVERSO DECLARADO : este archivo (1 pieza) + sim/PREREGISTRO_RW_ZERILLI_20261013.md (1 pieza).
 MOTOR              : numpy 2.4.6 + scipy 1.17.1 (CubicSpline, least_squares). Sin red,
@@ -24,7 +24,10 @@ Potenciales sellados (l dado, lambda = (l-1)(l+2)/2):
                        / [ r^3 (lam r + 3M)^2 ]
 
 Esquema: leapfrog escalonado (campo en tiempos enteros n, velocidad en n+1/2).
+Fase V2 (D-A): bucle ARRASTRAR-LUEGO-PATEAR; la entrada vhalf es v^{+1/2}.
 CFL sellado: dt/dr* = 0.50.
+Nulo N-RW-0 (V2, D-B/D-C): capa esponja FORZADA OFF y certificacion F1 a CFL = 1.00
+(nodo-exacto); la corrida a CFL = 0.50 NO certifica F1 (dominio del umbral, declarado).
 Tres mallas NO anidadas: Delta_k = Delta_0 / 2^k, offset delta_k.
 Absorbentes: capa esponja de perfil sen^2 (atenuacion exponencial declarada) + condicion
 de radiacion de primer orden (Mur-1) en el nodo extremo, con la DIRECCION invertida entre
@@ -47,7 +50,7 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.optimize import least_squares
 
-HUELLA = "HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-20261013"
+HUELLA = "HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013"
 
 # Referencia EXTERNA citada (Leaver). No se autogenera; su acuerdo no se usa como prueba.
 LEAVER_MWR = 0.37367
@@ -208,6 +211,8 @@ def solve(rs, h, cfl, V, psi0, vhalf, tmax, sponge_L, sponge_A, obs_x, diag=None
     Mur-1 lleva la DIRECCION INVERTIDA entre extremos (sellado 3):
       extremo del infinito espacial (r* -> +inf): absorbe el frente SALIENTE (derechante)
       extremo del horizonte       (r* -> -inf): absorbe el frente ENTRANTE (izquierdante)
+
+    V2 (D-A): la entrada `vhalf` ES v^{+1/2}; el bucle arrastra-luego-patea.
     """
     dt = cfl * h
     nsteps = int(round(tmax / dt))
@@ -231,13 +236,20 @@ def solve(rs, h, cfl, V, psi0, vhalf, tmax, sponge_L, sponge_A, obs_x, diag=None
         diag(0, 0.0, psi)
 
     estable = True
+    # V2 (D-A): ARRASTRAR-LUEGO-PATEAR. La entrada `vhalf` es v^{+1/2} (convencion del
+    # llamante: 0.5*dt*laplaciano para d_t Psi(x,0) = 0). Orden del paso:
+    #   drift:  Psi^n     -> Psi^{n+1}    con v^{n+1/2}
+    #   kick:   v^{n+1/2} -> v^{n+3/2}    con lap(Psi^{n+1})
+    # => Psi^1 = Psi^0 + 1/2 dt^2 lap(Psi^0).
+    # La version V1 pateaba PRIMERO y consumia la entrada como v^{-1/2}, ejecutando
+    #    Psi^1 = Psi^0 + 3/2 dt^2 lap(Psi^0)  (error de fase medido; ver D-A).
     for step in range(1, nsteps + 1):
-        lap = laplaciano(psi, h, V)
-        v = ((1.0 - alpha) * v + dt * lap) / (1.0 + alpha)
         psi_old = psi
         psi = psi + dt * v
         psi[-1] = psi_old[-2] + mur * (psi[-2] - psi_old[-1])
         psi[0] = psi_old[1] + mur * (psi[1] - psi_old[0])
+        lap = laplaciano(psi, h, V)
+        v = ((1.0 - alpha) * v + dt * lap) / (1.0 + alpha)
         v[0] = (psi[0] - psi_old[0]) / dt
         v[-1] = (psi[-1] - psi_old[-1]) / dt
         if obs is not None:
@@ -318,11 +330,26 @@ def richardson(A0, A1, A2):
 def suite_nulo(args):
     """N-RW-0: V identicamente 0 y M = 0 => la exacta es la onda de d'Alembert (dos frentes).
     Se mide el error L2 relativo en el dominio interior (8 celdas de borde excluidas por lado)
-    y se descarta el transitorio inicial. Se corre a CFL 0.50 (sellado) y a CFL 1.00 (control
-    de causa: en CFL = 1 el esquema de 3 puntos es nodo-exacto para d'Alembert)."""
-    out = {"UMBRAL_F1": UMBRAL_F1, "ventana_interior": "8 celdas de borde excluidas por lado",
+    y se descarta el transitorio inicial.
+
+    V2 (D-B): la capa esponja se FUERZA OFF en el nulo (sponge_L, sponge_A = 1.0, 0.0):
+    d'Alembert vale en R LIBRE, sin fronteras y sin disipacion. Con la esponja activa no se
+    mide el propagador sino la absorcion (el borde izquierdo esta a 28 unidades de la fuente
+    y contamina desde t ~ 28).
+
+    V2 (D-C): la CERTIFICACION de F1 (err_rel_max <= 1e-12) corre a CFL = 1.00, donde el
+    esquema de 3 puntos es NODO-EXACTO para d'Alembert. El regimen sellado CFL = 0.50 arrastra
+    su error de truncamiento O(dt^2) (~1e-4) y NO certifica F1: queda declarado aqui como
+    dominio del umbral y se audita por orden de convergencia (p=2) en --modo mallas.
+    El veredicto F1 se calcula SOLO sobre las filas certificantes (CFL = 1.00)."""
+    sponge_L, sponge_A = 1.0, 0.0          # D-B: esponja OFF forzada en el nulo
+    out = {"UMBRAL_F1": UMBRAL_F1,
+           "ventana_interior": "8 celdas de borde excluidas por lado",
+           "esponja": "OFF (forzada en el nulo; d'Alembert vale en R libre)",
+           "cfl_certificante": 1.0,
            "tlo": args.nulo_tlo, "tmax": args.nulo_tmax}
-    for cfl in (CFL_SELLADO, 1.0):
+    for cfl in (1.0, CFL_SELLADO):
+        certifica = (cfl == 1.0)
         for arranque in ("auto", "exacto"):
             filas = []
             for k in (0, 1, 2):
@@ -352,14 +379,21 @@ def suite_nulo(args):
                     _e["err_fin"], _e["t_fin"] = e, t
 
                 g = solve(rs, h, cfl, V, psi0, vhalf, args.nulo_tmax,
-                          args.sponge_L, args.sponge_A, None, diag=diag)
+                          sponge_L, sponge_A, None, diag=diag)
                 filas.append({"k": k, "h": h, "delta": delta, "dt": dt,
                               "nsteps": g["nsteps"], "N": int(rs.size),
                               "err_rel_max": est["err_max"], "t_del_max": est["t_max"],
                               "err_final": est["err_fin"],
                               "estable": g["estable"],
+                              "certifica_F1": certifica,
                               "toca_F1": bool(est["err_max"] > UMBRAL_F1)})
             out["cfl_%.2f_arranque_%s" % (cfl, arranque)] = filas
+    # V2 (D-C): veredicto F1 SOLO sobre las filas certificantes (CFL = 1.00)
+    cert = [r for kk, vv in out.items() if kk.startswith("cfl_") and isinstance(vv, list)
+            for r in vv if r.get("certifica_F1")]
+    out["veredicto_F1"] = ("PASA" if cert and all(r["err_rel_max"] <= UMBRAL_F1 for r in cert)
+                           else "FALLA")
+    out["filas_certificantes"] = len(cert)
     return out
 
 
