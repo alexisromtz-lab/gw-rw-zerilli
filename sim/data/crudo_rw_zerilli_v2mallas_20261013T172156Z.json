@@ -1,0 +1,148 @@
+{
+ "cabecera": {
+  "HUELLA": "HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013",
+  "T_UTC": "2026-10-13T17:21:56Z",
+  "UNIVERSO DECLARADO": "este driver (1 pieza) + pre-registro sellado (1 pieza)",
+  "MOTOR": "python3 3.14.7 | numpy 2.4.6 | scipy (CubicSpline, least_squares)",
+  "UNIDAD": "nodo / paso temporal / linea / encabezado",
+  "argv": {
+   "modo": "mallas",
+   "potencial": "rw",
+   "l": 2,
+   "M": 1.0,
+   "delta0": 0.05,
+   "cfl": 0.5,
+   "rsmin": -40.0,
+   "rsmax": 150.0,
+   "tmax": 100.0,
+   "xc": 0.0,
+   "sigma": 3.0,
+   "sigma_f": 2.0,
+   "robs": 40.0,
+   "t1": 48.0,
+   "t2": 92.0,
+   "t8a": 55.0,
+   "t8b": 90.0,
+   "nulo_tmax": 38.0,
+   "nulo_tlo": 5.0,
+   "sponge_L": 12.0,
+   "sponge_A": 25.0,
+   "offset": "no-anidado",
+   "outdir": "sim/data",
+   "tag": "v2mallas"
+  },
+  "driver_path": "/Users/marlene/gw-rw-zerilli/sim/driver_rw_zerilli_1d.py",
+  "driver_sha256": "72df3878e2245bd033df524d0db1d41197aeed5153623dcb4e2b5c1f4ea79465",
+  "driver_git_blob": "62931cf059d72f797d66b4e6ed9d1b8e0958c95e",
+  "t_utc_fin": "2026-10-13T17:21:56Z",
+  "wall_s": 0.04
+ },
+ "F6_mallas": {
+  "literal": {
+   "deltas": [
+    0.0,
+    0.008333333333333333,
+    0.008333333333333333
+   ],
+   "nodos": [
+    3801,
+    7600,
+    15200
+   ],
+   "compartidos": [
+    {
+     "par": [
+      0,
+      1
+     ],
+     "ha": 0.04999999999999716,
+     "hb": 0.02499999999999858,
+     "ha_sobre_hb": 2.0,
+     "compartidos": 0,
+     "resid_max_emparejados": null,
+     "resid_min_no_emparejados": 0.008333333322497083,
+     "tol": 1e-09
+    },
+    {
+     "par": [
+      0,
+      2
+     ],
+     "ha": 0.04999999999999716,
+     "hb": 0.012500000000002842,
+     "ha_sobre_hb": 3.999999999998863,
+     "compartidos": 0,
+     "resid_max_emparejados": null,
+     "resid_min_no_emparejados": 0.004166666623461879,
+     "tol": 1e-09
+    },
+    {
+     "par": [
+      1,
+      2
+     ],
+     "ha": 0.02499999999999858,
+     "hb": 0.012500000000002842,
+     "ha_sobre_hb": 1.9999999999994316,
+     "compartidos": 7600,
+     "resid_max_emparejados": 4.317257662478369e-11,
+     "resid_min_no_emparejados": null,
+     "tol": 1e-09
+    }
+   ]
+  },
+  "no-anidado": {
+   "deltas": [
+    0.0,
+    0.016666666666666666,
+    0.03333333333333333
+   ],
+   "nodos": [
+    3801,
+    7600,
+    15198
+   ],
+   "compartidos": [
+    {
+     "par": [
+      0,
+      1
+     ],
+     "ha": 0.04999999999999716,
+     "hb": 0.02499999999999858,
+     "ha_sobre_hb": 2.0,
+     "compartidos": 0,
+     "resid_max_emparejados": null,
+     "resid_min_no_emparejados": 0.00833333333333286,
+     "tol": 1e-09
+    },
+    {
+     "par": [
+      0,
+      2
+     ],
+     "ha": 0.04999999999999716,
+     "hb": 0.012500000000002842,
+     "ha_sobre_hb": 3.999999999998863,
+     "compartidos": 0,
+     "resid_max_emparejados": null,
+     "resid_min_no_emparejados": 0.0041666666234903005,
+     "tol": 1e-09
+    },
+    {
+     "par": [
+      1,
+      2
+     ],
+     "ha": 0.02499999999999858,
+     "hb": 0.012500000000002842,
+     "ha_sobre_hb": 1.9999999999994316,
+     "compartidos": 0,
+     "resid_max_emparejados": null,
+     "resid_min_no_emparejados": 0.0041666666666699825,
+     "tol": 1e-09
+    }
+   ]
+  }
+ }
+}
