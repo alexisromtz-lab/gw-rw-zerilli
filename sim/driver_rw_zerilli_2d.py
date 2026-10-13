@@ -305,11 +305,22 @@ def certifica_L2(malla):
 
 
 # --------------------------------------------------------------------------------------------
-# Bucle (arrastrar-luego-patear) y verificaciones F1
+# Bucle (patear-luego-arrastrar: v escalonada en n-1/2) y verificaciones F1
 # --------------------------------------------------------------------------------------------
 
 def corre(malla, u0, v0, nsteps, forzador=None, ref=None, cheqs=(), nulo_ang=False):
-    """Bucle ARRASTRAR-LUEGO-PATEAR escalonado.
+    """Bucle PATEAR-LUEGO-ARRASTRAR (kick-drift) con v escalonada en n-1/2.
+
+    El orden de las dos operaciones es el que manda el nombre y el codigo:
+        v^{n+1/2} = v^{n-1/2} + dt * a(u^n)   (patear)    ->  v = v + dt * aceleracion
+        u^{n+1}   = u^n     + dt * v^{n+1/2}  (arrastrar)  ->  u = u + dt * v
+    Consecuencia que gobierna la INICIALIZACION: al entrar al bucle, v debe llevar
+    v^{-1/2} = (u^0 - u^{-1})/dt -- la velocidad en t = -dt/2, NO en t = +dt/2.
+    Pasar v^{+1/2} inyecta el sesgo dt^2 * a(u^0) en el primer arrastre y el error
+    acumula ~dt^2 por paso => O(dt*T) = O(h*T): ORDEN 1 con el CFL sellado.
+    Medido 13-Oct-2026 (T=20, N0=96, cfl=0.5, dato viajero): v^{+1/2} da
+    2.7344e-02 / 1.4291e-02 / 7.3259e-03 (orden 0.94/0.96/0.99) y v^{-1/2} da
+    2.6250e-03 / 6.5668e-04 / 1.6435e-04 (orden 2.00/2.00/2.00).
 
     forzador(n, u) fuerza los dos bordes RADIALES con la referencia exacta (Dirichlet).
     Si ref no es None, se mide el residuo relativo max|u - ref(n)| / max|ref(n)| en los cheqs.
@@ -401,7 +412,9 @@ def f1b_manufacturada(malla_base, T, omega, niveles, nulo_ang=False):
             return _manufacturada(_m.r, _m.th, n * _m.dt, omega)
 
         u0 = ref(0)
-        v0 = (_manufacturada(m.r, m.th, m.dt, omega) - _manufacturada(m.r, m.th, 0.0, omega)) / m.dt
+        # v escalonada en n-1/2: v^{-1/2} = (u^0 - u^{-1})/dt (mismo convenio que F1.a)
+        v0 = (_manufacturada(m.r, m.th, 0.0, omega)
+              - _manufacturada(m.r, m.th, -m.dt, omega)) / m.dt
 
         def forzador(n, u, _m=m):
             e = _manufacturada(_m.r, _m.th, n * _m.dt, omega)
