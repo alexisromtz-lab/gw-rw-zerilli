@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013
+# HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V3-20261013
 """
 BANCO 1D REGGE-WHEELER / ZERILLI -- DRIVER LEAPFROG EN COORDENADA DE TORTUGA
 ============================================================================
 
-HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013
+HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V3-20261013
 
 UNIVERSO DECLARADO : este archivo (1 pieza) + sim/PREREGISTRO_RW_ZERILLI_20261013.md (1 pieza).
 MOTOR              : numpy 2.4.6 + scipy 1.17.1 (CubicSpline, least_squares). Sin red,
@@ -29,9 +29,15 @@ CFL sellado: dt/dr* = 0.50.
 Nulo N-RW-0 (V2, D-B/D-C): capa esponja FORZADA OFF y certificacion F1 a CFL = 1.00
 (nodo-exacto); la corrida a CFL = 0.50 NO certifica F1 (dominio del umbral, declarado).
 Tres mallas NO anidadas: Delta_k = Delta_0 / 2^k, offset delta_k.
-Absorbentes: capa esponja de perfil sen^2 (atenuacion exponencial declarada) + condicion
+Absorbentes: capa esponja de perfil CUBICO (p = 3, C^2 en la interfaz) + condicion
 de radiacion de primer orden (Mur-1) en el nodo extremo, con la DIRECCION invertida entre
 el extremo del infinito espacial y el extremo del horizonte (sellado 3, se mide en F4).
+Fase V3 (D-E/D-F, orden del dueno): (i) perfil de esponja sen^2 (C^1) -> cubico (C^2),
+sigma = sigmax*(x/L)^3 con x = distancia a la INTERFAZ y sigma(0)=sigma'(0)=sigma''(0)=0
+=> se elimina el salto de impedancia del borde interior (que reflejaba a -21.68 dB);
+(ii) monitor izquierdo de F4 movido de r* = -30 (dentro de la capa [-40,-28]) a r* = -26
+(fuera), para medir A_inc intacta (V2 daba 0.7317). Mur-1 pura ya daba -90.66 dB: la
+frontera exterior era impecable; V3 empareja la impedancia de la capa disipativa.
 
 Cortes de fallo sellados (F1..F7) -- ver sim/PREREGISTRO_RW_ZERILLI_20261013.md seccion 7.
 """
@@ -50,7 +56,7 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 from scipy.optimize import least_squares
 
-HUELLA = "HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V2-20261013"
+HUELLA = "HUELLA-DRIVER-RW-ZERILLI-1D-LEAPFROG-V3-20261013"
 
 # Referencia EXTERNA citada (Leaver). No se autogenera; su acuerdo no se usa como prueba.
 LEAVER_MWR = 0.37367
@@ -187,13 +193,27 @@ def cubic_stencil(rs, x0):
 # Capa esponja + Mur-1
 # --------------------------------------------------------------------------- #
 def sponge_sigma(rs, L, Amax, sigmax):
-    """sigma(x) = sigmax * sen^2(pi (L-x) / (2L)) con x = distancia a la frontera.
-       sigma = 0 en el borde interior de la capa; sigma = sigmax en el nodo extremo.
-       Atenuacion de un cruce: int sigma dx = sigmax * L / 2."""
-    xl = rs - rs[0]
-    xr = rs[-1] - rs
-    sl = np.where(xl < L, sigmax * np.sin(0.5 * np.pi * (L - np.minimum(xl, L)) / L) ** 2, 0.0)
-    sr = np.where(xr < L, sigmax * np.sin(0.5 * np.pi * (L - np.minimum(xr, L)) / L) ** 2, 0.0)
+    """V3 (D-E), PASADA 2: perfil polinomico CUBICO (p = 3), simetrico en ambos extremos.
+
+       sigma = sigmax * (d / L)^3,   d = PROFUNDIDAD dentro de la capa medida desde su
+                                     INTERFAZ (el borde interior, contacto con el dominio
+                                     fisico): d = 0 en la INTERFAZ, d = L en el nodo EXTREMO.
+
+       Propiedades selladas en la interfaz (d = 0):
+           sigma(0) = 0 · sigma'(0) = 0 · sigma''(0) = 0   =>  C^2
+       => NO hay salto de impedancia en el punto de contacto. LA ORIENTACION IMPORTA: la
+          rampa debe anularse en la INTERFAZ (donde vive el dominio fisico) y crecer hacia
+          el EXTREMO (donde ademas actua Mur-1 y el frente ya no vuelve). La pasada 1 la
+          tenia invertida (sigma maxima en la interfaz) y la cazo la sonda estructural:
+          ver /tmp/f4v3/pasada1_rampa_invertida.txt (blob e2d51ee4, sin corrida de fisica).
+          V2 (sen^2) ya anulaba sigma y sigma' en la interfaz, pero dejaba sigma'' != 0;
+          V3 cierra el termino cubico.
+       sigma = sigmax en el nodo EXTREMO (d = L); sigma = 0 en todo el dominio fisico.
+       Atenuacion de un cruce: int_0^L sigma dd = sigmax * L / 4."""
+    dl = np.clip((rs[0] + L) - rs, 0.0, L)      # profundidad desde la interfaz IZQUIERDA
+    dr = np.clip(rs - (rs[-1] - L), 0.0, L)     # profundidad desde la interfaz DERECHA
+    sl = np.where(rs < rs[0] + L, sigmax * (dl / L) ** 3, 0.0)
+    sr = np.where(rs > rs[-1] - L, sigmax * (dr / L) ** 3, 0.0)
     return sl + sr
 
 
@@ -415,7 +435,9 @@ def suite_frontera(args):
             v0 = -(-(rs - xc) / (args.sigma_f ** 2) * gauss(rs, xc, args.sigma_f))
         else:
             # frente que viaja a -r* (hacia el horizonte): Psi = f(x + t) => d_t Psi(0) = +f'(x)
-            xc, mon = -20.0, -30.0
+            # V3 (D-F): monitor FUERA de la capa esponja [-40,-28] => r* = -26 (V2 usaba -30,
+            # dentro de la capa, y medía una incidente ya atenuada: A_inc = 0.7317).
+            xc, mon = -20.0, -26.0
             t_inc = xc - mon
             t_ref = (xc - rs[0]) + (mon - rs[0])
             v0 = (-(rs - xc) / (args.sigma_f ** 2) * gauss(rs, xc, args.sigma_f))
