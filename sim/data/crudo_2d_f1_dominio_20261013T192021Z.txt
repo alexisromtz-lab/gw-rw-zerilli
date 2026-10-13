@@ -1,0 +1,74 @@
+====================================================================================
+SONDA 2D-F1 v4.b: esquema vs dato  (V=0, periodico, cfl=1/sqrt(2))
+HUELLA-SONDA-2D-F1-DOMINIO-20261013
+====================================================================================
+UNIVERSO DECLARADO: malla 2D periodica 128 x 128, h=0.100000, L=12.800000,
+  cfl=0.7071067812 (=1/sqrt(2)), T=10.000, modos enteros (mx,my), residuo L2 relativo.
+QUEDA FUERA: capa absorbente · M>0 · eje polar · angulo rasante · no linealidad.
+UMBRAL: 1.0e-13   UNIDAD: residuo L2 relativo   NULO: mismo operador con dato=cont
+COMANDO: python3 -B sim/sonda_2d_f1_dominio.py --estricto
+INSTANTE UTC: 2026-10-13T19:20:21Z
+HUELLA DEL INSTRUMENTO: 5f77b302d3b9f8bc00c40879e2432e52f29583b450c970e6bec0c82b34fe5165
+
+[S] SIMBOLO (algebra, sin integrar): xi_disc vs w*dt  y  xi_disc vs el 1D equivalente
+     (mx,my)   ang_deg        |xi - w*dt|/w*dt
+     (2,0)     0.00      2.008823e-04
+     (3,1)    18.43      3.215860e-04
+     (2,1)    26.57      9.039931e-05
+     (3,2)    33.69      9.664291e-05
+     (1,1)    45.00      0.000000e+00
+     (2,2)    45.00      1.413580e-16
+     (3,3)    45.00      0.000000e+00
+     (1,0)     0.00      5.020470e-05
+
+[A] ESQUEMA PURO  (dato=disc, ref=cont)  -- el residuo que queda ES la dispersion
+     (mx,my)   ang_deg    residuo(dato=disc)   residuo(dato=cont)
+     (2,0)     0.00    7.459319e-04        7.538481e-04
+     (3,1)    18.43    1.185170e-03        1.200305e-03
+     (2,1)    26.57    1.900558e-02        1.932764e-02
+     (3,2)    33.69    4.434818e-03        4.572708e-03
+     (1,1)    45.00    3.444081e-15        1.828039e-06
+     (2,2)    45.00    2.573674e-14        6.505644e-05
+     (3,3)    45.00    1.423329e-14        1.863998e-04
+     (1,0)     0.00    1.337203e-03        1.351430e-03
+
+[B] FAMILIA DIAGONAL PURA (mx == my, ang = 45 grados EXACTO), cfl=1/sqrt(2), T=10
+     m    residuo(dato=disc)   residuo(dato=cont)   residuo(disc,ref=sim)
+     1    3.444081e-15        1.828039e-06        3.444081e-15
+     2    2.573674e-14        6.505644e-05        2.668732e-14
+     3    1.423329e-14        1.863998e-04        1.423329e-14
+     4    1.967306e-14        1.058347e-04        1.967306e-14
+     6    8.744309e-15        4.411139e-04        8.744309e-15
+     8    8.185048e-14        3.099581e-03        8.313321e-14
+
+[C] REFINADO (mx=my=2, dato=disc) + control 1D equivalente (cfl=1/sqrt(2))
+     N      h       residuo(2D diag)   residuo(2D eje)   residuo(1D)
+      64   0.200   1.409270e-14     3.633376e-03     3.633376e-03
+     128   0.100   2.573674e-14     7.459319e-04     7.459319e-04
+     256   0.050   1.508196e-14     2.073124e-04     2.073124e-04
+     512   0.025   1.831377e-14     5.184681e-05     5.184681e-05
+
+[D] CONTROL DE CFL SOBRE LA DIAGONAL (mx=my=2, dato=disc, N=128)
+     cfl=0.500000   residuo=1.077678e-02   n=200
+     cfl=0.600000   residuo=6.825919e-03   n=167
+     cfl=0.700000   residuo=4.580104e-04   n=143
+     cfl=0.707107   residuo=2.573674e-14   n=141
+     cfl=0.707200   residuo=4.869481e-06   n=141
+     cfl=0.750000   residuo=2.922646e+24   n=133
+     cfl=1.000000   residuo=1.586612e+61   n=100
+
+[E] CONTROL NEGATIVO: modos NO diagonales a cfl optimo (dato=disc) -- NO deben caer
+     (2,1): 1.900558e-02
+     (3,1): 1.185170e-03
+     (0,2): 7.459319e-04
+
+====================================================================================
+GATE 2D-F1 (postura): dato=disc, ref=cont, familia mx==my a cfl=1/sqrt(2) -> residuo < 1e-13
+CONTROL: modos NO diagonales al MISMO cfl NO bajan de 1e-13 (el umbral tiene dominio)
+====================================================================================
+
+AGUDEZA DEL CFL (fuera de la region de datos, v4.b): exceso del desvio
+  cfl=0.707200 sobre el optimo 1/sqrt(2): x1.892e+08   (4.869481e-06 vs 2.573674e-14)
+
+VEREDICTO 2D-F1 (--estricto): VERDE  objeto<1.0e-13 en los 6 modos diagonales
+   y el control (nulo · no diagonales · desvio de CFL x1.892e+08) NO baja de 1.0e-13.
