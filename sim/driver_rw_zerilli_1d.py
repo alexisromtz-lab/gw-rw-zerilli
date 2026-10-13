@@ -29,15 +29,46 @@ CFL sellado: dt/dr* = 0.50.
 Nulo N-RW-0 (V2, D-B/D-C): capa esponja FORZADA OFF y certificacion F1 a CFL = 1.00
 (nodo-exacto); la corrida a CFL = 0.50 NO certifica F1 (dominio del umbral, declarado).
 Tres mallas NO anidadas: Delta_k = Delta_0 / 2^k, offset delta_k.
-Absorbentes: capa esponja de perfil CUBICO (p = 3, C^2 en la interfaz) + condicion
-de radiacion de primer orden (Mur-1) en el nodo extremo, con la DIRECCION invertida entre
-el extremo del infinito espacial y el extremo del horizonte (sellado 3, se mide en F4).
-Fase V3 (D-E/D-F, orden del dueno): (i) perfil de esponja sen^2 (C^1) -> cubico (C^2),
-sigma = sigmax*(x/L)^3 con x = distancia a la INTERFAZ y sigma(0)=sigma'(0)=sigma''(0)=0
-=> se elimina el salto de impedancia del borde interior (que reflejaba a -21.68 dB);
-(ii) monitor izquierdo de F4 movido de r* = -30 (dentro de la capa [-40,-28]) a r* = -26
-(fuera), para medir A_inc intacta (V2 daba 0.7317). Mur-1 pura ya daba -90.66 dB: la
-frontera exterior era impecable; V3 empareja la impedancia de la capa disipativa.
+Absorbentes: capa esponja de perfil LINEAL (p = 1) + condicion de radiacion de primer
+orden (Mur-1) en el nodo extremo, con la DIRECCION invertida entre el extremo del infinito
+espacial y el extremo del horizonte (sellado 3, se mide en F4).
+
+Fase V3, PASADA 3 (orden del dueno, 2026-10-13) -- los cuatro hallazgos del ciclo:
+(i) D-F (reparado en la pasada 2, se CONSERVA): monitor izquierdo de F4 movido de
+    r* = -30 (dentro de la capa [-40,-28] con la geometria por defecto) a r* = -26
+    (fuera), para medir A_inc intacta: V2 daba A_inc = 0.7317 (medida ya atenuada);
+    pasada 2 da 1.0000064368985893 y 1.0000225010792492 (simetria a 4 decimales).
+(ii) D-G (reparado): con sigmax = 2A/L fijo, el exponente p triplicaba la deuda de la
+    integral declarada, int_0^L sigma dd = sigmax*L/(p+1): p = 3 dejaba A/2 = 12.5, no
+    el A = 25 que el artefacto de referencia declara (int_sigma_una_via = args.esponja_A).
+    Medido con int_sigma por trapecio: p=1 -> 25.00000, p=2 -> 16.66681, p=3 -> 12.50022
+    => el defecto era del MAPEO sigmax(A,p,L), no del perfil. p = 1 vale sigmax*L/2 = A
+    EXACTO => el invariante declarado se cumple por construccion, sin tocar la linea de
+    sigmax.
+(iii) D-E REFUTADO EN SU CURA: mas suavidad en la interfaz es PEOR, no mejor. Con
+    int_sigma = A fija manda el PICO sigmax = (p+1)*A/L, no el gradiente de la interfaz.
+    Medido a L = 96, A = 25 (banco 4): p=0 (escalon) -53.2756 | p=0.5 -49.8374 |
+    p=1 (rampa) -47.4885 | p=2 -44.2430 con int_sigma = 25.0000 en los cuatro; y sin^2
+    (V2) -45.7945. La ley continua del artefacto de referencia ya lo decia: |R| ~ sigma
+    /(4 omega) => menos sigma, menos reflexion.
+(iv) D-H (el defecto dominante): la capa L = 12 era ~1 longitud de onda (sigma_f = 2.0
+    => lambda ~ 12.6) y NINGUN perfil la rescata: a L = 12 el mejor (p=0) da -31.01 dB.
+    La reflexion la gobierna el grupo adimensional L/sigma_f, con el cruce de F4 (-40 dB)
+    alrededor de L/sigma_f ~ 24: (L=48,sf=2) -40.8565 | (L=64,sf=2) -43.6647 |
+    (L=96,sf=2) -47.4885 | (L=96,sf=4) -40.8541 => solo importa L/sigma_f (ley
+    verificada a 4 digitos). => --sponge-L por defecto 12 -> 96 (L/sigma_f = 48) y dominio
+    ampliado para albergarla. El residuo tardio NUNCA supera la reflexion de prompt
+    (L=48: -44.1762 tardio vs -40.8565 prompt) => F4 no tapa una cola.
+
+Mur-1 pura ya daba -90.66 dB: la frontera exterior era impecable y el reflector es la
+capa disipativa (control A=0 -> -90.6623/-90.6620 dB). El borde del DOMINIO no es lo
+medido: el mismo (perfil, A, L) en tres extensiones distintas da el MISMO dB (banco 4,
+seccion n: -40.8565 en (-90,180), (-140,280) y (-200,400) bit a bit).
+Crudos de la decision: /tmp/f4v3/barrido_perfiles_20261013.txt (banco 1, con dos
+controles exactos que reproducen los crudos V2 y V3p2 del driver) |
+/tmp/f4v3/barrido_capas_gruesas_20261013.txt (banco 2) |
+/tmp/f4v3/barrido_residuo_tardio_20261013.txt (banco 3) |
+/tmp/f4v3/barrido_forma_y_dominio_20261013.txt (banco 4).
 
 Cortes de fallo sellados (F1..F7) -- ver sim/PREREGISTRO_RW_ZERILLI_20261013.md seccion 7.
 """
@@ -193,27 +224,32 @@ def cubic_stencil(rs, x0):
 # Capa esponja + Mur-1
 # --------------------------------------------------------------------------- #
 def sponge_sigma(rs, L, Amax, sigmax):
-    """V3 (D-E), PASADA 2: perfil polinomico CUBICO (p = 3), simetrico en ambos extremos.
+    """V3 (D-E/D-G/D-H), PASADA 3: perfil LINEAL (p = 1), simetrico en ambos extremos.
 
-       sigma = sigmax * (d / L)^3,   d = PROFUNDIDAD dentro de la capa medida desde su
-                                     INTERFAZ (el borde interior, contacto con el dominio
-                                     fisico): d = 0 en la INTERFAZ, d = L en el nodo EXTREMO.
+       sigma = sigmax * (d / L),   d = PROFUNDIDAD dentro de la capa medida desde su
+                                   INTERFAZ (el borde interior, contacto con el dominio
+                                   fisico): d = 0 en la INTERFAZ, d = L en el nodo EXTREMO.
 
-       Propiedades selladas en la interfaz (d = 0):
-           sigma(0) = 0 · sigma'(0) = 0 · sigma''(0) = 0   =>  C^2
-       => NO hay salto de impedancia en el punto de contacto. LA ORIENTACION IMPORTA: la
-          rampa debe anularse en la INTERFAZ (donde vive el dominio fisico) y crecer hacia
-          el EXTREMO (donde ademas actua Mur-1 y el frente ya no vuelve). La pasada 1 la
-          tenia invertida (sigma maxima en la interfaz) y la cazo la sonda estructural:
+       Propiedad en la interfaz (d = 0): sigma(0) = 0 (C^0). LA ORIENTACION IMPORTA: la
+          rampa se anula en la INTERFAZ (donde vive el dominio fisico) y crece hacia el
+          EXTREMO (donde ademas actua Mur-1 y el frente ya no vuelve). La pasada 1 la tenia
+          invertida (sigma maxima en la interfaz) y la cazo la sonda estructural:
           ver /tmp/f4v3/pasada1_rampa_invertida.txt (blob e2d51ee4, sin corrida de fisica).
-          V2 (sen^2) ya anulaba sigma y sigma' en la interfaz, pero dejaba sigma'' != 0;
-          V3 cierra el termino cubico.
        sigma = sigmax en el nodo EXTREMO (d = L); sigma = 0 en todo el dominio fisico.
-       Atenuacion de un cruce: int_0^L sigma dd = sigmax * L / 4."""
+
+       POR QUE LINEAL Y NO MAS SUAVE (D-E refutado en su cura, MEDIDO): con int_sigma = A
+       fija, el exponente fija el PICO sigmax = (p+1)*A/L, y el pico ES la reflexion
+       (|R| ~ sigma/(4 omega) en la ley continua del artefacto de referencia): mas
+       suavidad => mas pico => mas reflexion. A L = 96, A = 25 (banco 4): p=0 (escalon)
+       -53.2756 | p=0.5 -49.8374 | p=1 (esta) -47.4885 | p=2 -44.2430, con int_sigma =
+       25.0000 en los cuatro.
+       Atenuacion de un cruce: int_0^L sigma dd = sigmax * L / 2 = A, EXACTO con
+       sigmax = 2A/L. Es el invariante que declara el artefacto de referencia
+       (int_sigma_una_via = args.esponja_A); con p = 3 esa integral valia A/2 (D-G)."""
     dl = np.clip((rs[0] + L) - rs, 0.0, L)      # profundidad desde la interfaz IZQUIERDA
     dr = np.clip(rs - (rs[-1] - L), 0.0, L)     # profundidad desde la interfaz DERECHA
-    sl = np.where(rs < rs[0] + L, sigmax * (dl / L) ** 3, 0.0)
-    sr = np.where(rs > rs[-1] - L, sigmax * (dr / L) ** 3, 0.0)
+    sl = np.where(rs < rs[0] + L, sigmax * (dl / L), 0.0)
+    sr = np.where(rs > rs[-1] - L, sigmax * (dr / L), 0.0)
     return sl + sr
 
 
@@ -555,8 +591,11 @@ def main(argv=None):
     ap.add_argument("--M", type=float, default=1.0)
     ap.add_argument("--delta0", type=float, default=0.05)
     ap.add_argument("--cfl", type=float, default=CFL_SELLADO)
-    ap.add_argument("--rsmin", type=float, default=-40.0)
-    ap.add_argument("--rsmax", type=float, default=150.0)
+    # D-H (2026-10-13): el dominio por defecto (-40.0, 150.0) solo alcanzaba para una
+    # capa de ~1 lambda, que NO puede pasar F4 con ningun perfil. El dominio se amplia
+    # para albergar la capa L = 96 medida (L/sigma_f = 48 => -47.49 dB, margen 7.49 dB).
+    ap.add_argument("--rsmin", type=float, default=-140.0)
+    ap.add_argument("--rsmax", type=float, default=280.0)
     ap.add_argument("--tmax", type=float, default=100.0)
     ap.add_argument("--xc", type=float, default=0.0)
     ap.add_argument("--sigma", type=float, default=3.0)
@@ -568,7 +607,12 @@ def main(argv=None):
     ap.add_argument("--t8b", type=float, default=90.0)
     ap.add_argument("--nulo-tmax", type=float, default=38.0)
     ap.add_argument("--nulo-tlo", type=float, default=5.0)
-    ap.add_argument("--sponge-L", type=float, default=12.0)
+    # D-H: espesor medido, no elegido a ojo: L = 96 = 48 * sigma_f. A L = 12 (~1 lambda)
+    # F4 es inalcanzable para cualquier perfil (el mejor, p=0, da -31.01 dB); el cruce de
+    # F4 (-40 dB) vive en L/sigma_f ~ 24. L/sigma_f = 48 deja 7.49 dB de margen.
+    ap.add_argument("--sponge-L", type=float, default=96.0)
+    # A PRESERVADO: es el invariante declarado por el artefacto de referencia
+    # (int_sigma_una_via). No se baja: con p = 1 la integral vale A EXACTO.
     ap.add_argument("--sponge-A", type=float, default=25.0)
     ap.add_argument("--offset", default="no-anidado", choices=["literal", "no-anidado"])
     ap.add_argument("--outdir", default="sim/data")
