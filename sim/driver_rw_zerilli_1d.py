@@ -59,6 +59,14 @@ Fase V3, PASADA 3 (orden del dueno, 2026-10-13) -- los cuatro hallazgos del cicl
     verificada a 4 digitos). => --sponge-L por defecto 12 -> 96 (L/sigma_f = 48) y dominio
     ampliado para albergarla. El residuo tardio NUNCA supera la reflexion de prompt
     (L=48: -44.1762 tardio vs -40.8565 prompt) => F4 no tapa una cola.
+(v) PASADA 3b, GUARDAS FAIL-CLOSED (no mueven ningun numero con configuracion valida):
+    (a) en solve(): si 2*sponge_L >= ancho del dominio las dos capas se SOLAPAN, sus
+    INTERFACES se cruzan y NO QUEDA DOMINIO FISICO -- la corrida no fallaria, se volveria
+    muda. Medido (sonda estructural, dominio V2 (-40, 150) con L = 96): interfaces en
+    +56.0 y +54.0 (cruzadas) y region fisica vacia. (b) en suite_frontera(): el monitor
+    debe caer FUERA de su capa esponja, o mide una incidente ya atenuada (D-F); la guarda
+    impide que D-F vuelva si cambia --sponge-L. Ambas abortan con SystemExit llevando los
+    numeros; los cuatro bancos de este ciclo las satisfacen.
 
 Mur-1 pura ya daba -90.66 dB: la frontera exterior era impecable y el reflector es la
 capa disipativa (control A=0 -> -90.6623/-90.6620 dB). El borde del DOMINIO no es lo
@@ -272,6 +280,22 @@ def solve(rs, h, cfl, V, psi0, vhalf, tmax, sponge_L, sponge_A, obs_x, diag=None
     """
     dt = cfl * h
     nsteps = int(round(tmax / dt))
+
+    # V3 (D-H, PASADA 3b): GUARDA DE CONFIGURACION (fail-closed). La capa esponja se mide
+    # desde CADA extremo: si 2*L alcanza o cruza el ancho del dominio, las dos capas se
+    # SOLAPAN, sus INTERFACES se cruzan y NO QUEDA DOMINIO FISICO. La corrida no falla, se
+    # vuelve muda (medido con la sonda estructural: dominio V2 (-40, 150) con L = 96 da
+    # interfaces +56.0 y +54.0 y region fisica vacia, ValueError: zero-size array).
+    # Una salida que no puede diferir no es evidencia => se aborta llevando los numeros.
+    ancho_dominio = float(rs[-1] - rs[0])
+    if 2.0 * sponge_L >= ancho_dominio:
+        raise SystemExit(
+            "CONFIG INVALIDA: 2*sponge_L = %.6f >= ancho del dominio = %.6f "
+            "(sponge_L = %.6f, rs = [%.3f, %.3f]): las capas esponja se solapan y no "
+            "queda dominio fisico. Ensanche el dominio o reduzca --sponge-L."
+            % (2.0 * sponge_L, ancho_dominio, sponge_L, rs[0], rs[-1])
+        )
+
     sigmax = 2.0 * sponge_A / sponge_L
     sigma = sponge_sigma(rs, sponge_L, sponge_A, sigmax)
     alpha = 0.5 * sigma * dt
@@ -477,6 +501,25 @@ def suite_frontera(args):
             t_inc = xc - mon
             t_ref = (xc - rs[0]) + (mon - rs[0])
             v0 = (-(rs - xc) / (args.sigma_f ** 2) * gauss(rs, xc, args.sigma_f))
+
+        # V3 (D-F, PASADA 3b): GUARDA DE MONITOR (fail-closed). El monitor DEBE caer FUERA
+        # de la capa esponja: dentro de ella mide una incidente YA ATENUADA (V2: mon = -30
+        # dentro de la capa [-40, -28] daba A_inc = 0.7317). La guarda usa la MISMA
+        # geometria que solve(), asi que D-F no puede volver si cambia --sponge-L.
+        if lado == "derecha":
+            mon_fuera_de_capa = mon < rs[-1] - args.sponge_L
+            capa = "[%.3f, %.3f]" % (rs[-1] - args.sponge_L, rs[-1])
+        else:
+            mon_fuera_de_capa = mon > rs[0] + args.sponge_L
+            capa = "[%.3f, %.3f]" % (rs[0], rs[0] + args.sponge_L)
+        if not mon_fuera_de_capa:
+            raise SystemExit(
+                "CONFIG INVALIDA: el monitor r* = %.3f (%s) cae DENTRO de la capa "
+                "esponja %s (sponge_L = %.3f): mediria una incidente ya atenuada. "
+                "Mueva el monitor o reduzca --sponge-L."
+                % (mon, lado, capa, args.sponge_L)
+            )
+
         psi0 = gauss(rs, xc, args.sigma_f)
         vhalf = v0 + 0.5 * dt * laplaciano(psi0, h, V)
         g = solve(rs, h, CFL_SELLADO, V, psi0, vhalf, max(t_ref + 30.0, 120.0),
