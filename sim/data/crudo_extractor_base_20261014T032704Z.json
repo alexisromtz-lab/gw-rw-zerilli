@@ -1,0 +1,240 @@
+{
+ "cabecera": {
+  "instrumento": "extractor_polos_matrixpencil (MPM + Prony/LP)",
+  "huella": "HUELLA-EXTRACTOR-ESPECTRAL-PRONY-MATRIXPENCIL-20261013",
+  "preregistro": {
+   "ruta": "sim/PREREGISTRO_EXTRACTOR_ESPECTRAL_20261013.md",
+   "sha16": "3a707f6cade6d6bc",
+   "blob": "ecd55fef00a79ca3d5e239e232c680791f8f6edb",
+   "append_only": 1
+  },
+  "t_utc": "2026-10-14T03:19:50Z",
+  "universo_declarado": "sim/extractor_polos_matrixpencil.py (1 pieza) + sim/driver_rw_zerilli_1d.py (1 pieza, SOLO LECTURA) + el crudo que este instrumento escribe",
+  "motor": {
+   "python": "3.14.7",
+   "numpy": "2.4.6",
+   "plataforma": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+   "scipy": "1.17.1"
+  },
+  "unidad_declarada": "linea | polo | valor singular | muestra | decibelio",
+  "ventana_declarada": "reloj UTC de esta cabecera",
+  "no_finitos": "los valores no finitos se imprimen como null, NUNCA como 0",
+  "defectos_del_metro_declarados": {
+   "F5_inertes_por_construccion": "Z es real => eigvals devuelve pares conjugados exactos => residuo_conjugado = 0.0 siempre; F5 no puede diferir. Medido en los tres casos limpios.",
+   "F2_dominio": "el sello dice 'sin ruido'; la V1 lo evaluaba tambien con ruido, donde el conteo de valores singulares mide el piso de ruido. Corregido a la letra del sello: sin ruido.",
+   "F7_frontera": "W menor que 20 periodos del modo mas lento: FRONTERA, no falla.",
+   "ventana_del_sello": "el barrido sellado (20..320 periodos del modo mas lento) implica T ~ 337.6 unidades de tiempo, donde el polo 1 vale ~1e-13 y no hay objeto que extraer. Se declara en dominio_del_sello; no se baja el umbral."
+  },
+  "argv": [
+   "sim/extractor_polos_matrixpencil.py",
+   "--modo",
+   "serie",
+   "--serie",
+   "sim/data/serie_2d_f3_obs_20261014T030807Z.json",
+   "--t1",
+   "64.041775",
+   "--t2",
+   "568.485694",
+   "--K",
+   "3"
+  ],
+  "modo": "serie",
+  "sha256_self_16": "bd02127657d69bb0",
+  "blob_self": "4fb04ab780acf4f7eedcf0ea8c5c5757fe696d47",
+  "driver": {
+   "ruta": "sim/driver_rw_zerilli_1d.py",
+   "sha256_16": "45e63b3803a51595",
+   "blob": "d6b899c6d142254dd025d6c8ef4b0fbf13d715e7",
+   "modificado_por_este_instrumento": 0
+  },
+  "constantes": {
+   "EPS": 2.220446049250313e-16,
+   "RANK_REL": 1e-12,
+   "SEMILLA_RUIDO": 20261013,
+   "UMBRAL_C1": 1e-14,
+   "UMBRAL_F1": 1e-13,
+   "UMBRAL_F3_GAP": 1000000.0,
+   "UMBRAL_F4_COND": 10000000000.0,
+   "UMBRAL_F5_CONJ": 1e-10,
+   "UMBRAL_F7_PERIODOS": 20.0,
+   "UMBRAL_F8": 0.05,
+   "TOL_EMPAREJA": 0.25
+  }
+ },
+ "serie": {
+  "fuente": {
+   "tipo": "archivo",
+   "info": {
+    "archivo": "/Users/marlene/gw-rw-zerilli/sim/data/serie_2d_f3_obs_20261014T030807Z.json",
+    "n": 26190,
+    "dt_mediano": 0.02367404381578808,
+    "uniforme": 1,
+    "dt_max_desvio": 5.684341886080802e-14,
+    "sha256_16": "3e05db4df98688f2"
+   }
+  },
+  "ventana": {
+   "t1": 64.041775,
+   "t2": 568.485694,
+   "n": 21308,
+   "T": 504.42285158326,
+   "dt": 0.02367404381578808,
+   "escala_normalizacion": 0.004560845223671172
+  },
+  "mpm": {
+   "polos": [
+    {
+     "wR": 0.1963887435258751,
+     "wI": 0.01221180949439704,
+     "z_re": 0.9997001339485074,
+     "z_im": 0.004647955037537639,
+     "s_re": -0.01221180949439704,
+     "s_im": 0.1963887435258751,
+     "abs_s": 0.19676805349141258,
+     "abs_s_dt": 0.0046582955199030345,
+     "modA": 0.4068024399334237,
+     "fase": -1.0102826562219487
+    },
+    {
+     "wR": 0.14967631490536906,
+     "wI": 0.0024103058046065235,
+     "z_re": 0.9999366623111454,
+     "z_im": 0.0035432340333442615,
+     "s_re": -0.0024103058046065235,
+     "s_im": 0.14967631490536906,
+     "abs_s": 0.1496957207729163,
+     "abs_s_dt": 0.0035439030526139984,
+     "modA": 0.31401760566490206,
+     "fase": 0.08090209095563325
+    },
+    {
+     "wR": 0.07536469259640277,
+     "wI": 0.0034197893641355888,
+     "z_re": 0.9999174515015357,
+     "z_im": 0.0017840416457908384,
+     "s_re": -0.0034197893641355888,
+     "s_im": 0.07536469259640277,
+     "abs_s": 0.07544224181084058,
+     "abs_s_dt": 0.0017860229381911196,
+     "modA": 0.2943523174848531,
+     "fase": 3.1020311060912165
+    }
+   ],
+   "L": 10654,
+   "M": 10654,
+   "rango_declarado": 6,
+   "sv_top": 1068.733841184707,
+   "sv_min_empaquetado": 8.575844176901591e-16,
+   "rank_rel_1e-12": 184,
+   "rank_efectivo_2K": 1,
+   "gap_sv_2K_2K1": 1.1710914464832871,
+   "cond_Z": 1.0010050514335687,
+   "residuo_conjugado": 0.0,
+   "residuo_conjugado_evaluado": 1,
+   "residuo_conjugado_pares": [
+    {
+     "i": 0,
+     "j": 1,
+     "dist_abs": 0.0,
+     "dist_rel": 0.0
+    },
+    {
+     "i": 2,
+     "j": 3,
+     "dist_abs": 0.0,
+     "dist_rel": 0.0
+    },
+    {
+     "i": 4,
+     "j": 5,
+     "dist_abs": 0.0,
+     "dist_rel": 0.0
+    }
+   ],
+   "residuo_reconstruccion_abs": 19.319781826055188,
+   "residuo_reconstruccion_rel": 0.5467671714139543
+  },
+  "prony": {
+   "polos": [
+    {
+     "wR": 1.6045723838016064,
+     "wI": 0.00685982120000638,
+     "z_re": 0.9991163220494002,
+     "z_im": 0.03797141478512836,
+     "s_re": -0.00685982120000638,
+     "s_im": 1.6045723838016064,
+     "abs_s": 1.6045870471886734,
+     "abs_s_dt": 0.03798706406139067,
+     "modA": 0.0034985387196905062,
+     "fase": -1.5164065283688877
+    },
+    {
+     "wR": 0.5259554356201942,
+     "wI": 0.00446058331597495,
+     "z_re": 0.9998168948908681,
+     "z_im": 0.012449855509963805,
+     "s_re": -0.00446058331597495,
+     "s_im": 0.5259554356201942,
+     "abs_s": 0.5259743501939491,
+     "abs_s_dt": 0.012451939812472217,
+     "modA": 0.015544540099330791,
+     "fase": 1.8819478271677426
+    },
+    {
+     "wR": 0.15947971448064796,
+     "wI": 0.001985695870065627,
+     "z_re": 0.999945864684963,
+     "z_im": 0.0037753432975697566,
+     "s_re": -0.001985695870065627,
+     "s_im": 0.15947971448064796,
+     "abs_s": 0.1594920760380195,
+     "abs_s_dt": 0.0037758223963950776,
+     "modA": 0.2249942181069781,
+     "fase": -0.8370140511866753
+    }
+   ],
+   "p": 6,
+   "filas_LS": 21302,
+   "cond_A": 187607886355.27228,
+   "residuo_LS": 2.476058392683952e-10,
+   "norma_b": 35.32524645233857,
+   "residuo_rel_LS": 7.009316682403597e-12,
+   "residuo_reconstruccion_abs": 31.806530316682103,
+   "residuo_reconstruccion_rel": 0.9001533645835892
+  },
+  "leaver_ref": {
+   "wR": 0.37367,
+   "wI": 0.08896,
+   "M_ref": "0.37367 - 0.08896 i (l=2, n=0) [REF]"
+  },
+  "contraste_leaver": [
+   {
+    "wR": 0.1963887435258751,
+    "wI": 0.01221180949439704,
+    "abs_s_dt": 0.0046582955199030345,
+    "modA": 0.4068024399334237,
+    "ds_abs": 0.19318107734177478,
+    "ds_rel": 0.5029271224047193,
+    "F8": 1
+   },
+   {
+    "wR": 0.14967631490536906,
+    "wI": 0.0024103058046065235,
+    "abs_s_dt": 0.0035439030526139984,
+    "modA": 0.31401760566490206,
+    "ds_abs": 0.24013333905892537,
+    "ds_rel": 0.6251625204091668,
+    "F8": 1
+   },
+   {
+    "wR": 0.07536469259640277,
+    "wI": 0.0034197893641355888,
+    "abs_s_dt": 0.0017860229381911196,
+    "modA": 0.2943523174848531,
+    "ds_abs": 0.31032754318748873,
+    "ds_rel": 0.8079059318117793,
+    "F8": 1
+   }
+  ]
+ }
+}

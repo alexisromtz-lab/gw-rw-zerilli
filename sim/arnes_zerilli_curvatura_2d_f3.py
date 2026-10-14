@@ -6,6 +6,10 @@ HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013
 HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3   <- revision R3 (cinematica + C6 + C4)
 HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R4   <- revision R4 (D16 dominio de C4 + D17 piso
                                                       del metro de C6). NO mueve ningun umbral.
+HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-P4-SERIE  <- revision P4 (volcado de la serie de
+                                                      observacion Psi(t, r*_obs) + longitud y nt
+                                                      por CLI para el extractor espectral).
+                                                      NO mueve ningun umbral.
 
 PADRE (append-only, NO se edita): sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md
 ERRATA 1 (sellada en git):       sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md
@@ -149,6 +153,9 @@ HUELLA_V3 = "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013"
 HUELLA_R2 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R2"
 HUELLA_R3 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3"
 HUELLA_R4 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R4"
+HUELLA_P4 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-P4-SERIE"
+LEAVER_WR_M = 0.37367   # P4: Leaver l = 2, n = 0 en unidades de M (misma cifra que publica el
+LEAVER_WI_M = 0.08896   # extractor). Solo ROTULA la serie y la ventana declarada: no decide.
 PREREGISTRO = "sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md"
 ERRATA = "sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md"
 ARNES_F11 = "sim/arnes_capa_absorbente_2d_f11.py"
@@ -756,7 +763,8 @@ def piso_operador_theta(nt, frac_fila=FRAC_FILA_VIVA):
     return {"nt": nt, "hth": float(hth), "piso_por_paso": float(rel)}
 
 
-def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, u0, v0, sigma, capturas=()):
+def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, u0, v0, sigma, capturas=(),
+               serie=None):
     """R3: el dato (u0, v0) entra ya construido desde main, para que la corrida ON y la OFF usen
     el MISMO objeto y la unica diferencia entre ambas sea la capa."""
     ip = int(np.argmin(np.abs(m.rs - g["p"])))
@@ -767,9 +775,14 @@ def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, u0, v0, sigma, capt
     caps = {}
     pedidos = set(int(x) for x in capturas)
     med = f11.Medidor(m, ip, m.hr, m.th, m.hth, filas, ())
+    p2_s = perfil_p2(m.th) if serie is not None else None
+    sin_s = np.sin(m.th) if serie is not None else None
 
     def sonda(k, u, v):
         med(k, u, v)
+        if serie is not None:
+            serie["t"].append(float(k) * dt)
+            serie["psi_obs"].append(float(np.sum(u[ip, :] * p2_s * sin_s) * m.hth))
         if k in pedidos:
             caps[int(k)] = u.copy()
 
@@ -1092,6 +1105,19 @@ def main(argv=None):
     ap.add_argument("--L-frac", dest="L_frac", type=float, default=L_FRAC)
     ap.add_argument("--n", type=int, default=N_PERFIL)
     ap.add_argument("--A", type=float, default=A_ESPONJA)
+    ap.add_argument("--nsteps", type=int, default=None,
+                    help="P4: numero LITERAL de pasos de la evolucion (extiende la corrida mas "
+                         "alla de T_obs del sello). NO mueve ventanas ni umbrales")
+    ap.add_argument("--t-final", dest="t_final", type=float, default=None,
+                    help="P4: alternativa FISICA a --nsteps: nsteps = ceil(t_final / dt) con el "
+                         "dt de la malla declarada (excluyente con --nsteps)")
+    ap.add_argument("--nt", type=int, default=None,
+                    help="P4: nt objetivo de la escalera sellada nt = (nt0-1)*2^nivel + 1 "
+                         "(33, 65, 129, ...); fuera de la escalera falla cerrado")
+    ap.add_argument("--serie-ruta", dest="serie_ruta", default="auto",
+                    help="P4: destino del volcado de la serie de observacion Psi(t, r*_obs) JSON")
+    ap.add_argument("--sin-serie", dest="sin_serie", action="store_true",
+                    help="P4: NO volcar la serie de observacion")
     ap.add_argument("--solo-controles", dest="solo", default=None)
     ap.add_argument("--json", dest="json_ruta", default="auto")
     ap.add_argument("--estricto", action="store_true")
@@ -1104,6 +1130,37 @@ def main(argv=None):
     if int(a.n) != N_PERFIL:
         raise SystemExit("FAIL-CLOSED: perfil n = %d fuera de la familia sellada (F11: n = 3)"
                          % int(a.n))
+
+    # ---------------- P4: guardas del contrato de longitud / nt (fail-closed) ----------------
+    if a.nsteps is not None and a.t_final is not None:
+        raise SystemExit("FAIL-CLOSED P4: --nsteps y --t-final son mutuamente excluyentes (el "
+                         "contrato pide UNA longitud declarada)")
+    if a.nsteps is not None and int(a.nsteps) <= 0:
+        raise SystemExit("FAIL-CLOSED P4: --nsteps = %d no es positivo" % int(a.nsteps))
+    if a.t_final is not None and float(a.t_final) <= 0.0:
+        raise SystemExit("FAIL-CLOSED P4: --t-final = %r no es positivo" % float(a.t_final))
+    nivel_p4 = 0
+    nt_escalera_p4 = (int(a.nt0) - 1) * (2 ** nivel_p4) + 1
+    if a.nt is not None:
+        nt_p4 = int(a.nt)
+        base_p4 = int(a.nt0) - 1
+        if nt_p4 < 1 or base_p4 < 1:
+            raise SystemExit("FAIL-CLOSED P4: nt = %d o nt0 = %d degenerados"
+                             % (nt_p4, int(a.nt0)))
+        razon_p4 = (nt_p4 - 1.0) / float(base_p4)
+        nivel_p4 = -1
+        for _nv in range(0, 13):
+            if base_p4 * (2 ** _nv) + 1 == nt_p4:
+                nivel_p4 = _nv
+                break
+        if nivel_p4 < 0:
+            raise SystemExit("FAIL-CLOSED P4: nt = %d NO esta en la escalera sellada "
+                             "nt = (nt0-1)*2^nivel + 1 con nt0 = %d (33, 65, 129, ...): razon = "
+                             "%.12f no es potencia de 2" % (nt_p4, int(a.nt0), razon_p4))
+        nt_escalera_p4 = nt_p4
+        print("P4 ESCALERA DECLARADA: nt = %d desde nt0 = %d con nivel = %d; el nivel refina "
+              "TAMBIEN el radio (hr y delta de f2.Malla2D), luego el dt declarado es el de esa "
+              "malla y no el de la malla sellada" % (nt_p4, int(a.nt0), nivel_p4))
 
     t0 = utc_now()
 
@@ -1145,7 +1202,7 @@ def main(argv=None):
         gd = guarda_soporte_dato(g["rs_min"], g["rs_sponge"], rs_dato, a.sigma)
         if not gd["ok"]:
             raise SystemExit("FAIL-CLOSED R3 (D15): " + gd["causa"])
-        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), 0)
+        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), nivel_p4)
         u0, v0 = dato_saliente_l2(m, rs_dato, a.sigma, float(a.omega))
         dato_declarado = ("SALIENTE PURO de F11 (f11.dato_saliente verbatim) x P_2(cos theta): "
                           "c = %.6f, sigma = %.6f, omega = %.6f, v^0 = -d_r u^0"
@@ -1155,7 +1212,7 @@ def main(argv=None):
         rs_dato = float(a.rs0)
         g_win["c"] = rs_dato
         gd = guarda_soporte_dato(g["rs_min"], g["rs_sponge"], rs_dato, a.sigma)
-        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), 0)
+        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), nivel_p4)
         u0 = dato_f3(m, rs_dato, a.sigma)
         v0 = np.zeros_like(u0)
         dato_declarado = ("ESTATICO de §R5 (FALSADOR del ROJO): c = %.6f, sigma = %.6f, v^0 = 0"
@@ -1178,7 +1235,17 @@ def main(argv=None):
                                                      # paso que puede decidir)
     k_ret = int(math.floor(vw["t_ret"] / dt))        # primer retorno posible al anillo (fuera del
                                                      # dominio: informativo)
-    nsteps = int(math.ceil(vw["T_obs"] / dt))
+    nsteps_sello = int(math.ceil(vw["T_obs"] / dt))  # R4: la longitud CERTIFICADA del gate
+    nsteps = int(nsteps_sello)
+    if a.t_final is not None:                         # P4: longitud por tiempo fisico declarado
+        nsteps = int(math.ceil(float(a.t_final) / dt))
+    if a.nsteps is not None:                          # P4: longitud LITERAL en pasos
+        nsteps = int(a.nsteps)
+    if nsteps < nsteps_sello:
+        raise SystemExit("FAIL-CLOSED P4: nsteps = %d < %d = ceil(T_obs/dt): esta corrida "
+                         "EXTIENDE la longitud, no la acorta" % (nsteps, nsteps_sello))
+    extension_p4 = bool(nsteps != nsteps_sello or int(m.nivel) != 0)
+    t_final_p4 = float(nsteps) * dt
     caps_c4 = (k_pro, k_pro2, k_a, k_b, k_ret, nsteps)
     max_inc = float(np.max(np.abs(u0)))
 
@@ -1188,6 +1255,7 @@ def main(argv=None):
     print("HUELLA = %s" % HUELLA)
     print("HUELLA R3 = %s" % HUELLA_R3)
     print("HUELLA R4 = %s" % HUELLA_R4)
+    print("HUELLA P4 = %s" % HUELLA_P4)
     print("hora_utc = %s" % hora_utc())
     print("DATO DECLARADO = %s" % dato_declarado)
     print("GUARDA DE SOPORTE DEL DATO (D15): %s" % gd["causa"])
@@ -1208,6 +1276,11 @@ def main(argv=None):
           "%s | captura heredada de F11 k_a = %d (t = %.6f) -> DENTRO del dominio"
           % (dt, nsteps, vw["t_s"], k_b, str([k_a, k_b]), str([k_ret, nsteps]),
              str([int(x) for x in caps_c4]), k_a, k_a * dt))
+    print("P4 LONGITUD DECLARADA: nsteps = %d (sello R4 = %d, T_obs = %.6f) | t_final = %.6f | "
+          "nt = %d (sello %d) | nivel = %d | nr = %d | dt = %.18e | extension_declarada = %s | "
+          "ventanas de f11.ventanas y umbrales INTACTOS"
+          % (nsteps, nsteps_sello, float(vw["T_obs"]), t_final_p4, int(m.nt), int(NT0),
+             int(m.nivel), int(m.nr), dt, bool(extension_p4)))
     print("D7 CRONOLOGIA DECLARADA (unidades de r* = unidades de t): mitad saliente: anillo "
           "%.3f, esponja %.3f, retorno al anillo %.3f"
           % (cron["T_centro_saliente_en_anillo"], cron["T_centro_saliente_en_esponja"],
@@ -1235,8 +1308,9 @@ def main(argv=None):
         print("[%s] rc=%s ok=%s" % (r.get("control"), r.get("rc"), r.get("ok")))
         print("    %s" % r.get("causa", ""))
 
+    serie_obs = None if a.sin_serie else {"t": [], "psi_obs": []}
     res_on = corrida_c2(m, g, g_win, dt, nsteps, True, pot, wang, u0, v0, a.sigma,
-                        capturas=caps_c4)
+                        capturas=caps_c4, serie=serie_obs)
     res_off = corrida_c2(m, g, g_win, dt, nsteps, False, pot, wang, u0, v0, a.sigma,
                          capturas=caps_c4)
     c4 = control_C4(m, g, dt, pot, wang, res_on, res_off, (k_a, k_b),
@@ -1315,6 +1389,92 @@ def main(argv=None):
     print("CONTROLES INFORMATIVOS (no deciden): %s" % ", ".join(x["control"] for x in informativos))
     print("VEREDICTO = %s | rojos = %s" % (veredicto, rojos if rojos else "ninguno"))
 
+    # ---------------- P4: serie de observacion Psi(t, r*_obs) para el extractor espectral --------
+    M_p4 = float(a.dosM) / 2.0
+    T_lento_p4 = 2.0 * math.pi * M_p4 / LEAVER_WR_M
+    tau_p4 = M_p4 / LEAVER_WI_M
+    t1_p4 = float(max(vw["t_ret"], vw["t_s"])) + 4.0
+    t2_p4 = t1_p4 + 20.0 * T_lento_p4
+    t2_vivo_p4 = t1_p4 + 5.0 * tau_p4
+    info_serie = None
+    if serie_obs is not None:
+        t_s_p4 = np.asarray(serie_obs["t"], dtype=float)
+        y_s_p4 = np.asarray(serie_obs["psi_obs"], dtype=float)
+        cuerpo_serie = {
+            "huella": HUELLA_P4,
+            "huella_arnes": HUELLA,
+            "universo_declarado": ("serie de OBSERVACION del arnes F3: proyeccion l = 2 del CAMPO "
+                                   "en el anillo r*_obs de la malla declarada (2M = %.1f, "
+                                   "l = %d, nt = %d, nivel = %d)"
+                                   % (float(a.dosM), L_ANGO, int(m.nt), int(m.nivel))),
+            "hora_utc": hora_utc(),
+            "t": [float(x) for x in t_s_p4],
+            "psi_obs": [float(x) for x in y_s_p4],
+            "meta": {
+                "definicion_psi_obs": "psi_obs(t) = hth * suma_theta u[ip, theta] * P_2(cos "
+                                       "theta) * sin(theta): proyeccion l = 2 del CAMPO "
+                                       "(LINEAL en el modo). No se vuelca P(t) del medidor de "
+                                       "F11: la energia es CUADRATICA en la amplitud y una "
+                                       "extraccion sobre ella devolveria 2*omega",
+                "normalizacion": "sin normalizar; el extractor normaliza por max|y| (escala "
+                                 "irrelevante para f y tau)",
+                "r_star_obs": p_eff, "ip": int(ip), "dt": dt, "n": int(t_s_p4.size),
+                "t_final": (float(t_s_p4[-1]) if t_s_p4.size else None),
+                "nsteps": int(nsteps), "nsteps_del_sello_R4": int(nsteps_sello),
+                "nr": int(m.nr), "nt": int(m.nt), "nivel": int(m.nivel),
+                "hth": float(m.hth), "hr": float(m.hr),
+                "dosM": float(a.dosM), "M": M_p4, "l": L_ANGO,
+                "dato": a.dato, "rs_dato": float(rs_dato), "sigma": float(a.sigma),
+                "extension_declarada": bool(extension_p4),
+                "leaver_ref_unidades_de_M": {"wR": LEAVER_WR_M, "wI": LEAVER_WI_M},
+                "leaver_ref_unidades_de_tiempo": {"wR": LEAVER_WR_M / M_p4,
+                                                  "wI": LEAVER_WI_M / M_p4,
+                                                  "f": (LEAVER_WR_M / M_p4) / (2.0 * math.pi),
+                                                  "tau": 1.0 / (LEAVER_WI_M / M_p4)},
+                "contraste_con_el_extractor": ("el extractor imprime wR, wI en unidades de "
+                                                "tiempo (modo serie): multiplicar por M = %.6f "
+                                                "antes de comparar con Leaver en unidades de M"
+                                                % M_p4),
+                "ventanas_declaradas": {
+                    "criterio": ("t1 = max(t_ret, t_s) + 4.0 (el eco de la capa ya paso); el "
+                                 "modo l = 2 n = 0 muere en ~5 tau = %.3f, mas alla manda la "
+                                 "cola dispersiva: la ventana de 20 periodos cumple el piso F7 "
+                                 "del extractor pero NO es la ventana donde el modo domina"
+                                 % (5.0 * tau_p4)),
+                    "veinte_periodos": {"t1": t1_p4, "t2": t2_p4, "W": t2_p4 - t1_p4,
+                                        "T_lento": T_lento_p4, "periodos": 20.0,
+                                        "dentro_del_registro": bool(t2_p4 <= float(t_s_p4[-1]))},
+                    "modo_vivo_cinco_tau": {"t1": t1_p4, "t2": t2_vivo_p4,
+                                            "W": t2_vivo_p4 - t1_p4, "tau_esperado": tau_p4,
+                                            "taus": 5.0,
+                                            "dentro_del_registro": bool(t2_vivo_p4 <=
+                                                                        float(t_s_p4[-1]))},
+                },
+            },
+        }
+        ruta_serie = a.serie_ruta
+        if ruta_serie == "auto":
+            os.makedirs(os.path.join(_AQUI, "data"), exist_ok=True)
+            ruta_serie = os.path.join(_AQUI, "data", "serie_2d_f3_obs_%s.json" % stamp_utc())
+        with open(ruta_serie, "w", encoding="utf-8") as fh:
+            json.dump(cuerpo_serie, fh, ensure_ascii=False)
+            fh.write("\n")
+        with open(ruta_serie, "rb") as fh:
+            bytes_serie = fh.read()
+        sha_serie = hashlib.sha256(bytes_serie).hexdigest()
+        info_serie = {"volcada": True, "ruta": ruta_serie, "n": int(t_s_p4.size),
+                      "bytes": len(bytes_serie), "sha256": sha_serie,
+                      "sha256_16": sha_serie[:16], "r_star_obs": p_eff, "dt": dt,
+                      "t_final": (float(t_s_p4[-1]) if t_s_p4.size else None),
+                      "ventanas_declaradas_en_meta": True}
+        print("serie de observacion Psi(t): %s | n = %d | bytes = %d | sha256 = %s"
+              % (info_serie["ruta"], info_serie["n"], info_serie["bytes"], sha_serie))
+        print("    r*_obs = %.16f | dt = %.18e | t en [%.6f, %.6f] | ventana 20 periodos = "
+              "[%.6f, %.6f] dentro = %s | ventana 5 tau = [%.6f, %.6f] dentro = %s"
+              % (p_eff, dt, float(t_s_p4[0]), float(t_s_p4[-1]), t1_p4, t2_p4,
+                 bool(t2_p4 <= float(t_s_p4[-1])), t1_p4, t2_vivo_p4,
+                 bool(t2_vivo_p4 <= float(t_s_p4[-1]))))
+
     crudo = {
         "huella": HUELLA,
         "huella_preregistro": HUELLA_PREREGISTRO,
@@ -1324,6 +1484,7 @@ def main(argv=None):
         "huella_r2": HUELLA_R2,
         "huella_r3": HUELLA_R3,
         "huella_r4": HUELLA_R4,
+        "huella_p4": HUELLA_P4,
         "huella_dueno_en_crudo": 0,
         "preregistro": PREREGISTRO,
         "errata": ERRATA,
@@ -1400,6 +1561,30 @@ def main(argv=None):
                                 "angular, 2.239675e-04 por aplicacion en nt0 = 33; el piso de "
                                 "campo converge x5.6-x6.3 por duplicacion de nt0: la impureza no-P_2 "
                                 "es discretizacion en theta, no fisica)"],
+        "extension_declarada": {
+            "usada": bool(extension_p4),
+            "nsteps": int(nsteps), "nsteps_del_sello_R4": int(nsteps_sello),
+            "t_final": t_final_p4, "T_obs_del_sello": float(vw["T_obs"]),
+            "nt": int(m.nt), "nt_del_sello_R4": int(NT0), "nt_de_la_escalera_pedido":
+                int(nt_escalera_p4), "nivel": int(m.nivel), "nr": int(m.nr), "dt": dt,
+            "nsteps_pedido": (int(a.nsteps) if a.nsteps is not None else None),
+            "t_final_pedido": (float(a.t_final) if a.t_final is not None else None),
+            "criterio": "R4 certifica la malla sellada (nsteps = ceil(T_obs/dt), nt = 33). Esta "
+                        "corrida puede EXTENDER la longitud y/o subir nt sobre la escalera "
+                        "sellada para alimentar al extractor espectral. Ninguna ventana de "
+                        "f11.ventanas y ningun umbral se mueven; con usada = True esta corrida "
+                        "NO es el certificado del gate (el certificado es el crudo R4 de la "
+                        "malla sellada)",
+            "umbral_R_dB_no_movido": UMBRAL_R_DB,
+            "umbral_C4_no_movido": UMBRAL_C4,
+            "umbral_C6_no_movido": UMBRAL_C6,
+            "umbral_C6_de_razon_al_piso_no_movido": UMBRAL_C6_RAZON,
+            "aviso_del_dt": "con nivel > 0 el nivel refina tambien el radio y el dt de "
+                            "f2.Malla2D BAJA (la cota es de la malla): el mismo t_final exige "
+                            "mas pasos que en la malla sellada",
+        },
+        "serie_de_observacion": (info_serie if info_serie is not None else
+                                 {"volcada": False, "causa": "corrida con --sin-serie"}),
         "notas": ["dt_cota tomada con f = 1 (la de F11): conservadora porque f <= 1 en r > 2M",
                   "el factor geometrico del medidor es r*^2 (F11) y cancela en R_dB",
                   "R_dB es una RAZON en energia: no se re-ventanea ni se mueve ningun umbral",
@@ -1419,7 +1604,18 @@ def main(argv=None):
                   "1e-12 queda en el crudo como cifra NO movida",
                   "R4: la captura final (k = nsteps) va como INFORMATIVA porque el campo a t > 60 "
                   "no esta convergido en theta (max|u| = 2.2633e-02 en nt0 = 33 vs 9.3697e-01 "
-                  "en nt0 = 65); se declara con su respaldo y su hora"],
+                  "en nt0 = 65); se declara con su respaldo y su hora",
+                  "P4: la serie de observacion es la proyeccion l = 2 del CAMPO en el anillo "
+                  "r*_obs (lineal en el modo); el P(t) del medidor F11 es ENERGIA (cuadratica), "
+                  "luego una extraccion de polos sobre el devolveria 2*omega y NO se vuelca",
+                  "P4: --nsteps es LITERAL y --t-final es fisico (nsteps = ceil(t_final/dt)); con "
+                  "nivel > 0 el dt de f2.Malla2D baja, asi que un mismo t_final exige mas pasos "
+                  "que en la malla sellada (cifras del crudo: extension_declarada)",
+                  "P4: la escalera de nt es la sellada nt = (nt0-1)*2^nivel + 1 (33, 65, 129) y el "
+                  "nivel refina tambien el radio; fuera de la escalera el arnes falla cerrado",
+                  "P4: ningun umbral se mueve (R_dB = -40.0 dB, C4 = 1e-13, C6 = 1e-12 y su razon "
+                  "al piso = 1.0); la corrida extendida se DECLARA y no es el certificado del "
+                  "gate"],
     }
     ruta = a.json_ruta
     if ruta == "auto":

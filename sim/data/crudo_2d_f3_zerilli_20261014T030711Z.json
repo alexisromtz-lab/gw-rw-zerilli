@@ -1,0 +1,600 @@
+{
+ "campos": {
+  "U_r_max": -2.446702211607451e-05,
+  "U_r_min": -0.031928810604302416,
+  "max_abs_U": 0.031928810604302416,
+  "r_max_de_rs_max": 87.92862771945147,
+  "r_min_de_rs_min": 4.39046756816955,
+  "r_star_en_max_abs_U": 2.08355091383812
+ },
+ "casa_f11": "sim/arnes_capa_absorbente_2d_f11.py",
+ "casa_v3": "sim/arnes_richardson_2d_f2_v3.py",
+ "controles": {
+  "C0": {
+   "causa": "U(M=0) = 2.775558e-17 <= 1e-14 : PASA | diff vs F11 (a, l=0, sin esponja, 40 pasos) = 0.000000e+00 | diff vs F11 (b, l=2, con esponja, 1200 pasos) = 1.589813e-15 <= 1e-13 : PASA",
+   "control": "C0",
+   "diff_a_l0_sin_esponja": 0.0,
+   "diff_b_l2_con_esponja": 1.5898126558440678e-15,
+   "dt": 0.04885735582160892,
+   "max_abs_U_M0": 2.7755575615628914e-17,
+   "ok": true,
+   "que": "limite plano M = 0: el operador diagonal U es cero de maquina y la evolucion se reduce AL ARNES CERTIFICADO F11",
+   "rc": 0,
+   "umbral_U": 1e-14,
+   "umbral_diff": 1e-13,
+   "universo": "malla nr0=96 nt0=33 nivel 0 | 40 y 1200 pasos | dato (a) l=0 en r*=22.0, dato (b) l=2 en r*=10.0"
+  },
+  "C1a": {
+   "causa": "|r*_A - ref| = 4.440892e-16 | |r*_B - ref| = 1.465494e-14 | |r*_A - r*_B| = 1.509903e-14 <= 1e-12 : PASA (ref sellada = 2.851374906561190; cambios de signo del barrido = 1; raices reales del polinomio = 9)",
+   "control": "C1a",
+   "dif_A_B": 1.509903313490213e-14,
+   "dif_A_ref": 4.440892098500626e-16,
+   "dif_B_ref": 1.4654943925052066e-14,
+   "metodo_A_paso_complejo_r": 4.648185966305974,
+   "metodo_B_polinomio_r": 4.648185966305979,
+   "n_cambios_signo": 1,
+   "n_raices_polinomio": 9,
+   "ok": true,
+   "que": "pico analitico continuo: raiz de dV_Z/dr* = 0 por DOS metodos independientes",
+   "r_ref_escala": 4.648185966305973,
+   "r_star_A": 2.8513749065611895,
+   "r_star_B": 2.8513749065612046,
+   "r_star_ref_sellada": 2.85137490656119,
+   "rc": 0,
+   "umbral": 1e-12,
+   "universo": "A: barrido 3.000..600.000 (400001 puntos) + biseccion 200 | B: raices del numerador polinomico exacto (numpy.roots)",
+   "vz_en_pico_A": 0.06724915820470116
+  },
+  "C1b": {
+   "causa": "|r*_rejilla_max - r*_teorico| = 9.941668e-02 <= 0.5 hr = 1.253264e-01 : PASA",
+   "control": "C1b",
+   "dif": 0.09941668201810883,
+   "hr": 0.2506527415143603,
+   "ok": true,
+   "que": "pico discreto: argmax de V_Z sobre la malla sellada a media celda del teorico",
+   "r_en_rejilla": 4.613177528355932,
+   "r_star_rejilla_max": 2.751958224543081,
+   "r_star_teorico": 2.85137490656119,
+   "rc": 0,
+   "tol_media_celda": 0.12532637075718014,
+   "universo": "malla nr0=384 nt0=33 nivel 0 (hr = 0.2506527415143603)",
+   "vz_max_rejilla": 0.0672394055845486
+  },
+  "C2": {
+   "E_entrante": 0.00014052525105162048,
+   "E_muerta": 0.021932899862458805,
+   "E_sal": 1016.0596259892402,
+   "E_vuelta": -0.005826548681551296,
+   "R_dB": null,
+   "T_obs": 84.04177545691907,
+   "amax": 0.9999932713100824,
+   "causa": "R_dB NO MEDIBLE: E_sal = 1.016060e+03, E_vuelta = -5.826549e-03 (la razon no existe)",
+   "control": "C2",
+   "dato_declarado": "SALIENTE PURO de F11 (f11.dato_saliente verbatim) x P_2(cos theta): c = 26.000000, sigma = 2.000000, omega = 1.000000, v^0 = -d_r u^0",
+   "eco_max": 0.022236735202062104,
+   "ok": false,
+   "que": "dispersion por U(r*) con el dato en reposo y absorcion de la senal saliente en la capa F11 exterior",
+   "rc": 1,
+   "residuo_no_P2_dato_inicial": 4.461038240424078e-16,
+   "residuo_no_P2_dato_inicial_fila_viva": 4.329220780100469e-16,
+   "residuo_no_P2_solucion_final": 0.9979137149025386,
+   "residuo_no_P2_solucion_final_fila_viva": 0.9897531236678803,
+   "t_a": 35.95822454308093,
+   "t_ret": 60.04177545691907,
+   "umbral_R_dB": -40.0,
+   "universo": "malla sellada nr0=766 nt0=65 | nsteps = 12500 | dato saliente-r26 en r* = 26.000000, sigma = 2.000000",
+   "var_theta_max": 1.4999899070914249
+  },
+  "C3": {
+   "2L_sobre_ancho": 1.1,
+   "causa": "C3 FAIL-CLOSED: solape de capa: 2*L = 105.600000000000009 >= ancho = 96.000000000000000 (guarda anti-solape del pre-registro §B.3; no se rebaja el umbral, se corrige L_frac)",
+   "control": "C3",
+   "ok": true,
+   "provocado_con_L_frac": 0.55,
+   "que": "guarda de solape (2*L >= ancho)",
+   "rc": 0
+  },
+  "C4": {
+   "causa": "max |u_ON - u_OFF| en r* < r*_sponge = 1.536292e-14 <= 1e-13 : PASA (dominio declarado t <= t_s = 36.000000, pasos que DECIDEN [506, 1520], margen del ultimo = 0.015453) | pasos con t > t_s (INFORMATIVOS: capa trabajando) [2536, 12500] = 8.533020e-01 | prologo (inform.) [1, 8] = 7.627099e-135 | violacion de dominio = ninguna | max |damp_interior - 1| = 0.000000e+00",
+   "control": "C4",
+   "damp_interior_bit": 0.0,
+   "detalles_fuera_dominio": [
+    {
+     "dif_interior": 0.013834688720582047,
+     "max_abs_u_esponja_ON": 0.2997223982370429,
+     "medido": true,
+     "paso": 2536,
+     "razon_d_interior_sobre_esponja_ON": 0.046158341191573346,
+     "t": 60.03737511686992
+    },
+    {
+     "dif_interior": 0.8533020440013094,
+     "max_abs_u_esponja_ON": 0.0007763562183106368,
+     "medido": true,
+     "paso": 12500,
+     "razon_d_interior_sobre_esponja_ON": 1099.111495310887,
+     "t": 295.9255476975055
+    }
+   ],
+   "detalles_prologo": [
+    {
+     "dif_interior": 0.0,
+     "medido": true,
+     "paso": 1,
+     "t": 0.02367404381580044
+    },
+    {
+     "dif_interior": 7.627098652000622e-135,
+     "medido": true,
+     "paso": 8,
+     "t": 0.18939235052640352
+    }
+   ],
+   "detalles_que_deciden": [
+    {
+     "dif_interior": 2.8872024576323295e-77,
+     "medido": true,
+     "paso": 506,
+     "t": 11.979066170795022
+    },
+    {
+     "dif_interior": 1.5362917507974493e-14,
+     "medido": true,
+     "paso": 1520,
+     "t": 35.98454660001667
+    }
+   ],
+   "dif_max_interior": 1.5362917507974493e-14,
+   "dif_max_interior_fuera_dominio": 0.8533020440013094,
+   "dif_max_interior_prologo": 7.627098652000622e-135,
+   "dominio_declarado": {
+    "criterio": "t <= t_s (antes de que el frente del paquete toque la capa: damp == 1.0 exacto en toda fila interior)",
+    "guarda_de_dominio_fail_closed": "ningun paso que decide puede tener t > t_s",
+    "margen_del_ultimo_paso_que_decide": 0.015453399983329064,
+    "pasos_fuera_del_dominio_informativos": [
+     2536,
+     12500
+    ],
+    "pasos_prologo_informativos": [
+     1,
+     8
+    ],
+    "pasos_que_deciden": [
+     506,
+     1520
+    ],
+    "razon_informativa_de_fuera": "d_interior / max|u|_esponja_ON (la capa trabajando)",
+    "t_s": 36.0,
+    "violacion_de_dominio": []
+   },
+   "ok": true,
+   "que": "pureza del interior util: la capa NO contamina el interior (ON vs OFF, mismo dt y misma longitud de corrida) en el dominio t <= t_s",
+   "rc": 0,
+   "umbral": 1e-13,
+   "universo": "filas con r* < r*_sponge = 74.0 (574 de 766 filas) en los pasos de captura"
+  },
+  "C6": {
+   "causa": "pureza l = 2 del CAMPO sobre filas vivas (frac = 1.0e-03): max razon al PISO = 1.615856e-02 <= 1.0 : PASA (pasos que DECIDEN [1520, 2536]) | piso por paso = 5.604850e-05 | residuo del DATO = 4.329221e-16 | UMBRAL_C6 = 1e-12 INTACTO (no decide: esta por debajo del piso del metro) | informativas (campo no convergido en theta) [12500] -> max razon = 1.412710e+00 | factor de amplificacion = 5.305255e+12 | dispersion angular de U = 0.0e+00 | no-P_2 de -U u^0 = 2.336464e-12 | escalera del piso en theta = [(65, '5.605e-05'), (129, '1.402e-05')]",
+   "control": "C6",
+   "dominio_declarado": {
+    "criterio": "residuo_no_P2 / (piso_por_paso * k) <= 1.0",
+    "denominador": "residuo no-P_2 del DATO (r_0)",
+    "mascara": "d2 >= 1.0e-03 * max_fila d2",
+    "pasos_informativos_campo_no_convergido": [
+     12500
+    ],
+    "pasos_que_deciden": [
+     1520,
+     2536
+    ],
+    "piso_declarado_fuente": "residuo_no_p2 de L2_theta(P_2) en la malla sellada, mismo operador y misma mascara",
+    "piso_por_paso": 5.604850086628735e-05
+   },
+   "escalera_piso_operador_theta": [
+    {
+     "es_la_malla_sellada": true,
+     "hth": 0.02454369260617026,
+     "nt": 65,
+     "piso_por_paso": 5.604850086628735e-05,
+     "razon_vs_nt_sellado": 1.0
+    },
+    {
+     "es_la_malla_sellada": false,
+     "hth": 0.01227184630308513,
+     "nt": 129,
+     "piso_por_paso": 1.4021023586708617e-05,
+     "razon_vs_nt_sellado": 0.25015876196507036
+    }
+   ],
+   "factor_amplificacion": 5305255325395.89,
+   "informativos": {
+    "dispersion_theta_U": 0.0,
+    "piso_de_campo_por_refinamiento_theta": {
+     "hora_utc": "2026-10-14T02:06:19Z",
+     "no_convergencia_declarada": "max|u| en k = 1836: 2.2633e-02 (nt0 = 33) vs 9.3697e-01 (nt0 = 65): el campo a t > 60 NO esta convergido en theta, por eso esa captura entra como INFORMATIVA",
+     "razon_por_duplicacion": "x5.6 - x6.3 (segundo orden en h_theta)",
+     "residuo_no_P2_relativo": {
+      "nt0_129": {
+       "k1309": 1.1655e-06,
+       "k1836": 1.4232e-06,
+       "k787": 8.147e-07
+      },
+      "nt0_33": {
+       "k1309": 3.8115e-05,
+       "k1836": 0.00026768,
+       "k787": 2.8771e-05
+      },
+      "nt0_65": {
+       "k1309": 6.7873e-06,
+       "k1836": 7.9337e-06,
+       "k787": 5.1617e-06
+      }
+     },
+     "respaldo": "sonda heredoc python3 -B: simula_f3 a nt0 en {33, 65, 129} con el MISMO tiempo fisico final T = 83.917133311096 y nsteps = round(T / dt_nt)",
+     "tiempo_fisico_final": 83.917133311096
+    },
+    "piso_metro_angular_no_P2_de_L2P2": 5.604850086628735e-05,
+    "residuo_no_P2_dato_metro_R2": 4.461038240424078e-16,
+    "residuo_no_P2_de_delta_a": 2.3364638856157704e-12
+   },
+   "lecturas": [
+    {
+     "factor_sobre_dato": 802008310215.3562,
+     "paso": 1520,
+     "piso_declarado": 0.08519372131675677,
+     "razon_al_piso": 0.004075501091786046,
+     "residuo_no_P2": 0.00034720710423975836,
+     "t": 35.98454660001667
+    },
+    {
+     "factor_sobre_dato": 5305255325395.89,
+     "paso": 2536,
+     "piso_declarado": 0.14213899819690473,
+     "razon_al_piso": 0.016158564426228463,
+     "residuo_no_P2": 0.0022967621598442563,
+     "t": 60.03737511686992
+    }
+   ],
+   "lecturas_informativas": [
+    {
+     "factor_sobre_dato": 2286215404438003.5,
+     "paso": 12500,
+     "piso_declarado": 0.7006062608285919,
+     "razon_al_piso": 1.4127095046186435,
+     "residuo_no_P2": 0.9897531236678803,
+     "t": 295.9255476975055
+    }
+   ],
+   "ok": true,
+   "que": "pureza del modo cuadrupolar l = 2 del CAMPO: el residuo no-P_2 no excede el PISO DECLARADO del metro angular (D17)",
+   "razon_al_piso_max": 0.016158564426228463,
+   "razon_al_piso_max_informativa": 1.4127095046186435,
+   "rc": 0,
+   "residuo_no_P2_campo_max": 0.0022967621598442563,
+   "residuo_no_P2_campo_max_informativo": 0.9897531236678803,
+   "residuo_no_P2_dato_den": 4.329220780100469e-16,
+   "rotulo_dato_angular": {
+    "dato_theta_independiente": false,
+    "lectura_F11_que_no_se_hereda": "C6 de F11 midio variacion_theta_max = 0.0 sobre un dato theta-independiente: esa lectura NO aplica",
+    "motivo": "el dato es saliente puro de F11 x P_2(cos theta): el sector l = 2 esta VIVO por construccion fisica y no es simetria radial plana"
+   },
+   "umbral": 1e-12,
+   "umbral_C6_no_movido": 1e-12,
+   "umbral_de_razon_al_piso": 1.0,
+   "universo": "campo 2D de la malla sellada (nr0=766, nt0=65) en los pasos de captura, con mascara de FILA VIVA frac = 1.0e-03"
+  },
+  "C7": {
+   "aplicable": false,
+   "banda_del_dato_r": [
+    2.0,
+    14.0
+   ],
+   "banda_del_dato_vacia": false,
+   "banda_sellada_r": [
+    2.08355091383812,
+    13.989556135770234
+   ],
+   "causa": "D6 DECLARADO: la banda sellada [2.1, 14.0] CONTIENE el dato de C2 (centrado en 26.0, soporte +-6 sigma = [14.0, 38.0]); el maximo de la banda es el propio dato. Medida contra la banda del dato sale [2.0, 14.0] = NO VACIA. Control que no puede diferir (familia D5): se reporta la cifra y NO se adjudica.",
+   "control": "C7",
+   "eco_max_medido": 0.022236735202062104,
+   "entra_en_veredicto": false,
+   "max_inc": 0.9997273355647981,
+   "ok": null,
+   "que": "eco prematuro en la banda de testigos (herencia F11)",
+   "ratio_banda_sellada": 0.022242800022567566,
+   "rc": null,
+   "umbral": 0.01
+  },
+  "C8": {
+   "6_sigma": 12.0,
+   "causa": "p_eff - r*_min = 47.958225 > 6 sigma = 12.0 : PASA",
+   "control": "C8",
+   "entra_en_veredicto": false,
+   "interior_util_frac": 0.75,
+   "ok": true,
+   "p_eff": 49.95822454308093,
+   "p_eff_menos_rs_min": 47.95822454308093,
+   "que": "contencion informativa del anillo testigo",
+   "rc": null
+  },
+  "C9": {
+   "causa": "max |r*(r(r*)) - r*| = 2.842171e-14 <= 1e-13 : PASA (n = 200001 puntos) | identidad analitica 2M(1+W+lnW) = r*: 1.421085e-14 | nodos de la malla: 1.421085e-14 | punto fijo desnudo en r* = 2.0 tras 60 pasos: r = nan (err nan) => NO contrae, Lambert W0 es obligatoria",
+   "control": "C9",
+   "err_max_ida_vuelta": 2.842170943040401e-14,
+   "err_max_identidad_analitica": 1.4210854715202004e-14,
+   "err_max_nodos_malla": 1.4210854715202004e-14,
+   "ok": true,
+   "punto_fijo_desnudo_err": NaN,
+   "punto_fijo_desnudo_r": NaN,
+   "que": "ida y vuelta del mapa tortuga r* -> r -> r* con Lambert W0 estricta",
+   "r_star_sonda_punto_fijo": 2.0,
+   "rc": 0,
+   "umbral": 1e-13,
+   "universo": "200001 puntos uniformes en r* en [2.0, 98.0] + los 384 nodos de la malla sellada"
+  }
+ },
+ "controles_gating": [
+  "C0",
+  "C1a",
+  "C1b",
+  "C2",
+  "C3",
+  "C4",
+  "C6",
+  "C9"
+ ],
+ "controles_informativos": [
+  "C7",
+  "C8"
+ ],
+ "cronologia_D7": {
+  "T_centro_eco_pared_en_esponja": 96.0,
+  "T_centro_entrante_en_anillo": 71.95822454308093,
+  "T_centro_entrante_en_pared": 24.0,
+  "T_centro_saliente_en_anillo": 23.95822454308093,
+  "T_centro_saliente_en_esponja": 48.0,
+  "T_frente_eco_pared_en_anillo": 108.04177545691907,
+  "T_frente_entrante_en_anillo": 59.95822454308093,
+  "T_retorno_eco_pared_en_anillo": 120.04177545691907,
+  "T_retorno_saliente_en_anillo": 60.04177545691907,
+  "anillo_testigo_p_eff": 49.95822454308093,
+  "dato_centro": 26.0,
+  "dato_soporte_6sigma": [
+   14.0,
+   38.0
+  ],
+  "es_saliente_puro": true,
+  "esponja": 74.0,
+  "mitad_entrante_existe": false,
+  "pared_interna": 2.0
+ },
+ "dato_declarado": "SALIENTE PURO de F11 (f11.dato_saliente verbatim) x P_2(cos theta): c = 26.000000, sigma = 2.000000, omega = 1.000000, v^0 = -d_r u^0",
+ "dato_elegido": "saliente-r26",
+ "defectos_declarados": [
+  "D6 (C7 no aplicable: la banda sellada contiene el dato)",
+  "D7 (la mitad entrante regresa de la pared interna y su eco de esponja cae dentro de la ventana de vuelta)",
+  "D13 (C6 con msk = d2 > 0.0 es una razon sobre filas vacias: 9.999999e-01 no es el campo, es 1/0)",
+  "D14 (las capturas de C4 heredadas de F11 caen en t < t_s: en el ROJO las DOS capturas quedaron fuera del dominio del control)",
+  "D15 (el soporte +-6 sigma del dato de §R5 sale de la malla por abajo y se pega a la pared Dirichlet interna)",
+  "D16 (R4: el dominio declarado de C4 en R3 estaba INVERTIDO; el prefijo t <= t_s mide 2.325996e-14 y PASA, y la cola t > t_s mide 1.875977e-02 = 1.5 % de la diferencia de contorno: la capa trabajando, no contaminacion)",
+  "D17 (R4: UMBRAL_C6 = 1e-12 esta por debajo del piso del metro angular, 2.239675e-04 por aplicacion en nt0 = 33; el piso de campo converge x5.6-x6.3 por duplicacion de nt0: la impureza no-P_2 es discretizacion en theta, no fisica)"
+ ],
+ "dominio_c4_declarado": {
+  "criterio": "t <= t_s (antes de que el frente del paquete toque la capa: damp == 1.0 exacto en toda fila interior)",
+  "guarda_de_dominio_fail_closed": "ningun paso que decide puede tener t > t_s",
+  "pasos_fuera_del_dominio_informativos": [
+   2536,
+   12500
+  ],
+  "pasos_prologo": [
+   1,
+   8
+  ],
+  "pasos_que_deciden": [
+   506,
+   1520
+  ],
+  "t_s": 36.0,
+  "umbral_C4_no_movido": 1e-13,
+  "umbral_C6_de_razon_al_piso_nuevo": 1.0,
+  "umbral_C6_no_movido": 1e-12,
+  "umbral_R_dB_no_movido": -40.0
+ },
+ "dominio_c6_declarado": {
+  "criterio": "residuo_no_P2 / (piso_por_paso * k) <= 1.0",
+  "pasos_informativos_por_no_convergencia_theta": [
+   12500
+  ],
+  "pasos_que_deciden": [
+   1520,
+   2536
+  ],
+  "piso_por_paso": "residuo_no_p2 de L2_theta(P_2) en la malla sellada, mismo operador y misma mascara de fila viva (medido en la corrida)",
+  "rotulo_dato_angular": "el dato cuadrupolar NO es theta-independiente por construccion fisica (D17/R4)",
+  "umbral_C6_no_movido": 1e-12
+ },
+ "errata": "sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md",
+ "extension_declarada": {
+  "T_obs_del_sello": 84.04177545691907,
+  "aviso_del_dt": "con nivel > 0 el nivel refina tambien el radio y el dt de f2.Malla2D BAJA (la cota es de la malla): el mismo t_final exige mas pasos que en la malla sellada",
+  "criterio": "R4 certifica la malla sellada (nsteps = ceil(T_obs/dt), nt = 33). Esta corrida puede EXTENDER la longitud y/o subir nt sobre la escalera sellada para alimentar al extractor espectral. Ninguna ventana de f11.ventanas y ningun umbral se mueven; con usada = True esta corrida NO es el certificado del gate (el certificado es el crudo R4 de la malla sellada)",
+  "dt": 0.02367404381580044,
+  "nivel": 1,
+  "nr": 766,
+  "nsteps": 12500,
+  "nsteps_del_sello_R4": 3550,
+  "nsteps_pedido": 12500,
+  "nt": 65,
+  "nt_de_la_escalera_pedido": 65,
+  "nt_del_sello_R4": 33,
+  "t_final": 295.9255476975055,
+  "t_final_pedido": null,
+  "umbral_C4_no_movido": 1e-13,
+  "umbral_C6_de_razon_al_piso_no_movido": 1.0,
+  "umbral_C6_no_movido": 1e-12,
+  "umbral_R_dB_no_movido": -40.0,
+  "usada": true
+ },
+ "geometria_f11": {
+  "A": 25.0,
+  "L": 24.0,
+  "L_frac": 0.25,
+  "ancho": 96.0,
+  "c": 26.0,
+  "gamma_max": 4.166666666666667,
+  "integral_gamma": 25.0,
+  "interior_util_frac": 0.75,
+  "n": 3.0,
+  "p": 50.0,
+  "regla_anticolape": "2*L < ancho  =>  C3 INACTIVA POR CONSTRUCCION",
+  "rs_max": 98.0,
+  "rs_min": 2.0,
+  "rs_sponge": 74.0,
+  "solape": 48.0
+ },
+ "guarda_soporte_dato": {
+  "causa": "soporte +-6 sigma del dato = [14.000000, 38.000000] vs pared interna 2.0 y esponja 74.0 : CABE ESTRICTO",
+  "esponja": 74.0,
+  "ok": true,
+  "pared_interna": 2.0,
+  "soporte_6sigma": [
+   14.0,
+   38.0
+  ]
+ },
+ "hora_fin_utc": "2026-10-14T03:07:11Z",
+ "hora_inicio_utc": "2026-10-14T03:06:51Z",
+ "huella": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013",
+ "huella_dueno_en_crudo": 0,
+ "huella_errata": "HUELLA-ERRATA-1-PREREGISTRO-GATE-2D-F3-20261013",
+ "huella_f11": "HUELLA-ARNES-CAPA-ABSORBENTE-2D-F11-20261013",
+ "huella_p4": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-P4-SERIE",
+ "huella_preregistro": "HUELLA-PREREGISTRO-GATE-2D-F3-ZERILLI-CURVATURA-20261013",
+ "huella_r2": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R2",
+ "huella_r3": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3",
+ "huella_r4": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R4",
+ "huella_v3": "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013",
+ "identidad_self": {
+  "bytes": 88394,
+  "cabezas": 44,
+  "encabezados": 45,
+  "huella_en_self": 7,
+  "huella_verbo": "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013",
+  "lineas": 1635,
+  "ruta": "/Users/marlene/gw-rw-zerilli/sim/arnes_zerilli_curvatura_2d_f3.py",
+  "sha256": "6a94657c80e5ea86966a5d240ebf5c46892d33c922cda737af28af44431a41fb"
+ },
+ "laminas_declaradas": [
+  "2M = 3.0, l = 2, lambda = 2",
+  "U(r) = V_Zerilli(r) - (1 - 2M/r) * 6/r^2",
+  "peso angular (1 - 2M/r)/r^2",
+  "capa F11 verbatim (n=3, A=25.0, L_frac=0.25, ancho=96.0)",
+  "malla sellada nr0=384 nt0=33 CFL=0.50 (f2.Malla2D nivel 0)",
+  "dato de C2 (falsador R3): gaussiana en r*-10 con sigma=2 y P_2(cos theta), v^0 = 0",
+  "dato de R3: saliente puro de F11 en r*=26.0, sigma=2, omega=1, con P_2(cos theta)",
+  "medidor, ventanas, acumulacion y R_dB verbatim de F11"
+ ],
+ "malla": {
+  "dt": 0.02367404381580044,
+  "hr": 0.12532637075718014,
+  "hth": 0.02454369260617026,
+  "ip": 382,
+  "nr": 766,
+  "nsteps": 12500,
+  "nt": 65,
+  "p_eff": 49.95822454308093,
+  "rs_max": 97.95822454308093,
+  "rs_min": 2.08355091383812
+ },
+ "notas": [
+  "dt_cota tomada con f = 1 (la de F11): conservadora porque f <= 1 en r > 2M",
+  "el factor geometrico del medidor es r*^2 (F11) y cancela en R_dB",
+  "R_dB es una RAZON en energia: no se re-ventanea ni se mueve ningun umbral",
+  "la unica linea nueva del sector angular es el factor metrico f en el peso",
+  "R3: f11.ventanas sigue VERBATIM; lo que cambio es el DATO (c = 26.0 saliente puro), no las formulas de las ventanas",
+  "R3: C6 ya no exige simetria radial plana; audita la pureza l = 2 del CAMPO",
+  "R3: la corrida OFF tiene la MISMA longitud que la ON (antes se cortaba en k_b + 1), para que la unica diferencia entre ambas sea la capa",
+  "R3: las lecturas INFORMATIVAS de C6 se miden con la MISMA mascara de fila viva que el criterio, para que sean comparables entre si",
+  "R4 (D16): el dominio de C4 pasa a t <= t_s; los pasos con t > t_s se imprimen con su razon d_interior / max|u|_esponja_ON y NO deciden. Guarda fail-closed: ningun paso que decide puede tener t > t_s",
+  "R4 (D17): C6 decide por RAZON al piso declarado del metro angular (<= 1.0), medido en la corrida como residuo_no_p2 de L2_theta(P_2) por paso; UMBRAL_C6 = 1e-12 queda en el crudo como cifra NO movida",
+  "R4: la captura final (k = nsteps) va como INFORMATIVA porque el campo a t > 60 no esta convergido en theta (max|u| = 2.2633e-02 en nt0 = 33 vs 9.3697e-01 en nt0 = 65); se declara con su respaldo y su hora",
+  "P4: la serie de observacion es la proyeccion l = 2 del CAMPO en el anillo r*_obs (lineal en el modo); el P(t) del medidor F11 es ENERGIA (cuadratica), luego una extraccion de polos sobre el devolveria 2*omega y NO se vuelca",
+  "P4: --nsteps es LITERAL y --t-final es fisico (nsteps = ceil(t_final/dt)); con nivel > 0 el dt de f2.Malla2D baja, asi que un mismo t_final exige mas pasos que en la malla sellada (cifras del crudo: extension_declarada)",
+  "P4: la escalera de nt es la sellada nt = (nt0-1)*2^nivel + 1 (33, 65, 129) y el nivel refina tambien el radio; fuera de la escalera el arnes falla cerrado",
+  "P4: ningun umbral se mueve (R_dB = -40.0 dB, C4 = 1e-13, C6 = 1e-12 y su razon al piso = 1.0); la corrida extendida se DECLARA y no es el certificado del gate"
+ ],
+ "parametros": {
+  "A": 25.0,
+  "L_frac": 0.25,
+  "ancho": 96.0,
+  "cfl": 0.5,
+  "dosM": 3.0,
+  "l": 2,
+  "lam": 2.0,
+  "n": 3,
+  "nivel": 1,
+  "nr0": 766,
+  "nt0": 33,
+  "omega_r3": 1.0,
+  "rs0": 10.0,
+  "rs_dato": 26.0,
+  "rs_min": 2.0,
+  "sigma": 2.0
+ },
+ "preregistro": "sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md",
+ "rc": 1,
+ "rojos": [
+  "C2"
+ ],
+ "serie_de_observacion": {
+  "bytes": 537808,
+  "dt": 0.02367404381580044,
+  "n": 12500,
+  "r_star_obs": 49.95822454308093,
+  "ruta": "/Users/marlene/gw-rw-zerilli/sim/data/serie_2d_f3_obs_20261014T030711Z.json",
+  "sha256": "d997ade9a92b99d3baa5e8a65f69457472c887f0bfb442f3f0bce6f21a70ceb7",
+  "sha256_16": "d997ade9a92b99d3",
+  "t_final": 295.9255476975055,
+  "ventanas_declaradas_en_meta": true,
+  "volcada": true
+ },
+ "universo_declarado": [
+  "2M = 3.0, l = 2, lambda = 2",
+  "U(r) = V_Zerilli(r) - (1 - 2M/r) * 6/r^2",
+  "peso angular (1 - 2M/r)/r^2",
+  "capa F11 verbatim (n=3, A=25.0, L_frac=0.25, ancho=96.0)",
+  "malla sellada nr0=384 nt0=33 CFL=0.50 (f2.Malla2D nivel 0)",
+  "dato de C2 (falsador R3): gaussiana en r*-10 con sigma=2 y P_2(cos theta), v^0 = 0",
+  "dato de R3: saliente puro de F11 en r*=26.0, sigma=2, omega=1, con P_2(cos theta)",
+  "medidor, ventanas, acumulacion y R_dB verbatim de F11"
+ ],
+ "ventanas": {
+  "T_c1": 132.04177545691908,
+  "T_obs": 84.04177545691907,
+  "t_1": 23.95822454308093,
+  "t_3": 72.04177545691907,
+  "t_4": 120.0,
+  "t_a": 35.95822454308093,
+  "t_ret": 60.04177545691907,
+  "t_ret_c1": 108.04177545691907,
+  "t_s": 36.0,
+  "t_s_max": 60.0,
+  "ventana_ida": [
+   0.0,
+   35.95822454308093
+  ],
+  "ventana_muerta": [
+   35.95822454308093,
+   60.04177545691907
+  ],
+  "ventana_vuelta": [
+   60.04177545691907,
+   84.04177545691907
+  ],
+  "ventana_vuelta_C1": [
+   108.04177545691907,
+   132.04177545691908
+  ]
+ },
+ "veredicto": "ROJO"
+}
