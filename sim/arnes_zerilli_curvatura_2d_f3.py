@@ -83,6 +83,7 @@ HUELLA_PREREGISTRO = "HUELLA-PREREGISTRO-GATE-2D-F3-ZERILLI-CURVATURA-20261013"
 HUELLA_ERRATA = "HUELLA-ERRATA-1-PREREGISTRO-GATE-2D-F3-20261013"
 HUELLA_F11 = "HUELLA-ARNES-CAPA-ABSORBENTE-2D-F11-20261013"
 HUELLA_V3 = "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013"
+HUELLA_R2 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R2"
 PREREGISTRO = "sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md"
 ERRATA = "sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md"
 ARNES_F11 = "sim/arnes_capa_absorbente_2d_f11.py"
@@ -950,6 +951,7 @@ def main(argv=None):
         "huella_errata": HUELLA_ERRATA,
         "huella_f11": HUELLA_F11,
         "huella_v3": HUELLA_V3,
+        "huella_r2": HUELLA_R2,
         "huella_dueno_en_crudo": 0,
         "preregistro": PREREGISTRO,
         "errata": ERRATA,
@@ -961,7 +963,7 @@ def main(argv=None):
         "universo_declarado": LAMINAS_DECLARADAS,
         "laminas_declaradas": LAMINAS_DECLARADAS,
         "parametros": {"dosM": float(a.dosM), "l": L_ANGO, "lam": LAM_Z, "rs0": float(a.rs0),
-                       "sigma": float(a.sigma), "nr0": int(m.nr0), "nt0": int(m.nt0),
+                       "sigma": float(a.sigma), "nr0": int(m.nr), "nt0": int(m.nt0),
                        "cfl": float(m.cfl), "nivel": int(m.nivel), "n": int(a.n),
                        "A": float(a.A), "L_frac": float(a.L_frac), "ancho": float(a.ancho),
                        "rs_min": float(a.rs_min)},
