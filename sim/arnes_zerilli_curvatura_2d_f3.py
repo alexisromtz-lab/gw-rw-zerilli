@@ -10,6 +10,11 @@ HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-P4-SERIE  <- revision P4 (volcado 
                                                       observacion Psi(t, r*_obs) + longitud y nt
                                                       por CLI para el extractor espectral).
                                                       NO mueve ningun umbral.
+HUELLA-PARCHE-ARNES-ZERILLI-F3-T-FINAL-20261014  <- adjudicacion del parche P4 (ventana de 20
+                                                  periodos: nsteps, t_final y nt por CLI, ventanas
+                                                  declaradas + aviso del dt). CERO umbrales movidos.
+                                                  El rojo F8 no lo repara el arnes: el objeto no
+                                                  contiene el QNM (ACTA_NO-HAY-QNM-EN-SENAL-SALIENTE).
 
 PADRE (append-only, NO se edita): sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md
 ERRATA 1 (sellada en git):       sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md
