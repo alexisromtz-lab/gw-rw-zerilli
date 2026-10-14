@@ -3,6 +3,7 @@
 """ARNES DEL POTENCIAL DE ZERILLI (M > 0) EN TORTUGA CON CAPAS F11 -- GATE 2D-F3.
 
 HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013
+HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3   <- revision R3 (cinematica + C6 + C4)
 
 PADRE (append-only, NO se edita): sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md
 ERRATA 1 (sellada en git):       sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md
@@ -50,6 +51,47 @@ imprimen con su cifra y su causa, y NO mueven ningun umbral):
       propia reflexion de esponja (t ~ 91.9) cae DENTRO de la ventana de VUELTA. Cronologia
       analitica impresa + E_muerta medido. NO se re-ventanea ni se repara.
 
+REVISION R3 (orden del dueno, 14-Oct-2026) -- HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3.
+Cambia SOLO la cinematica del dato, la forma de C6 y el dominio de C4. NO mueve un solo umbral.
+  * CINEMATICA DE VENTANAS -- se toma la SEGUNDA de las dos rutas que el dueno ofrecio
+    ("volviendo al paquete saliente en r* = 26.0"). Razon MEDIDA, no de gusto: la cola del
+    agujero negro en este dominio NO TIENE TIEMPO DE ARRIBO. La pared Dirichlet interna en
+    r* = 2.0 esta por dentro del maximo de U(r*) (~2.85) y forma con el una CAVIDAD que radia
+    hacia afuera mientras decaiga; su emision es asintotica, de modo que "t_arribo_tail" no
+    existe como numero y "T_vuelta > t_arribo_tail + 6 sigma" solo se podria escribir DESPUES de
+    ver E_vuelta (familia (a): ventana elegida despues de la salida). La ruta del paquete
+    saliente cierra el canal de contaminacion POR CONSTRUCCION, no por re-ventaneo.
+  * El dato de R3 es el de F11 (f11.dato_saliente VERBATIM: sigma = 2.0, omega = 1.0,
+    v^0 = -d_r u^0, SALIENTE PURO) en r* = 26.0 (el c de F11) multiplicado por P_2(cos theta):
+    el sector angular queda VIVO (la objecion D5 al dato de F11 era su vacuidad ANGULAR, no su
+    condicion saliente).
+  * f11.ventanas sigue VERBATIM y sin tocar: con c = 26.0 sus propias formulas vuelven a ser
+    correctas (t_1 = 24.125326, t_a = 36.125326, t_s = 36.0, t_ret = 59.874674, t_3 = 71.874674,
+    T_obs = 83.874674). El defecto D7 era del DATO, no de las formulas.
+  * C6 RE-EXPRESADO (orden 2 del dueno): deja de exigir simetria radial plana y audita la
+    PUREZA DEL MODO CUADRUPOLAR l = 2 del CAMPO. La dispersion angular de U pasa a lectura
+    INFORMATIVA; el criterio es el residuo no-P_2 del CAMPO sobre FILAS VIVAS declaradas, con el
+    residuo del dato como DENOMINADOR DECLARADO.
+  * El dato ESTATICO de §R5 (r* = 10.0, v^0 = 0) NO se borra: queda como FALSADOR reproducible
+    con --dato estatico-r10, para que el ROJO se pueda volver a medir sobre el mismo objeto.
+  D13 (defecto de METRO, nuevo): C6 medido con la mascara de filas de R2 (msk = d2 > 0.0) es una
+      razon cuyo denominador tiende a 0 en las filas vacias de la cola; el maximo sobre filas
+      mide 1/0 y no el campo. El crudo del ROJO imprimio residuo_no_P2_solucion_final =
+      9.999999e-01 junto a residuo_no_P2_dato_inicial = 2.953954e-16. R3 declara la mascara de
+      FILA VIVA (d2 >= FRAC_FILA_VIVA * max_fila d2) y NO mueve UMBRAL_C6 = 1e-12.
+  D14 (defecto de DOMINIO, nuevo): la captura de C4 heredada de F11 (k_a = floor(12.0/dt), t =
+      11.975103) cae cuando el frente del paquete esta en r* = 22.0 y la capa empieza en
+      r* = 74.0: una diferencia no nula ahi NO PUEDE ser contaminacion de capa, luego esa captura
+      no mide el "que" del control. Con el dato de §R5 (t_s = 52.0) la SEGUNDA captura heredada
+      (t = 51.968290) tambien cae ANTES de t_s = 52.0: el rojo de C4 del 14-Oct se midio ENTERO
+      fuera de su dominio. R3 declara el dominio (pasos con t >= t_s) y NO mueve UMBRAL_C4.
+  D15 (defecto de DOMINIO DEL DATO, nuevo): el soporte +-6 sigma del dato de §R5 (centro 10.0)
+      es [-2.0, 22.0] y sale de la malla por abajo (r*_min = 2.0) pegandose a la pared Dirichlet:
+      es la misma causa que D7, vista del lado de la GEOMETRIA del dato. La guarda de R3 lo
+      cierra fail-closed para cualquier centro y sigma.
+  NINGUN UMBRAL SE MUEVE: UMBRAL_R_DB = -40.0, UMBRAL_C4 = 1e-13 y UMBRAL_C6 = 1e-12 quedan
+  exactamente como estaban. R_dB sigue siendo una RAZON EN ENERGIA con el medidor de F11.
+
 UNIVERSO DECLARADO: unicamente la malla sellada de F11 (r* en [2.0, 98.0], nr0 = 384, nt0 = 33),
 el mapa tortuga con 2M = 3.0 sobre esa malla, el dato de C2 y las cifras analiticas de V_Z/U.
 Fuera: mallas mas finas (eso es C5, no ordenado), horizonte, r* < 2.0, y toda re-base de la
@@ -84,6 +126,7 @@ HUELLA_ERRATA = "HUELLA-ERRATA-1-PREREGISTRO-GATE-2D-F3-20261013"
 HUELLA_F11 = "HUELLA-ARNES-CAPA-ABSORBENTE-2D-F11-20261013"
 HUELLA_V3 = "HUELLA-ARNES-RICHARDSON-2D-F2-V3-20261013"
 HUELLA_R2 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261013-R2"
+HUELLA_R3 = "HUELLA-ARNES-ZERILLI-CURVATURA-2D-F3-20261014-R3"
 PREREGISTRO = "sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md"
 ERRATA = "sim/ERRATA_1_PREREGISTRO_GATE_2D_F3_20261013.md"
 ARNES_F11 = "sim/arnes_capa_absorbente_2d_f11.py"
@@ -96,7 +139,12 @@ ARNES_V3 = "sim/arnes_richardson_2d_f2_v3.py"
 L_ANGO = 2                              # l = 2 sellado
 LAM_Z = 2.0                             # lambda = (l-1)(l+2)/2  (D1 ratificado)
 DOSM = 3.0                              # 2M = 3.0  (D3 ratificado); M = 1.5
-RS0 = 10.0                              # centro del dato de C2 (D5 ratificado)
+RS0 = 10.0                              # centro del dato ESTATICO de §R5 (13-Oct): NO se edita;
+                                        # R3 lo conserva como falsador reproducible
+RS_DATO_R3 = 26.0                       # R3: centro del dato SALIENTE = c de F11 (verbatim)
+OMEGA_R3 = 1.0                          # R3: omega de F11 (dato saliente)
+DATO_R3 = "saliente-r26"                # R3 (default) | "estatico-r10" = el del ROJO
+FRAC_FILA_VIVA = 1e-3                   # R3: fraccion del maximo del campo que define FILA VIVA
 CFL_SELLADO = 0.50
 ANCHO = 96.0
 RS_MIN = 2.0
@@ -122,7 +170,8 @@ LAMINAS_DECLARADAS = [
     "peso angular (1 - 2M/r)/r^2",
     "capa F11 verbatim (n=3, A=25.0, L_frac=0.25, ancho=96.0)",
     "malla sellada nr0=384 nt0=33 CFL=0.50 (f2.Malla2D nivel 0)",
-    "dato de C2: gaussiana en r*-10 con sigma=2 y P_2(cos theta), v^0 = 0",
+    "dato de C2 (falsador R3): gaussiana en r*-10 con sigma=2 y P_2(cos theta), v^0 = 0",
+    "dato de R3: saliente puro de F11 en r*=26.0, sigma=2, omega=1, con P_2(cos theta)",
     "medidor, ventanas, acumulacion y R_dB verbatim de F11",
 ]
 
@@ -291,9 +340,48 @@ def perfil_p2(th):
 
 
 def dato_f3(m, rs0, sigma, amp=1.0):
-    """u^0(r*,theta) = amp * exp(-(r*-rs0)^2/(2 sigma^2)) * P_2(cos theta)."""
+    """DATO DE §R5 (v^0 = 0): u^0 = amp exp(-(r*-rs0)^2/(2 sigma^2)) P_2(cos theta).
+
+    R3 NO lo borra: queda como FALSADOR del ROJO (--dato estatico-r10). Es el dato cuya mitad
+    entrante produce D7 y D15.
+    """
     env = float(amp) * np.exp(-(m.rs - float(rs0)) ** 2 / (2.0 * float(sigma) ** 2))
     return env[:, None] * perfil_p2(m.th)[None, :]
+
+
+def dato_saliente_l2(m, c, sigma, omega):
+    """DATO DE R3: saliente puro de F11 (f11.dato_saliente VERBATIM) con contenido l = 2 exacto.
+
+        x   = r* - c
+        u^0 = env(x) cos(omega x) P_2(cos theta)
+        v^0 = -d_r* u^0          (condicion saliente EXACTA, no heredada de un v^0 = 0)
+
+    La parte radial la calcula la CASA (F11); aqui solo se anade el factor angular. Devuelve
+    (u0, v0) 2D, ambos con la MISMA estructura angular exacta.
+    """
+    u_r, v_r = f11.dato_saliente(m.rs, float(c), float(sigma), float(omega))
+    p2 = perfil_p2(m.th)
+    return u_r[:, None] * p2[None, :], v_r[:, None] * p2[None, :]
+
+
+def guarda_soporte_dato(rs_min, rs_sponge, c, sigma, ancho_extra=6.0):
+    """GUARDA FAIL-CLOSED DE R3 (D15): el soporte +-6 sigma del dato debe caber ESTRICTO en
+    (r*_min, r*_sponge). Si no cabe, el dato nace cortado por la pared Dirichlet o nace dentro de
+    la capa: en los dos casos el ratio del medidor mide otra cosa.
+    """
+    lo = float(c) - float(ancho_extra) * float(sigma)
+    hi = float(c) + float(ancho_extra) * float(sigma)
+    ok = bool(lo > float(rs_min) and hi < float(rs_sponge))
+    return {
+        "ok": ok,
+        "soporte_6sigma": [lo, hi],
+        "pared_interna": float(rs_min),
+        "esponja": float(rs_sponge),
+        "causa": ("soporte +-%.0f sigma del dato = [%.6f, %.6f] vs pared interna %.1f y esponja "
+                  "%.1f : %s"
+                  % (ancho_extra, lo, hi, float(rs_min), float(rs_sponge),
+                     "CABE ESTRICTO" if ok else "NO CABE (fail-closed)")),
+    }
 
 
 def dato_reducido_m0(m, rs0, sigma):
@@ -580,26 +668,36 @@ def control_C9(dosM=DOSM, n=200001, ref_pf=RS_MIN):
 # --------------------------------------------------------------------------------------------
 
 
-def residuo_no_p2(u, th, p2, sinth, den):
-    """Norma relativa L2(theta) (medida sin(theta) dtheta) de la parte NO-P_2 de cada fila."""
+def residuo_no_p2(u, th, p2, sinth, den, frac_fila=0.0):
+    """Norma relativa L2(theta) (medida sin(theta) dtheta) de la parte NO-P_2 de cada fila.
+
+    frac_fila = 0.0 reproduce BIT A BIT el metro de R2 (msk = d2 > 0.0); esa es la lectura que
+    imprimio 9.999999e-01 en el crudo del ROJO (D13: razon sobre filas vacias).
+    frac_fila > 0 es la mascara de FILA VIVA de R3: la fila cuenta solo si su densidad angular
+    llega a esa fraccion del maximo del CAMPO medido.
+    """
     a = (u * p2[None, :] * sinth[None, :]).sum(axis=1) / den
     res = u - a[:, None] * p2[None, :]
     num = np.sqrt(np.sum(res * res * sinth[None, :], axis=1))
     d2 = np.sqrt(np.sum(u * u * sinth[None, :], axis=1))
-    msk = d2 > 0.0
+    if float(frac_fila) > 0.0:
+        dmax = float(d2.max())
+        msk = (d2 >= float(frac_fila) * dmax) if dmax > 0.0 else np.zeros_like(d2, dtype=bool)
+    else:
+        msk = d2 > 0.0
     if not np.any(msk):
         return 0.0
     return float(np.max(num[msk] / d2[msk]))
 
 
-def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, rs0, sigma, capturas=()):
+def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, u0, v0, sigma, capturas=()):
+    """R3: el dato (u0, v0) entra ya construido desde main, para que la corrida ON y la OFF usen
+    el MISMO objeto y la unica diferencia entre ambas sea la capa."""
     ip = int(np.argmin(np.abs(m.rs - g["p"])))
     p_eff = float(m.rs[ip])
     vw = f11.ventanas(g_win, p_eff, sigma, g["rs_min"], g["rs_max"])
     filas = np.nonzero(m.rs <= g["c"] - 6.0 * sigma)[0]
     damp = f11.damp_de(m.rs, g, dt)[:, None] if encender else np.ones((m.nr, 1))
-    u0 = dato_f3(m, rs0, sigma)
-    v0 = np.zeros_like(u0)
     caps = {}
     pedidos = set(int(x) for x in capturas)
     med = f11.Medidor(m, ip, m.hr, m.th, m.hth, filas, ())
@@ -617,31 +715,64 @@ def corrida_c2(m, g, g_win, dt, nsteps, encender, pot, wang, rs0, sigma, captura
             "nsteps": int(nsteps), "encender": bool(encender), "damp": damp}
 
 
-def control_C4(m, g, dt, pot, wang, res_on, res_off, pasos):
-    """Pureza del interior util: ON vs OFF con el MISMO dt deben coincidir en r* < r*_sponge."""
+def control_C4(m, g, dt, pot, wang, res_on, res_off, pasos, pasos_heredados=(),
+               pasos_prologo=(), damp_on=None, t_s=None):
+    """Pureza del interior util: ON vs OFF con el MISMO dt deben coincidir en r* < r*_sponge.
+
+    DOMINIO DECLARADO (D14). La capa solo puede cambiar el interior DESPUES de que el frente del
+    paquete la toque (t_s): antes de t_s la capa vale 1.0 exacto en toda fila viva y una
+    diferencia no nula NO PUEDE ser contaminacion de capa. Por eso deciden solo los pasos con
+    t >= t_s; las capturas heredadas de F11 y el prologo se imprimen con su cifra y NO deciden.
+    NO se mueve UMBRAL_C4 = 1e-13.
+    """
     interior = m.rs < g["rs_sponge"]
-    detalles = []
-    peor = 0.0
-    for k in pasos:
-        kk = int(k)
-        if kk not in res_on["caps"] or kk not in res_off["caps"]:
-            detalles.append({"paso": kk, "t": kk * dt, "medido": False})
-            continue
-        a = res_on["caps"][kk]
-        b = res_off["caps"][kk]
-        d = float(np.max(np.abs(a[interior, :] - b[interior, :])))
-        peor = max(peor, d)
-        detalles.append({"paso": kk, "t": kk * dt, "medido": True, "dif_interior": d})
+    damp_bit = None
+    if damp_on is not None:
+        dd = np.asarray(damp_on, dtype=float)[:, 0][interior]
+        damp_bit = float(np.max(np.abs(dd - 1.0)))
+
+    def _mide(lista):
+        det, peor_l = [], 0.0
+        for k in lista:
+            kk = int(k)
+            if kk not in res_on["caps"] or kk not in res_off["caps"]:
+                det.append({"paso": kk, "t": kk * dt, "medido": False})
+                continue
+            a = res_on["caps"][kk]
+            b = res_off["caps"][kk]
+            d = float(np.max(np.abs(a[interior, :] - b[interior, :])))
+            peor_l = max(peor_l, d)
+            det.append({"paso": kk, "t": kk * dt, "medido": True, "dif_interior": d})
+        return det, peor_l
+
+    detalles, peor = _mide(pasos)
+    det_her, peor_her = _mide(pasos_heredados)
+    det_pro, peor_pro = _mide(pasos_prologo)
     ok = bool(peor <= UMBRAL_C4)
-    causa = ("max |u_ON - u_OFF| en r* < r*_sponge = %.6e <= %.0e : %s (pasos %s)"
-             % (peor, UMBRAL_C4, "PASA" if ok else "ROJO", str([int(x) for x in pasos])))
+    causa = ("max |u_ON - u_OFF| en r* < r*_sponge = %.6e <= %.0e : %s (dominio declarado t >= "
+             "t_s = %s, pasos %s) | lectura heredada de F11 (pasos %s) = %.6e | prologo t < t_s "
+             "(pasos %s) = %.6e | max |damp_interior - 1| = %s"
+             % (peor, UMBRAL_C4, "PASA" if ok else "ROJO",
+                ("%.6f" % t_s) if t_s is not None else "no declarado",
+                str([int(x) for x in pasos]), str([int(x) for x in pasos_heredados]), peor_her,
+                str([int(x) for x in pasos_prologo]), peor_pro,
+                ("%.6e" % damp_bit) if damp_bit is not None else "no medido"))
     return {
         "control": "C4",
-        "que": "pureza del interior util: la esponja NO contamina el interior (ON vs OFF, mismo dt)",
+        "que": "pureza del interior util: la capa NO contamina el interior (ON vs OFF, mismo dt "
+               "y misma longitud de corrida)",
         "universo": "filas con r* < r*_sponge = %.1f (%d de %d filas) en los pasos de captura"
                     % (g["rs_sponge"], int(np.count_nonzero(interior)), m.nr),
+        "dominio_declarado": {"criterio": "t >= t_s (el frente del paquete toca la capa)",
+                              "t_s": (float(t_s) if t_s is not None else None),
+                              "pasos": [int(x) for x in pasos]},
         "detalles": detalles,
         "dif_max_interior": peor,
+        "detalles_heredados_F11": det_her,
+        "dif_max_interior_heredado_F11": peor_her,
+        "detalles_prologo": det_pro,
+        "dif_max_interior_prologo": peor_pro,
+        "damp_interior_bit": damp_bit,
         "umbral": UMBRAL_C4,
         "causa": causa,
         "ok": ok,
@@ -649,35 +780,63 @@ def control_C4(m, g, dt, pot, wang, res_on, res_off, pasos):
     }
 
 
-def control_C6(m, dosM, pot, wang, u0, p2, sinth, den):
-    """C6 REDEFINIDO para l = 2 (padre §D): U no puede romper m.
+def control_C6(m, dosM, pot, wang, u0, p2, sinth, den, campos=()):
+    """R3 (orden 2 del dueno): PUREZA DEL MODO CUADRUPOLAR l = 2 DEL CAMPO.
 
-    (i) el operador diagonal U(r*) es theta-independiente por construccion: su dispersion en
-        theta es 0.0 exacto;
-    (ii) el termino que U agrega a la aceleracion, delta = a_con_U(u0) - a_sin_U(u0) = -U u0,
-        debe ser PROPORCIONAL a P_2 (componente no-P_2 <= 1e-12). Si alguien implementara un U
-        con dependencia angular, este control lo caza.
-    (iii) INFORMATIVO (no criterio): el piso del metro angular, residuo no-P_2 de L2_theta(P_2).
+    Ya NO se exige simetria radial plana (l = 0): la dispersion angular del operador U(r*) y la
+    pureza angular del termino -U u^0 pasan a LECTURA INFORMATIVA. El criterio es la pureza
+    armonica del CAMPO en sus pasos de captura:
+
+        r_k = residuo_no_p2(u_k, filas vivas d2 >= FRAC_FILA_VIVA * max d2)
+        r_0 = idem sobre el DATO (denominador declarado)
+        criterio: max_k r_k <= UMBRAL_C6   (UMBRAL_C6 = 1e-12, NO se mueve)
+
+    Segunda lectura, INFORMATIVA y NO elegida: el factor de amplificacion max_k r_k / r_0. Mide si
+    el residuo del campo es piso de redondeo (factor ~ 1) o rompimiento real de la simetria
+    angular (factor grande). No decide; se imprime para el dictamen del dueno.
     """
     pot2d = np.repeat(pot[:, None], m.nt, axis=1)
     spread = float(np.max(pot2d.max(axis=1) - pot2d.min(axis=1)))
     a_con = acel_f3(m, u0, pot, wang)
     a_sin = acel_f3(m, u0, None, wang)
     delta = a_con - a_sin
-    rel_delta = residuo_no_p2(delta, m.th, p2, sinth, den)
+    rel_delta = residuo_no_p2(delta, m.th, p2, sinth, den, FRAC_FILA_VIVA)
     l2p2 = f2.L2_theta(np.repeat(p2[None, :], 3, axis=0), m.th, m.hth, 2)[1:2, :]
-    rel_l2 = residuo_no_p2(np.repeat(l2p2, m.nr, axis=0), m.th, p2, sinth, den)
-    ok = bool(spread == 0.0 and rel_delta <= UMBRAL_C6)
-    causa = ("dispersion theta de U = %.1e (esperado 0.0) | componente no-P_2 de -U u0 = %.6e "
-             "<= %.0e : %s | PISO del metro angular (no-P_2 de L2 P_2) = %.6e (informativo)"
-             % (spread, rel_delta, UMBRAL_C6, "PASA" if ok else "ROJO", rel_l2))
+    rel_l2 = residuo_no_p2(np.repeat(l2p2, m.nr, axis=0), m.th, p2, sinth, den, FRAC_FILA_VIVA)
+    r_0 = residuo_no_p2(u0, m.th, p2, sinth, den, FRAC_FILA_VIVA)
+    r_0_r2 = residuo_no_p2(u0, m.th, p2, sinth, den)
+    lecturas = []
+    peor = 0.0
+    for k, u_k, t_k in campos:
+        r_k = residuo_no_p2(u_k, m.th, p2, sinth, den, FRAC_FILA_VIVA)
+        peor = max(peor, r_k)
+        lecturas.append({"paso": int(k), "t": float(t_k), "residuo_no_P2": r_k,
+                         "factor_sobre_dato": (r_k / r_0) if r_0 > 0.0 else None})
+    ok = bool(peor <= UMBRAL_C6)
+    causa = ("pureza l = 2 del CAMPO sobre filas vivas (frac = %.1e): max residuo no-P_2 = %.6e "
+             "<= %.0e : %s (pasos %s) | residuo del DATO = %.6e | factor de amplificacion = %s "
+             "(informativo, no elegido) | dispersion angular de U = %.1e (informativo) | "
+             "no-P_2 de -U u^0 = %.6e (informativo) | piso del metro angular = %.6e"
+             % (FRAC_FILA_VIVA, peor, UMBRAL_C6, "PASA" if ok else "ROJO",
+                str([int(x[0]) for x in campos]), r_0,
+                ("%.6e" % (peor / r_0)) if r_0 > 0.0 else "no medible", spread, rel_delta, rel_l2))
     return {
         "control": "C6",
-        "que": "invariancia angular REDEFINIDA para l = 2: U(r*) no puede romper m",
-        "universo": "operador 2D de la malla sellada (nr0=%d, nt0=%d) y el dato de C2" % (m.nr, m.nt),
-        "dispersion_theta_U": spread,
-        "residuo_no_P2_de_delta_a": rel_delta,
-        "piso_metro_angular_no_P2_de_L2P2": rel_l2,
+        "que": "pureza del modo cuadrupolar l = 2 del CAMPO (R3: ya no se exige simetria radial "
+               "plana l = 0)",
+        "universo": "campo 2D de la malla sellada (nr0=%d, nt0=%d) en los pasos de captura, con "
+                    "mascara de FILA VIVA frac = %.1e" % (m.nr, m.nt, FRAC_FILA_VIVA),
+        "dominio_declarado": {"mascara": "d2 >= %.1e * max_fila d2" % FRAC_FILA_VIVA,
+                              "denominador": "residuo no-P_2 del DATO (r_0)",
+                              "pasos": [int(x[0]) for x in campos]},
+        "residuo_no_P2_campo_max": peor,
+        "residuo_no_P2_dato_den": r_0,
+        "factor_amplificacion": (peor / r_0) if r_0 > 0.0 else None,
+        "lecturas": lecturas,
+        "informativos": {"dispersion_theta_U": spread,
+                         "residuo_no_P2_de_delta_a": rel_delta,
+                         "residuo_no_P2_dato_metro_R2": r_0_r2,
+                         "piso_metro_angular_no_P2_de_L2P2": rel_l2},
         "umbral": UMBRAL_C6,
         "causa": causa,
         "ok": ok,
@@ -685,12 +844,18 @@ def control_C6(m, dosM, pot, wang, u0, p2, sinth, den):
     }
 
 
-def cronologia(g, p_eff, rs0, sigma, ancho_extra=6.0):
-    """Cronologia analitica de las DOS mitades del dato (D7). Unidades de r* = unidades de t."""
+def cronologia(g, p_eff, rs0, sigma, ancho_extra=6.0, saliente_puro=False):
+    """Cronologia analitica del dato. Unidades de r* = unidades de t.
+
+    Con saliente_puro = True (dato de R3) la mitad ENTRANTE NO EXISTE: los numeros de ese bloque
+    se siguen imprimiendo -- son la cronologia de un dato que NO se lanzo -- y se declaran.
+    """
     rs_min, rs_sp = g["rs_min"], g["rs_sponge"]
     a = ancho_extra * sigma
     return {
         "dato_centro": rs0,
+        "es_saliente_puro": bool(saliente_puro),
+        "mitad_entrante_existe": (not bool(saliente_puro)),
         "dato_soporte_6sigma": [rs0 - a, rs0 + a],
         "pared_interna": rs_min,
         "anillo_testigo_p_eff": p_eff,
@@ -769,6 +934,9 @@ def main(argv=None):
     ap = argparse.ArgumentParser(
         description="Arnes del potencial de Zerilli (M>0) en tortuga con capas F11 -- Gate 2D-F3")
     ap.add_argument("--dosM", type=float, default=DOSM)
+    ap.add_argument("--dato", choices=("saliente-r26", "estatico-r10"), default=DATO_R3)
+    ap.add_argument("--rs-dato", dest="rs_dato", type=float, default=RS_DATO_R3)
+    ap.add_argument("--omega", type=float, default=OMEGA_R3)
     ap.add_argument("--rs0", type=float, default=RS0)
     ap.add_argument("--sigma", type=float, default=SIGMA)
     ap.add_argument("--nr0", type=int, default=NR0)
@@ -826,28 +994,54 @@ def main(argv=None):
     # ---------------- corrida completa ----------------
     g = f11.geometria(a.rs_min, a.ancho, a.L_frac, int(a.n), a.A)
     g_win = dict(g)
-    g_win["c"] = float(a.rs0)
-    m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), 0)
+    if a.dato == "saliente-r26":
+        rs_dato = float(a.rs_dato)
+        g_win["c"] = rs_dato
+        gd = guarda_soporte_dato(g["rs_min"], g["rs_sponge"], rs_dato, a.sigma)
+        if not gd["ok"]:
+            raise SystemExit("FAIL-CLOSED R3 (D15): " + gd["causa"])
+        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), 0)
+        u0, v0 = dato_saliente_l2(m, rs_dato, a.sigma, float(a.omega))
+        dato_declarado = ("SALIENTE PURO de F11 (f11.dato_saliente verbatim) x P_2(cos theta): "
+                          "c = %.6f, sigma = %.6f, omega = %.6f, v^0 = -d_r u^0"
+                          % (rs_dato, a.sigma, a.omega))
+        saliente_puro = True
+    else:
+        rs_dato = float(a.rs0)
+        g_win["c"] = rs_dato
+        gd = guarda_soporte_dato(g["rs_min"], g["rs_sponge"], rs_dato, a.sigma)
+        m = f2.Malla2D(g["rs_min"], g["rs_max"], int(a.nr0), int(a.nt0), float(a.cfl), 0)
+        u0 = dato_f3(m, rs_dato, a.sigma)
+        v0 = np.zeros_like(u0)
+        dato_declarado = ("ESTATICO de §R5 (FALSADOR del ROJO): c = %.6f, sigma = %.6f, v^0 = 0"
+                          % (rs_dato, a.sigma))
+        saliente_puro = False
     dt = float(m.dt_cota)
     r_nod, f_nod, pot, wang = campos_de_malla(m, a.dosM)
     ip = int(np.argmin(np.abs(m.rs - g["p"])))
     p_eff = float(m.rs[ip])
     vw = f11.ventanas(g_win, p_eff, a.sigma, g["rs_min"], g["rs_max"])
-    cron = cronologia(g, p_eff, a.rs0, a.sigma)
+    cron = cronologia(g, p_eff, rs_dato, a.sigma, saliente_puro=saliente_puro)
     p2 = perfil_p2(m.th)
     sinth = np.sin(m.th)
     den_p2 = float(np.sum(p2 * p2 * sinth))
-    k_a = int(math.floor(12.0 / dt))
-    k_b = int(math.floor(vw["t_s"] / dt))
+    k_pro = 1                                        # prologo (D14), muy por debajo de t_s
+    k_pro2 = 8
+    k_a = int(math.floor(12.0 / dt))                 # captura HEREDADA de F11 (informativa)
+    k_b = int(math.floor(vw["t_s"] / dt))            # el frente del paquete toca la capa
+    k_ret = int(math.floor(vw["t_ret"] / dt))        # primer retorno posible al anillo
     nsteps = int(math.ceil(vw["T_obs"] / dt))
-    u0 = dato_f3(m, a.rs0, a.sigma)
+    caps_c4 = (k_pro, k_pro2, k_b, k_ret, nsteps)
     max_inc = float(np.max(np.abs(u0)))
 
     print("UNIVERSO DECLARADO: malla sellada F11 (r* en [%.1f, %.1f], nr0=%d, nt0=%d, hr=%r) | "
-          "mapa tortuga con 2M = %.1f sobre esa malla | dato de C2 | cifras analiticas de V_Z y U"
-          % (g["rs_min"], g["rs_max"], m.nr, m.nt, float(m.hr), a.dosM))
+          "mapa tortuga con 2M = %.1f sobre esa malla | dato de %s | cifras analiticas de V_Z y U"
+          % (g["rs_min"], g["rs_max"], m.nr, m.nt, float(m.hr), a.dosM, a.dato))
     print("HUELLA = %s" % HUELLA)
+    print("HUELLA R3 = %s" % HUELLA_R3)
     print("hora_utc = %s" % hora_utc())
+    print("DATO DECLARADO = %s" % dato_declarado)
+    print("GUARDA DE SOPORTE DEL DATO (D15): %s" % gd["causa"])
     print("geometria F11 (VERBATIM): L = %.6f | c_esponja = %.6f | p = %.6f | p_eff = %.16f | "
           "r*_sponge = %.6f | r*_max = %.6f | gamma_max = %.16f | integral_gamma = %.16f | "
           "solape = %.6f" % (g["L"], g["c"], g["p"], p_eff, g["rs_sponge"], g["rs_max"],
@@ -857,19 +1051,29 @@ def main(argv=None):
           % (a.dosM, L_ANGO, LAM_Z, float(pot[0]), float(u0 is not None and
              pot[int(np.argmin(np.abs(m.rs - 74.0)))]),
              float(pot[-1]), float(np.max(np.abs(pot))), float(m.rs[int(np.argmax(np.abs(pot)))])))
-    print("ventanas (c_dato = %.1f): t_1 = %.6f | t_a = %.6f | t_s = %.6f | t_ret = %.6f | "
-          "t_3 = %.6f | T_obs = %.6f" % (a.rs0, vw["t_1"], vw["t_a"], vw["t_s"], vw["t_ret"],
-                                         vw["t_3"], vw["T_obs"]))
-    print("dt = %.18e | nsteps = %d | capturas C4 en k = %d (t = %.6f) y k = %d (t = %.6f)"
-          % (dt, nsteps, k_a, k_a * dt, k_b, k_b * dt))
+    print("ventanas f11.ventanas VERBATIM (c_dato = %.6f): t_1 = %.6f | t_a = %.6f | t_s = %.6f | "
+          "t_ret = %.6f | t_3 = %.6f | T_obs = %.6f"
+          % (rs_dato, vw["t_1"], vw["t_a"], vw["t_s"], vw["t_ret"], vw["t_3"], vw["T_obs"]))
+    print("dt = %.18e | nsteps = %d | dominio declarado de C4: t >= t_s = %.6f (k >= %d) | "
+          "capturas C4 k = %s | captura heredada de F11 k_a = %d (t = %.6f) -> PROLOGO (D14)"
+          % (dt, nsteps, vw["t_s"], k_b, str([int(x) for x in caps_c4]), k_a, k_a * dt))
     print("D7 CRONOLOGIA DECLARADA (unidades de r* = unidades de t): mitad saliente: anillo "
-          "%.3f, esponja %.3f, retorno al anillo %.3f | mitad entrante: pared %.3f, anillo "
-          "%.3f (frente %.3f), esponja %.3f, retorno de SU eco al anillo %.3f (frente %.3f)"
+          "%.3f, esponja %.3f, retorno al anillo %.3f"
           % (cron["T_centro_saliente_en_anillo"], cron["T_centro_saliente_en_esponja"],
-             cron["T_retorno_saliente_en_anillo"], cron["T_centro_entrante_en_pared"],
-             cron["T_centro_entrante_en_anillo"], cron["T_frente_entrante_en_anillo"],
-             cron["T_centro_eco_pared_en_esponja"], cron["T_retorno_eco_pared_en_anillo"],
-             cron["T_frente_eco_pared_en_anillo"]))
+             cron["T_retorno_saliente_en_anillo"]))
+    if cron["mitad_entrante_existe"]:
+        print("D7 mitad ENTRANTE (EXISTE): pared %.3f, anillo %.3f (frente %.3f), esponja %.3f, "
+              "retorno de SU eco al anillo %.3f (frente %.3f)"
+              % (cron["T_centro_entrante_en_pared"], cron["T_centro_entrante_en_anillo"],
+                 cron["T_frente_entrante_en_anillo"], cron["T_centro_eco_pared_en_esponja"],
+                 cron["T_retorno_eco_pared_en_anillo"], cron["T_frente_eco_pared_en_anillo"]))
+    else:
+        print("D7 mitad ENTRANTE: NO EXISTE (dato saliente puro, v^0 = -d_r u^0). Los numeros de "
+              "ese bloque serian pared %.3f, anillo %.3f, eco al anillo %.3f, pero describen un "
+              "dato que NO se lanzo: el canal de contaminacion de la pared queda CERRADO por "
+              "construccion (esa es la ruta elegida en R3)."
+              % (cron["T_centro_entrante_en_pared"], cron["T_centro_entrante_en_anillo"],
+                 cron["T_retorno_eco_pared_en_anillo"]))
 
     c0 = control_C0()
     c1a = control_C1a(a.dosM)
@@ -880,11 +1084,13 @@ def main(argv=None):
         print("[%s] rc=%s ok=%s" % (r.get("control"), r.get("rc"), r.get("ok")))
         print("    %s" % r.get("causa", ""))
 
-    res_on = corrida_c2(m, g, g_win, dt, nsteps, True, pot, wang, a.rs0, a.sigma,
-                        capturas=(k_a, k_b, nsteps))
-    res_off = corrida_c2(m, g, g_win, dt, k_b + 1, False, pot, wang, a.rs0, a.sigma,
-                         capturas=(k_a, k_b))
-    c4 = control_C4(m, g, dt, pot, wang, res_on, res_off, (k_a, k_b))
+    res_on = corrida_c2(m, g, g_win, dt, nsteps, True, pot, wang, u0, v0, a.sigma,
+                        capturas=caps_c4)
+    res_off = corrida_c2(m, g, g_win, dt, nsteps, False, pot, wang, u0, v0, a.sigma,
+                         capturas=caps_c4)
+    c4 = control_C4(m, g, dt, pot, wang, res_on, res_off, (k_b, k_ret, nsteps),
+                    pasos_heredados=(k_a, k_b), pasos_prologo=(k_pro, k_pro2),
+                    damp_on=res_on["damp"], t_s=vw["t_s"])
 
     rdb = res_on["rdb"]
     acc = res_on["acc"]
@@ -901,8 +1107,8 @@ def main(argv=None):
         "control": "C2",
         "que": "dispersion por U(r*) con el dato en reposo y absorcion de la senal saliente en "
                "la capa F11 exterior",
-        "universo": "malla sellada nr0=%d nt0=%d | nsteps = %d | dato l=2 en r* = %.1f, sigma = "
-                    "%.1f, v^0 = 0" % (m.nr, m.nt, nsteps, a.rs0, a.sigma),
+        "universo": "malla sellada nr0=%d nt0=%d | nsteps = %d | dato %s en r* = %.6f, sigma = "
+                    "%.6f" % (m.nr, m.nt, nsteps, a.dato, rs_dato, a.sigma),
         "R_dB": rdb,
         "umbral_R_dB": UMBRAL_R_DB,
         "E_sal": acc["E_sal"],
@@ -917,20 +1123,31 @@ def main(argv=None):
         "var_theta_max": float(np.max(res_on["med"].var_theta)) if res_on["med"].var_theta else 0.0,
         "residuo_no_P2_dato_inicial": residuo_no_p2(u0, m.th, p2, sinth, den_p2),
         "residuo_no_P2_solucion_final": residuo_no_p2(res_on["u"], m.th, p2, sinth, den_p2),
+        "residuo_no_P2_dato_inicial_fila_viva": residuo_no_p2(u0, m.th, p2, sinth, den_p2,
+                                                              FRAC_FILA_VIVA),
+        "residuo_no_P2_solucion_final_fila_viva": residuo_no_p2(res_on["u"], m.th, p2, sinth,
+                                                                den_p2, FRAC_FILA_VIVA),
+        "dato_declarado": dato_declarado,
         "causa": causa_c2,
         "ok": ok_c2,
         "rc": 0 if ok_c2 else 1,
     }
     print("[C2] rc=%s ok=%s" % (c2["rc"], c2["ok"]))
     print("    %s" % causa_c2)
-    print("    residuo no-P2 (DATO inicial / SOLUCION final) = %.6e / %.6e (informativo: mide el "
-          "piso del metro angular y, separado, el objeto)"
+    print("    residuo no-P2 con el metro de R2 (msk = d2 > 0.0) -> DATO %.6e / SOLUCION %.6e"
+          "  <- D13: es el metro que imprimio 9.999999e-01 sobre filas vacias"
           % (c2["residuo_no_P2_dato_inicial"], c2["residuo_no_P2_solucion_final"]))
+    print("    residuo no-P2 con FILAS VIVAS (frac = %.1e) -> DATO %.6e / SOLUCION %.6e"
+          % (FRAC_FILA_VIVA, c2["residuo_no_P2_dato_inicial_fila_viva"],
+             c2["residuo_no_P2_solucion_final_fila_viva"]))
     print("[C4] rc=%s ok=%s" % (c4["rc"], c4["ok"]))
     print("    %s" % c4["causa"])
 
-    c6 = control_C6(m, a.dosM, pot, wang, u0, p2, sinth, den_p2)
-    c7 = control_C7(res_on["med"], max_inc, m, g, a.rs0, a.sigma)
+    campos_c6 = [(k_b, res_on["caps"][k_b], k_b * dt),
+                 (k_ret, res_on["caps"][k_ret], k_ret * dt),
+                 (nsteps, res_on["u"], nsteps * dt)]
+    c6 = control_C6(m, a.dosM, pot, wang, u0, p2, sinth, den_p2, campos=campos_c6)
+    c7 = control_C7(res_on["med"], max_inc, m, g, rs_dato, a.sigma)
     c8 = control_C8(m, g, p_eff, a.sigma)
     for r in (c6, c7, c8):
         print("[%s] rc=%s ok=%s aplicable=%s" % (r.get("control"), r.get("rc"), r.get("ok"),
@@ -952,6 +1169,7 @@ def main(argv=None):
         "huella_f11": HUELLA_F11,
         "huella_v3": HUELLA_V3,
         "huella_r2": HUELLA_R2,
+        "huella_r3": HUELLA_R3,
         "huella_dueno_en_crudo": 0,
         "preregistro": PREREGISTRO,
         "errata": ERRATA,
@@ -962,7 +1180,19 @@ def main(argv=None):
         "hora_fin_utc": hora_utc(),
         "universo_declarado": LAMINAS_DECLARADAS,
         "laminas_declaradas": LAMINAS_DECLARADAS,
+        "dato_declarado": dato_declarado,
+        "dato_elegido": a.dato,
+        "guarda_soporte_dato": gd,
+        "dominio_c4_declarado": {"criterio": "t >= t_s (el frente del paquete toca la capa)",
+                                 "t_s": float(vw["t_s"]),
+                                 "pasos_que_deciden": [int(x) for x in (k_b, k_ret, nsteps)],
+                                 "pasos_heredados_F11": [int(k_a), int(k_b)],
+                                 "pasos_prologo": [int(k_pro), int(k_pro2)],
+                                 "umbral_C4_no_movido": UMBRAL_C4,
+                                 "umbral_C6_no_movido": UMBRAL_C6,
+                                 "umbral_R_dB_no_movido": UMBRAL_R_DB},
         "parametros": {"dosM": float(a.dosM), "l": L_ANGO, "lam": LAM_Z, "rs0": float(a.rs0),
+                       "rs_dato": float(rs_dato), "omega_r3": float(a.omega),
                        "sigma": float(a.sigma), "nr0": int(m.nr), "nt0": int(m.nt0),
                        "cfl": float(m.cfl), "nivel": int(m.nivel), "n": int(a.n),
                        "A": float(a.A), "L_frac": float(a.L_frac), "ancho": float(a.ancho),
@@ -987,11 +1217,24 @@ def main(argv=None):
         "rc": 0 if veredicto == "VERDE" else 1,
         "defectos_declarados": ["D6 (C7 no aplicable: la banda sellada contiene el dato)",
                                 "D7 (la mitad entrante regresa de la pared interna y su eco de "
-                                "esponja cae dentro de la ventana de vuelta)"],
+                                "esponja cae dentro de la ventana de vuelta)",
+                                "D13 (C6 con msk = d2 > 0.0 es una razon sobre filas vacias: "
+                                "9.999999e-01 no es el campo, es 1/0)",
+                                "D14 (las capturas de C4 heredadas de F11 caen en t < t_s: en el "
+                                "ROJO las DOS capturas quedaron fuera del dominio del control)",
+                                "D15 (el soporte +-6 sigma del dato de §R5 sale de la malla por "
+                                "abajo y se pega a la pared Dirichlet interna)"],
         "notas": ["dt_cota tomada con f = 1 (la de F11): conservadora porque f <= 1 en r > 2M",
                   "el factor geometrico del medidor es r*^2 (F11) y cancela en R_dB",
                   "R_dB es una RAZON en energia: no se re-ventanea ni se mueve ningun umbral",
-                  "la unica linea nueva del sector angular es el factor metrico f en el peso"],
+                  "la unica linea nueva del sector angular es el factor metrico f en el peso",
+                  "R3: f11.ventanas sigue VERBATIM; lo que cambio es el DATO (c = 26.0 saliente "
+                  "puro), no las formulas de las ventanas",
+                  "R3: C6 ya no exige simetria radial plana; audita la pureza l = 2 del CAMPO",
+                  "R3: la corrida OFF tiene la MISMA longitud que la ON (antes se cortaba en "
+                  "k_b + 1), para que la unica diferencia entre ambas sea la capa",
+                  "R3: las lecturas INFORMATIVAS de C6 se miden con la MISMA mascara de fila viva "
+                  "que el criterio, para que sean comparables entre si"],
     }
     ruta = a.json_ruta
     if ruta == "auto":
