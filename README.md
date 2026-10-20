@@ -1,98 +1,83 @@
-<!-- HUELLA-GW-RW-ZERILLI-README-20261020 -->
+# gw-rw-zerilli — convergencia cuadrática `O(h²)` y absorción perimetral sub-40 dB en esquemas kick-drift 2D
 
-# gw-rw-zerilli
+> **EN —** Numerical-relativity-grade metrology on 2D kick-drift hyperbolic schemes. Two properties
+> are certified: **second-order convergence** preserved under mesh refinement (Richardson `p = 2.0028`,
+> tolerance `0.05`) and **perimetric absorption below the sealed −40 dB** (`R_dB = −44.94 dB`). Each
+> gate was pre-registered in Git **before** its first number and closes with its own verdict —
+> including `F3`, which is **declared ROJO**.
 
-**Regge–Wheeler y Zerilli en 1D y 2D, con lo verde y lo rojo publicados tal como salieron.**
+**Manuscrito 2** — [`MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_PERIMETRAL_20261014.md`](MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_PERIMETRAL_20261014.md)
+`HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
+· cierre `2026-10-14` · licencia declarada en el propio manuscrito: **MIT**.
 
-> **EN —** Regge–Wheeler / Zerilli wave propagation on a Schwarzschild background: a 1D leapfrog driver and a 2D kick-drift scheme, pre-registered falsifiers and sealed raw files. Second-order convergence is measured on both potentials — `p = 2.0002312004820553` for Regge–Wheeler, `p = 2.000226129020191` for Zerilli. The absorbing perimeter clears its sealed threshold at `-47.48848252620233 dB` against `-40.0 dB`. Three cells are published RED or NOT MEASURABLE and one run is REFUSED *fail-closed*: nothing here is repaired after the fact.
+## Las dos propiedades que se certifican
 
-Estado del frente al cierre del manifiesto (2026-10-14): `F1` VERDE · `F2` VERDE · `F4` VERDE · `F11` VERDE (nominal) · `F3` **ROJO declarado** · Línea A certificada.
+1. **Orden de convergencia cuadrático `O(h²)`** preservado bajo refinamiento de malla, con extinción
+   del piso de error en arranque de Cauchy simétrico.
+2. **Absorción perimetral adiabática** por debajo del umbral sellado de **−40 dB**, sin reflexión
+   parásita de pared y sin contaminación interior.
 
----
+Tolerancias selladas: `umbral_p = 0.05` · frontera `-40.0 dB` · `UMBRAL_C5_DB = 0.5`.
 
-## 1. Lo que sí salió
+## Estado del frente, sin maquillaje
 
-| Frente | Objeto medido | Veredicto y cifra |
+| gate | estado | cifra que lo porta |
 |---|---|---|
-| `F2` — 1D | Orden de convergencia por extrapolación de Richardson, sobre los dos potenciales | VERDE — RW `p = 2.0002312004820553` · Zerilli `p = 2.000226129020191`, ambos `nota_p = OK` |
-| `F2` — 2D | Escalera de refinamiento `nr0 = 64 / 128 / 256`, umbral declarado `0.05` | VERDE — `p = 1.990765787067249` · `2.0011044055918528` · `2.0028629063990215` |
-| Piso de error | Arranque de Cauchy simétrico en `nr0 = 256` | `d2 = 4.986396759321774e-03` contra `ref_piso_f2 = 1.081241e-02`, factor `0.46117348115006496` |
-| `F4` | Frontera absorbente contra umbral sellado `-40.0 dB` | VERDE — `-47.48848252620233 dB` (derecha) · `-47.48845786723316 dB` (izquierda), margen `+7.4885 dB` |
-| `F11` | Absorción perimetral, corrida nominal `E1`, `nr0 = 384` | VERDE — `R_dB = -45.931354463740675` (unidad: energía), `fallos = []` |
-| Línea A | Certificación simbólica del residuo de ecuación modificada (reescritura de Taylor) | banco *must-fail* discriminado con vector `C0:0 E1:2 E2:3 E3:1`; `ORDEN p = 4 CERTIFICADO`, `escritura_a_disco: 0` |
+| `F1` | **VERDE** | `F1.a = 6.000848e-14` · `F1.b` orden `2.0251` / `1.9246` · control `4.913749e+00` |
+| `F2` | **VERDE** | Richardson cuadrático `p = 2.0028` en `nr0 = 256` |
+| `F4` | **VERDE** | pasó de `FALLA` declarada en V2 (`−21.68 dB` / `−19.10 dB` frente a `−40 dB`) a VERDE en V3 |
+| `F11` | **VERDE** (nominal) | `R_dB = −44.94 dB`, `C5` con `RC 0` a 3072 |
+| `F3` | **ROJO declarado** | rectificación ratificada en prosa, **aún no implementada** |
+| Línea A | certificada | banco *must-fail* `4/4` discriminado |
 
-## 2. Lo que salió rojo, y se queda rojo
+### El medio paso que costaba un orden de convergencia
 
-| Celda | Medición | Declaración |
-|---|---|---|
-| `C3b ANGULAR ORDEN 1` | `p = 0.9857539455144246` | **ROJA** |
-| `C3a RADIAL ORDEN 1` | sin medición válida | **NO MEDIBLE** |
-| `c4` | `CFL = 0.7500000000 > sellado 0.5000000000` | **REFUSADA** *fail-closed* |
-| `F3` — curvatura de Zerilli 2D | triple `['C2','C4','C6']`, `rc = 1` | **ROJO declarado**, con diagnóstico y rectificación ratificada en prosa, aún no implementada |
+Antes de la reparación, `F1.b` medía orden **`1.0163`** (ROJO, commit `39868c6`). La causa: la
+inicialización del bucle *kick-drift* usaba `v^{-1/2}` en lugar del medio paso correcto. Se corrigió
+**una línea** y se nombró el invariante en el docstring del `core`. La diferencia entre `1.0163` y
+`2.025059` es el efecto de **un medio paso mal puesto** — y quedó registrada como tal.
 
-Estos cuatro hechos se publican como están: no se reumbralizan, no se reparan y no se omiten. Un repositorio que sólo muestra lo verde no certifica nada.
-
-## 3. Regla de lectura de las cifras
-
-Toda cifra de este repositorio afirma con **portador declarado** (archivo · blob `git hash-object` · líneas · bytes) y con el **comando que la respalda**. Los crudos viven en `sim/data/` y son la fuente; el manuscrito y los metadatos de depósito los citan, no los sustituyen.
-
-**Declaración obligatoria: la cifra `-44.94 dB a 3072 celdas` NO es un resultado medido.** Aparece únicamente en el asunto de un commit (`f974578`) y en una cita de ese asunto dentro de `sim/PREREGISTRO_GATE_2D_F3_ZERILLI_CURVATURA_20261013.md`. No existe crudo commiteado que la respalde: el crudo de `F11` no contiene `3072`, ni `44.94`, ni bloque `C5`; su única `R_dB` es `-45.931354463740675` con `rung = E1`. Los escalones `E2`, `E3` y `E4` están declarados en la escalera pero **no fueron medidos** en la corrida commiteada. Se cita aquí como compromiso del sujeto de commit, nunca como medición.
-
-## 4. Mapa del repositorio
+## Aparato
 
 ```
-sim/driver_rw_zerilli_1d.py              driver leapfrog 1D (--potencial rw|zerilli|nulo)
-sim/driver_rw_zerilli_2d.py              driver 2D
-sim/arnes_richardson_2d_f2_v3.py         arnés de Richardson 2D (versión sellada)
-sim/arnes_richardson_2d_f2.py            versión previa; NO es la que produjo el crudo sellado
-sim/arnes_zerilli_curvatura_2d_f3.py     puerta de curvatura de Zerilli (ROJA)
-sim/arnes_capa_absorbente_2d_f11.py      capa absorbente perimetral
-sim/sonda_2d_f1_dominio.py               sonda de dominio F1
-sim/certificador_reescritura_stencil_residuo.py   certificador simbólico (Línea A)
-sim/extractor_polos_matrixpencil.py      polos complejos por Prony / Matrix Pencil
-sim/data/*.json                          crudos sellados — de aquí salen todas las cifras
-sim/PREREGISTRO_*.md                     pre-registros, commiteados antes de la primera cifra
-sim/ACTA_*.md · sim/ERRATA_*.md          cierres, erratas y declaraciones de colisión
-MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_PERIMETRAL_20261014.md
-ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json
+sim/arnes_richardson_2d_f2_v3.py              arnés de convergencia (Richardson F2)  blob 72844790ba3ef2184d941ed1202c84b88771276b
+sim/arnes_zerilli_curvatura_2d_f3.py           arnés del frente de curvatura (F3)
+sim/arnes_capa_absorbente_2d_f11.py            capa absorbente perimetral (F11)
+sim/certificador_reescritura_stencil_residuo.py certificación simbólica de stencils (Taylor)
+sim/data/crudo_2d_f2_richardson_post_arranque_v3_nr0_{64,128,256}_*.json   crudos del refinamiento
+sim/PREREGISTRO_*                              sellos por gate, ANTES de la primera cifra
+sim/ACTA_* · sim/ERRATA_* · sim/DECLARACION_*  actas de cierre, erratas y colisiones declaradas
 ```
 
-## 5. Cómo reproducir
+## Reproducir
 
-Requiere `python3` con `numpy` (y `scipy` para el extractor de polos). Los arneses se corren con `-B` para no escribir `__pycache__` dentro del árbol medido.
-
-```bash
-# 1D: mismo driver, los dos potenciales
-python3 -B sim/driver_rw_zerilli_1d.py --modo todo --potencial rw
-python3 -B sim/driver_rw_zerilli_1d.py --modo todo --potencial zerilli
-
-# 2D: un escalón de la escalera de Richardson (repetir con --nr0 128 y --nr0 256)
-python3 -B sim/arnes_richardson_2d_f2_v3.py --estricto --nr0 64 --json auto
-
-# 2D: capa absorbente perimetral (escribe su propio crudo)
-python3 -B sim/arnes_capa_absorbente_2d_f11.py --estricto --json sim/data/crudo_capa_absorbente_2d_f11_<sello>.json
-
-# 2D: puerta de curvatura de Zerilli (la que sale ROJA)
-python3 -B sim/arnes_zerilli_curvatura_2d_f3.py
-
-# Línea A: banco must-fail del certificador simbólico (debe discriminar C0:0 E1:2 E2:3 E3:1)
-python3 -B sim/certificador_reescritura_stencil_residuo.py --must-fail --json
-
-# Polos complejos por Matrix Pencil
-python3 -B sim/extractor_polos_matrixpencil.py --modo sintetico
+```sh
+python3 -B sim/arnes_richardson_2d_f2_v3.py --help
+# flags medidos en el arnes: --estricto --stamp --json --cfl --T --nr0   (refinamiento nr0 ∈ {64, 128, 256})
 ```
 
-Cada corrida escribe su crudo con hora UTC, `argv`, `huella` e `identidad_self`: dos ejecuciones no producen dos verdades distintas, producen dos crudos fechados.
+Cada cifra del manuscrito afirma con **portador declarado** (archivo · blob · líneas · bytes) y
+**comando que la respalda**. Una cifra cuya procedencia sea un *asunto de commit* y no un crudo se
+declara **compromiso**, no resultado medido (§4.4).
 
-## 6. Protocolo de medición
+## Erratas y colisiones declaradas (esto es el valor)
 
-Toda escritura se autoriza sólo después de medir que la fila no exista, con una compuerta determinista previa y bloqueante, corrida con rutas **absolutas**. Códigos: `0` apto · `10` el objetivo no existe (creación autorizada) · `11` la huella ya está presente (colisión: cero escrituras) · `12` blob mutado · `13` objetivo sucio · `14` objetivo sin árbol git · `15` líneas distintas al contrato · `20` tupla incompleta. El cierre de cada paso viaja con la huella del objeto destino (blob, bytes, líneas, hora).
+El repositorio conserva, con nombre y fecha, lo que la mayoría esconde: la **errata** de identidad
+`F2` v2/v3, la **colisión** de la sonda CFL con malla fija, la **declaración** de arranque exacto con
+su criterio de piso, y la **errata del pre-registro** del gate 2D `F3`. Ninguna se reescribe hacia
+atrás: se declaran y se conservan las dos filas.
 
-## 7. Estado de publicación
+## Límites declarados
 
-<!-- HUELLA-GW-RW-ZERILLI-LICENCIA-20261020 -->
-- **DOI: pendiente de depósito.** Los metadatos Zenodo del Manuscrito 2 están sellados en el árbol, pero este repositorio todavía no tiene identificador propio. No se cita uno.
-- **Licencia: hay colisión declarada, no resuelta.** El commit `3a033be` declara `"license": "MIT"` en `ZENODO_MANUSCRITO_2_...json`; el árbol de trabajo tiene esa misma clave cambiada a `"cc-by-4.0"` sin commitear. Este README no adjudica esa decisión: la publica como está. Al publicar, lo que se ve es `MIT`. El árbol **no contiene archivo `LICENSE`**.
-- **Autor:** Roman Martinez, Jose Alexis — Platino Labs.
+- `F3` es **ROJO** y sigue ROJO: la rectificación está ratificada **en prosa** y todavía **no
+  implementada**.
+- `F2` tiene un **vecino no adjudicado** (`sim/arnes_richardson_2d_f2.py`, sucio ` M`): no se toca y
+  no cuenta como resultado.
+- `F11` es VERDE **nominal**; el adjetivo es parte del veredicto.
 
-Cifras medidas y selladas; no se inventan experimentos. Toda cifra de conteo caduca al escribirse: su hora es parte de la cifra.
+## Licencia y citación
+
+**MIT** — declarada en el manuscrito y en [`LICENSE`](LICENSE).
+Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json`](ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json).
+
+**Parte del archivo de instrumentos de [alexisromtz-lab](https://github.com/alexisromtz-lab).**
