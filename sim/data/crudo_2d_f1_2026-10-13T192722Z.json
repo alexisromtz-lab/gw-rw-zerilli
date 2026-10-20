@@ -1,0 +1,353 @@
+{
+ "argv": [
+  "--gate",
+  "f1",
+  "--M",
+  "0.0",
+  "--T",
+  "20"
+ ],
+ "certificacion_L2_theta": {
+  "error_ecuador_rel": 0.004409314807332383,
+  "error_polo_rel": 0.003208635955053533,
+  "hth": 0.09817477042468103,
+  "nodo_peor_t": 0.09817477042468103,
+  "nota": "orden espacial O(h^2); el polo da 6 = l(l+1) exacto en el limite continuo",
+  "nt": 17,
+  "referencia": "analitica externa: L2 P_2 = l(l+1) P_2 = 6 P_2",
+  "residuo_rel_max": 0.0055356325465935425
+ },
+ "f1a": {
+  "celdas_media_onda": 6.0,
+  "cheqs": [
+   {
+    "n": 94,
+    "residuo_rel": 1.7356771334171756e-14,
+    "t": 4.955936197404015
+   },
+   {
+    "n": 189,
+    "residuo_rel": 6.000847803328321e-14,
+    "t": 9.96459512031233
+   },
+   {
+    "n": 284,
+    "residuo_rel": 1.8306859363125726e-14,
+    "t": 14.973254043220644
+   },
+   {
+    "n": 379,
+    "residuo_rel": 1.9868596200363266e-14,
+    "t": 19.981912966128956
+   }
+  ],
+  "dominio": "dato independiente de theta (rama l = 0), M = 0, V = 0",
+  "k_hr": 1.0471975511965976,
+  "lam_r": 0.4217818040343843,
+  "nsteps": 379,
+  "referencia": "modo discreto del simbolo radial (algebra externa al bucle)",
+  "residuo_rel_max": 6.000847803328321e-14,
+  "umbral": 1e-13,
+  "veredicto": "VERDE",
+  "xi": 0.42497254011269503
+ },
+ "f1b": {
+  "T": 20.0,
+  "dominio": "perfil angular l = 2 VIVO; no se reclama exactitud, solo orden",
+  "filas": [
+   {
+    "cheqs": [
+     {
+      "n": 189,
+      "residuo_rel": 0.043147533032688735,
+      "t": 9.96459512031233
+     },
+     {
+      "n": 379,
+      "residuo_rel": 0.13199838938693734,
+      "t": 19.981912966128956
+     }
+    ],
+    "dt": 0.05272272550429804,
+    "hr": 0.125,
+    "hth": 0.09817477042468103,
+    "malla": {
+     "M": 0.0,
+     "cfl": 0.5,
+     "cota_ratificada_es_menor_o_igual": true,
+     "dt": 0.05272272550429804,
+     "dt_cota_ratificada_literal": 0.05272272550429804,
+     "dt_cota_simbolo_con_f": 0.05272272550429804,
+     "hr": 0.125,
+     "hr0": 0.125,
+     "hth": 0.09817477042468103,
+     "lam_r": 0.4217818040343843,
+     "nivel": 0,
+     "nota_cota": "cota GLOBAL: un solo dt paga el radio mas chico de la malla",
+     "nr": 97,
+     "nt": 17,
+     "offset_delta": 0.0,
+     "r_max": 14.0,
+     "r_min": 2.0,
+     "rs_max": 14.0,
+     "rs_min": 2.0,
+     "tortuga": {
+      "iters": 0,
+      "metodo": "identidad (M = 0): r(r*) = r*",
+      "monotono": true,
+      "r_sobre_2M_min": Infinity,
+      "resid_max": 0.0
+     }
+    },
+    "nivel": 0,
+    "nr": 97,
+    "nsteps": 379,
+    "nt": 17,
+    "residuo_rel_max": 0.13199838938693734
+   },
+   {
+    "cheqs": [
+     {
+      "n": 378,
+      "residuo_rel": 0.022114765209717082,
+      "t": 9.994200562124188
+     },
+     {
+      "n": 756,
+      "residuo_rel": 0.06516650707573221,
+      "t": 19.988401124248377
+     }
+    ],
+    "dt": 0.026439684026783566,
+    "hr": 0.0625,
+    "hth": 0.04908738521234052,
+    "malla": {
+     "M": 0.0,
+     "cfl": 0.5,
+     "cota_ratificada_es_menor_o_igual": true,
+     "dt": 0.026439684026783566,
+     "dt_cota_ratificada_literal": 0.026439684026783566,
+     "dt_cota_simbolo_con_f": 0.026439684026783566,
+     "hr": 0.0625,
+     "hr0": 0.125,
+     "hth": 0.04908738521234052,
+     "lam_r": 0.42303494442853706,
+     "nivel": 1,
+     "nota_cota": "cota GLOBAL: un solo dt paga el radio mas chico de la malla",
+     "nr": 192,
+     "nt": 33,
+     "offset_delta": 0.020833333333333332,
+     "r_max": 13.958333333333334,
+     "r_min": 2.0208333333333335,
+     "rs_max": 13.958333333333334,
+     "rs_min": 2.0208333333333335,
+     "tortuga": {
+      "iters": 0,
+      "metodo": "identidad (M = 0): r(r*) = r*",
+      "monotono": true,
+      "r_sobre_2M_min": Infinity,
+      "resid_max": 0.0
+     }
+    },
+    "nivel": 1,
+    "nr": 192,
+    "nsteps": 756,
+    "nt": 33,
+    "residuo_rel_max": 0.06516650707573221
+   },
+   {
+    "cheqs": [
+     {
+      "n": 756,
+      "residuo_rel": 0.011631768277039704,
+      "t": 9.994200562124188
+     },
+     {
+      "n": 1513,
+      "residuo_rel": 0.032216920894998516,
+      "t": 20.00162096626177
+     }
+    ],
+    "dt": 0.013219842013391783,
+    "hr": 0.03125,
+    "hth": 0.02454369260617026,
+    "malla": {
+     "M": 0.0,
+     "cfl": 0.5,
+     "cota_ratificada_es_menor_o_igual": true,
+     "dt": 0.013219842013391783,
+     "dt_cota_ratificada_literal": 0.013219842013391783,
+     "dt_cota_simbolo_con_f": 0.013219842013391783,
+     "hr": 0.03125,
+     "hr0": 0.125,
+     "hth": 0.02454369260617026,
+     "lam_r": 0.42303494442853706,
+     "nivel": 2,
+     "nota_cota": "cota GLOBAL: un solo dt paga el radio mas chico de la malla",
+     "nr": 384,
+     "nt": 65,
+     "offset_delta": 0.020833333333333332,
+     "r_max": 13.989583333333334,
+     "r_min": 2.0208333333333335,
+     "rs_max": 13.989583333333334,
+     "rs_min": 2.0208333333333335,
+     "tortuga": {
+      "iters": 0,
+      "metodo": "identidad (M = 0): r(r*) = r*",
+      "monotono": true,
+      "r_sobre_2M_min": Infinity,
+      "resid_max": 0.0
+     }
+    },
+    "nivel": 2,
+    "nr": 384,
+    "nsteps": 1513,
+    "nt": 65,
+    "residuo_rel_max": 0.032216920894998516
+   }
+  ],
+  "nulo_ang": false,
+  "omega": 1.0,
+  "orden_min": 1.016312052310532,
+  "orden_min_exigido": 1.8,
+  "ordenes": [
+   {
+    "orden": 1.0183177525717575,
+    "par": [
+     0,
+     1
+    ]
+   },
+   {
+    "orden": 1.016312052310532,
+    "par": [
+     1,
+     2
+    ]
+   }
+  ],
+  "referencia": "solucion manufacturada exacta r j_2(omega r) P_2(cos t) cos(omega t)",
+  "veredicto": "ROJO"
+ },
+ "f1b_control_angular_apagado": {
+  "T": 20.0,
+  "dominio": "perfil angular l = 2 VIVO; no se reclama exactitud, solo orden",
+  "filas": [
+   {
+    "cheqs": [
+     {
+      "n": 189,
+      "residuo_rel": 1.0444188533327503,
+      "t": 9.96459512031233
+     },
+     {
+      "n": 379,
+      "residuo_rel": 4.825955099674984,
+      "t": 19.981912966128956
+     }
+    ],
+    "dt": 0.05272272550429804,
+    "hr": 0.125,
+    "hth": 0.09817477042468103,
+    "malla": {
+     "M": 0.0,
+     "cfl": 0.5,
+     "cota_ratificada_es_menor_o_igual": true,
+     "dt": 0.05272272550429804,
+     "dt_cota_ratificada_literal": 0.05272272550429804,
+     "dt_cota_simbolo_con_f": 0.05272272550429804,
+     "hr": 0.125,
+     "hr0": 0.125,
+     "hth": 0.09817477042468103,
+     "lam_r": 0.4217818040343843,
+     "nivel": 0,
+     "nota_cota": "cota GLOBAL: un solo dt paga el radio mas chico de la malla",
+     "nr": 97,
+     "nt": 17,
+     "offset_delta": 0.0,
+     "r_max": 14.0,
+     "r_min": 2.0,
+     "rs_max": 14.0,
+     "rs_min": 2.0,
+     "tortuga": {
+      "iters": 0,
+      "metodo": "identidad (M = 0): r(r*) = r*",
+      "monotono": true,
+      "r_sobre_2M_min": Infinity,
+      "resid_max": 0.0
+     }
+    },
+    "nivel": 0,
+    "nr": 97,
+    "nsteps": 379,
+    "nt": 17,
+    "residuo_rel_max": 4.825955099674984
+   }
+  ],
+  "nulo_ang": true,
+  "omega": 1.0,
+  "orden_min": NaN,
+  "orden_min_exigido": 1.8,
+  "ordenes": [],
+  "referencia": "solucion manufacturada exacta r j_2(omega r) P_2(cos t) cos(omega t)",
+  "veredicto": "CONTROL-ROJO"
+ },
+ "gate": {
+  "M": 0.0,
+  "cfl": 0.5,
+  "etiqueta_sellada": "N-2D-0",
+  "nombre": "Gate 2D-F1 (nombre del dueno)",
+  "nota": "primera corrida obligatoria ANTES de inyectar el potencial de Schwarzschild",
+  "potencial": "ratificado"
+ },
+ "huella": "HUELLA-DRIVER-RW-ZERILLI-2D-AXISIMETRICO-20261013",
+ "identidad_self": {
+  "cabezas_hash": 21,
+  "lineas": 589,
+  "ruta": "/Users/marlene/gw-rw-zerilli/sim/driver_rw_zerilli_2d.py",
+  "sha256": "cb086ef3892d861e17a0a676e8c81840e43ead8599fd9c54421a37ac08466faf"
+ },
+ "malla": {
+  "M": 0.0,
+  "cfl": 0.5,
+  "cota_ratificada_es_menor_o_igual": true,
+  "dt": 0.05272272550429804,
+  "dt_cota_ratificada_literal": 0.05272272550429804,
+  "dt_cota_simbolo_con_f": 0.05272272550429804,
+  "hr": 0.125,
+  "hr0": 0.125,
+  "hth": 0.09817477042468103,
+  "lam_r": 0.4217818040343843,
+  "nivel": 0,
+  "nota_cota": "cota GLOBAL: un solo dt paga el radio mas chico de la malla",
+  "nr": 97,
+  "nt": 17,
+  "offset_delta": 0.0,
+  "r_max": 14.0,
+  "r_min": 2.0,
+  "rs_max": 14.0,
+  "rs_min": 2.0,
+  "tortuga": {
+   "iters": 0,
+   "metodo": "identidad (M = 0): r(r*) = r*",
+   "monotono": true,
+   "r_sobre_2M_min": Infinity,
+   "resid_max": 0.0
+  }
+ },
+ "motor": "numpy 2.4.6 + scipy (spherical_jn); sin red, sin aleatoriedad",
+ "segundos_muro": 1.338,
+ "todo_verde": false,
+ "unidad": "nodo / celda / paso temporal / linea / encabezado",
+ "universo_declarado": "este archivo (1 pieza) + sim/PREREGISTRO_FRENTE_2D_CQG_20261013.md (1 pieza) + sim/ADENDA_1_RATIFICACION_SECCION_4_Y_ESQUEMA_2D_RATIFICADO_20261013.md (1 pieza)",
+ "utc": "2026-10-13T19:27:22Z",
+ "veredicto": {
+  "dominio_declarado": {
+   "f1a": "dato independiente de theta (rama l = 0), M = 0, V = 0",
+   "f1b": "perfil angular l = 2 VIVO; no se reclama exactitud, solo orden"
+  },
+  "f1a_exactitud": "VERDE",
+  "f1b_dispersion": "ROJO",
+  "f1c_control_negativo_no_converge": true
+ }
+}
