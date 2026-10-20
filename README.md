@@ -90,8 +90,9 @@ Toda escritura se autoriza sólo después de medir que la fila no exista, con un
 
 ## 7. Estado de publicación
 
+<!-- HUELLA-GW-RW-ZERILLI-LICENCIA-20261020 -->
 - **DOI: pendiente de depósito.** Los metadatos Zenodo del Manuscrito 2 están sellados en el árbol, pero este repositorio todavía no tiene identificador propio. No se cita uno.
-- **Licencia:** MIT, declarada en `ZENODO_MANUSCRITO_2_...json` (`"license": "MIT"`). El árbol **no contiene archivo `LICENSE`**.
+- **Licencia: hay colisión declarada, no resuelta.** El commit `3a033be` declara `"license": "MIT"` en `ZENODO_MANUSCRITO_2_...json`; el árbol de trabajo tiene esa misma clave cambiada a `"cc-by-4.0"` sin commitear. Este README no adjudica esa decisión: la publica como está. Al publicar, lo que se ve es `MIT`. El árbol **no contiene archivo `LICENSE`**.
 - **Autor:** Roman Martinez, Jose Alexis — Platino Labs.
 
 Cifras medidas y selladas; no se inventan experimentos. Toda cifra de conteo caduca al escribirse: su hora es parte de la cifra.
