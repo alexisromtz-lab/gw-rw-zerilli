@@ -13,7 +13,7 @@
 
 **Manuscrito 2** — [`MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_PERIMETRAL_20261014.md`](MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_PERIMETRAL_20261014.md)
 `HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
-· cierre `2026-10-14` · licencia declarada en el propio manuscrito: **MIT**.
+· cierre `2026-10-14` · doble licencia: **documentación CC BY 4.0**, **código MIT**.
 
 ## Las dos propiedades que se certifican
 
@@ -119,12 +119,23 @@ atrás: se declaran y se conservan las dos filas.
   `−45.931354463740675 dB` (corrida `E1`). La cifra `−44.94 dB` no tiene crudo: es compromiso.
 - Este repositorio **todavía no tiene DOI**. Los metadatos de depósito del Manuscrito 2 están
   sellados en el árbol, pero no se cita identificador propio.
-- El árbol de trabajo tiene `"license"` cambiado a `cc-by-4.0` sobre el manifiesto sin commitear:
-  lo que publica el repositorio es **MIT**. Esta discrepancia se declara, no se adjudica aquí.
+- El árbol de trabajo tenía `"license"` cambiado a `cc-by-4.0` sobre el manifiesto:
+  la discrepancia **queda adjudicada** por doble licencia (ver *Licencia y citación*).
+  El campo del depósito lleva `cc-by-4.0` porque el objeto depositado es un
+  `preprint`, es decir documentación; el código sigue en **MIT**.
 
 ## Licencia y citación
 
-**MIT** — declarada en el manuscrito y en [`LICENSE`](LICENSE).
-Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json`](ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json).
+<!-- HUELLA-GW-RW-ZERILLI-LICENSE-DOCS-CC-BY-4.0-20261020 -->
+
+**Doble licencia, por naturaleza del objeto:**
+
+- **Código** (`*.py`, `*.sh`) — **MIT**, en [`LICENSE`](LICENSE).
+- **Documentación** (manuscrito, README, metadatos, crudos de `sim/data/`) — **CC BY 4.0**,
+  en [`LICENSE-DOCS.md`](LICENSE-DOCS.md).
+
+Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json`](ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json)
+— su campo `license` es de un solo valor y declara `cc-by-4.0` porque el objeto depositado es un `preprint`.
+**Sin DOI todavía**: el blanco de atribución es la URL del repositorio más el commit citado.
 
 **Parte del archivo de instrumentos de [alexisromtz-lab](https://github.com/alexisromtz-lab).**
