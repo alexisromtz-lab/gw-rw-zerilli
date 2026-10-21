@@ -2,10 +2,11 @@
 """El README de este repositorio promete que cada cifra tiene portador.
 
 Este test hace exigible esa promesa en cada push. No mide fisica: mide
-procedencia. Dos falsadores, uno por cada forma de mentir de una cifra:
+procedencia. Tres falsadores, uno por cada forma de mentir de una cifra:
 
   1. una cifra publicada cuyo valor no esta en ningun crudo commiteado;
-  2. una celda roja que alguien borre del README para dejar solo lo verde.
+  2. una celda roja que alguien borre del README para dejar solo lo verde;
+  3. una cifra que entra SIN signo porque el README usa el menos tipografico.
 
 No hay red, no hay tolerancias elegidas a mano: la tolerancia de cada cifra es
 la de su propio redondeo (media unidad del ultimo digito publicado).
@@ -25,6 +26,13 @@ README = RAIZ / "README.md"
 # Una cifra "publicada" es la que se escribe con seis decimales o mas: las de
 # menos digitos son redondeos de prosa y no reclaman portador propio.
 PATRON_CIFRA = re.compile(r"-?\d+\.\d{6,}(?:[eE][-+]?\d+)?")
+
+# HUELLA-GW-AUDITORIA-DEL-SIGNO-20261020
+# El README escribe el menos como U+2212 (MENOS TIPOGRAFICO), no como ASCII. El
+# patron solo conoce el guion ASCII, asi que la cifra entraba SIN signo y pasaba
+# por la via de subcadena: `-45.93...` en el crudo "respaldaba" a `45.93...`
+# publicado. El signo es parte del dato; se normaliza antes de recortar.
+SIGNO_TIPOGRAFICO = str.maketrans({"\u2212": "-"})
 
 
 def _cargar_crudos() -> list[tuple[str, object]]:
@@ -59,8 +67,12 @@ def _quantum(literal: str) -> float:
     return 0.5 * 10.0 ** (exponente - decimales)
 
 
+def _cifras(texto: str) -> list[str]:
+    return PATRON_CIFRA.findall(texto.translate(SIGNO_TIPOGRAFICO))
+
+
 def _cifras_publicadas() -> list[str]:
-    return PATRON_CIFRA.findall(README.read_text(encoding="utf-8"))
+    return _cifras(README.read_text(encoding="utf-8"))
 
 
 def test_el_readme_publica_cifras():
@@ -131,3 +143,22 @@ def test_el_readme_conserva_las_celdas_rojas():
     texto = README.read_text(encoding="utf-8")
     for marca in ("REFUSADA", "NO MEDIBLE", "ROJA"):
         assert marca in texto, f"el README dejo de declarar {marca}"
+
+
+def test_el_menos_tipografico_no_borra_el_signo():
+    """Regresion: U+2212 en el README no puede entregar la cifra sin signo."""
+    assert _cifras("R_dB = \u221245.931354463740675 dB") == ["-45.931354463740675"]
+
+
+def test_ninguna_cifra_se_audita_solo_por_subcadena():
+    """El portador de una cifra es un numero del crudo, no un trozo de su texto."""
+    hojas = [
+        valor for _, objeto in _cargar_crudos() for valor in _hojas_numericas(objeto)
+    ]
+    solo_texto = []
+    for literal in sorted(set(_cifras_publicadas())):
+        publicado = float(literal)
+        tolerancia = _quantum(literal)
+        if not any(abs(valor - publicado) <= tolerancia for valor in hojas):
+            solo_texto.append(literal)
+    assert not solo_texto, f"cifras que solo 'aparecen' dentro de un texto del crudo: {solo_texto}"
