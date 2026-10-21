@@ -15,6 +15,10 @@
 `HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
 · cierre `2026-10-14` · doble licencia: **documentación CC BY 4.0**, **código MIT**.
 
+**Construido sobre [1,2].** — *Building on the Regge–Wheeler–Zerilli formulation [1,2], we implement the
+leapfrog ringdown driver and add a convergence test (`p = 2.0028629063990215`, within the sealed
+tolerance `0.05`) that, to our knowledge, was not present in the original papers.*
+
 ## Las dos propiedades que se certifican
 
 1. **Orden de convergencia cuadrático `O(h²)`** preservado bajo refinamiento de malla, con extinción
@@ -152,3 +156,17 @@ Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261
 **Sin DOI todavía**: el blanco de atribución es la URL del repositorio más el commit citado.
 
 **Parte del archivo de instrumentos de [alexisromtz-lab](https://github.com/alexisromtz-lab).**
+
+## References
+
+<!-- HUELLA-GW-REFERENCIAS-20261020 -->
+
+[1] T. Regge and J. A. Wheeler, "Stability of a Schwarzschild Singularity," *Phys. Rev.* **108**, 1063 (1957). DOI: [10.1103/PhysRev.108.1063](https://doi.org/10.1103/PhysRev.108.1063)
+
+[2] F. J. Zerilli, "Effective Potential for Even-Parity Regge-Wheeler Gravitational Perturbation Equations," *Phys. Rev. Lett.* **24**, 737 (1970). DOI: [10.1103/PhysRevLett.24.737](https://doi.org/10.1103/PhysRevLett.24.737)
+
+**[1,2] son la base teórica, y nada más se cita.** Este repositorio no consume datos observacionales:
+los `sim/PREREGISTRO_*` declaran LIGO/Virgo como **ajeno, no reclamado**, y aquí no hay ninguna serie
+de interferómetro. Las dos referencias son las ecuaciones que se implementan, no una fuente de
+mediciones. Citar una colaboración de la que no se tomó un dato sería atribución falsa.
+
