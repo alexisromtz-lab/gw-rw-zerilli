@@ -15,7 +15,7 @@
 `HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
 · cierre `2026-10-14` · doble licencia: **documentación CC BY 4.0**, **código MIT**.
 
-**DOI (concepto):** [10.5281/zenodo.23525359](https://doi.org/10.5281/zenodo.23525359) · `v1.0.1` → [10.5281/zenodo.23525446](https://doi.org/10.5281/zenodo.23525446)
+**DOI (concepto):** [10.5281/zenodo.23525359](https://doi.org/10.5281/zenodo.23525359) · `v1.0.2` → [10.5281/zenodo.23525898](https://doi.org/10.5281/zenodo.23525898)
 
 **Construido sobre [1,2].** — *Building on the Regge–Wheeler–Zerilli formulation [1,2], we implement the
 leapfrog ringdown driver and add a convergence test (`p = 2.0028629063990215`, within the sealed
@@ -161,10 +161,11 @@ Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261
 ### Identificadores: qué cita cada archivo
 
 <!-- HUELLA-GW-DOI-V101-20261020 -->
+<!-- HUELLA-GW-DOI-V102-20261020 -->
 
 | para qué | DOI | archivo que lo lleva |
 |---|---|---|
-| **reproducir** una versión exacta (`v1.0.1`) | [`10.5281/zenodo.23525446`](https://doi.org/10.5281/zenodo.23525446) | `CITATION.cff`, campo `doi` |
+| **reproducir** una versión exacta (`v1.0.2`) | [`10.5281/zenodo.23525898`](https://doi.org/10.5281/zenodo.23525898) | `CITATION.cff`, campo `doi` |
 | **atribución** — «esto salió de aquí» | [`10.5281/zenodo.23525359`](https://doi.org/10.5281/zenodo.23525359) | esta sección y `LICENSE-DOCS.md` |
 
 El DOI de **concepto** resuelve siempre a la última versión: es el que no se rompe en cada release
@@ -172,13 +173,16 @@ y por eso es el de la vitrina. El DOI de **versión** no se mueve nunca: es el q
 reproducir los bytes exactos. Copiar el de versión en la vitrina —o el de concepto en
 `CITATION.cff`— es el error que esta tabla existe para impedir.
 
-Depósito `v1.0.1`: registro <https://zenodo.org/record/23525446>, construido con `git archive`
-desde la etiqueta `v1.0.1`. El archivo depositado **se verifica a sí mismo**: extraído en un venv
-limpio sin `numpy`, `python3 -m pytest -q` da `8 passed`. Instancia anterior, inmutable:
+Depósito `v1.0.2`: registro <https://zenodo.org/record/23525898>, construido con `git archive`
+desde la etiqueta `v1.0.2`. El archivo depositado **se verifica a sí mismo**: extraído en un venv
+limpio sin `numpy`, `python3 -m pytest -q` da `8 passed`. Instancias anteriores, inmutables:
+`v1.0.1` = <https://zenodo.org/record/23525446>, archivo `gw-rw-zerilli-v1.0.1.zip`,
+`1023363 B`, `sha256 2fd48dd10f60a3ca5b303e6f538c0605e8244be1cd0c41866d63a83a279dcd3d`;
 `v1.0.0` = <https://zenodo.org/record/23525360>, archivo `gw-rw-zerilli-v1.0.0.zip`,
 `1021013 B`, `sha256 29de5f067defae3fe94707b5f305fc4b50fa1d7fbfd0d0ae25c17adc3ff7b917`.
 
 <!-- HUELLA-GW-DOI-V100-DEFECTO-20261020 -->
+<!-- HUELLA-GW-DOI-V101-DEFECTO-20261020 -->
 
 **Defecto declarado de `v1.0.0`.** Su archivo se construyó de la etiqueta `v1.0.0` (commit
 `108c817`) **antes** de que existiera `CITATION.cff`, así que su `README` interno todavía dice
@@ -187,10 +191,17 @@ se reescriben: la instancia queda como testimonio del orden en que se hicieron l
 la corrige. La declaración viaja también en el campo `notes` del registro `v1.0.1`; en el de `v1.0.0`
 no se pudo escribir sin republicar, y se prefiere el artefacto intacto a la nota.
 
+**Defecto declarado de `v1.0.1`.** Su `LICENSE-DOCS.md` interno todavía decía «este repositorio
+todavía no tiene DOI» mientras el `CITATION.cff` del mismo archivo ya citaba `10.5281/zenodo.23525446`:
+dos frases del mismo ZIP que se contradecían. La regla que lo causó —el archivo no puede contener su
+propio `sha256`, pero **sí puede y debe contener su propio DOI**, porque el DOI se reserva en el
+borrador antes de construir el ZIP— quedó fijada en `v1.0.2`, que lleva el DOI en los tres lugares
+(`CITATION.cff`, `README`, `LICENSE-DOCS.md`) y ninguna frase que lo niegue.
+
 **El `sha256` de un archivo no puede vivir dentro de ese archivo.** Por eso aquí se declara el de la
 versión anterior, y el de cada versión vive en el campo `notes` de su propio registro Zenodo, que se
-escribe con el hash ya calculado y antes de publicar. La fila `v1.0.0` no se borra al publicar
-`v1.0.1`: se conservan las dos.
+escribe con el hash ya calculado y antes de publicar. Las filas de `v1.0.0` y `v1.0.1` no se borran al
+publicar `v1.0.2`: se conservan todas.
 
 El registro declara `related_identifiers` hacia los dos papers (`cites` → `10.1103/PhysRev.108.1063`,
 `10.1103/PhysRevLett.24.737`), que es la vía por la que quien busque esos DOIs encuentra este
