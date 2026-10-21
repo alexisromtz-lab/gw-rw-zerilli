@@ -78,6 +78,18 @@ sim/ACTA_* · sim/ERRATA_* · sim/DECLARACION_*  actas de cierre, erratas y coli
 
 ## Reproducir
 
+<!-- HUELLA-GW-REPRODUCIBLE-20261020 -->
+
+Primero la auditoria, en un clon limpio y **sin instalar el repositorio** (no hay `pyproject.toml`,
+y no hace falta): los tests son biblioteca estandar, sin `numpy`.
+
+```sh
+git clone https://github.com/alexisromtz-lab/gw-rw-zerilli.git && cd gw-rw-zerilli
+python3 -m pip install --quiet pytest && python3 -m pytest -q     # 8 tests, ~0,6 s
+```
+
+Despues el aparato numerico (aqui si hace falta `numpy`, y `scipy` para los polos):
+
 ```sh
 python3 -B sim/arnes_richardson_2d_f2_v3.py --help
 # flags medidos en el arnes: --estricto --stamp --json --cfl --T --nr0   (refinamiento nr0 ∈ {64, 128, 256})
@@ -93,7 +105,8 @@ python3 -B sim/arnes_capa_absorbente_2d_f11.py --estricto --json <ruta-del-crudo
 python3 -B sim/certificador_reescritura_stencil_residuo.py --must-fail --json
 ```
 
-Requiere `python3` con `numpy` (y `scipy` para el extractor de polos). Los arneses se corren con `-B`
+El aparato numerico requiere `python3` con `numpy` (y `scipy` para el extractor de polos); la
+auditoria de cifras de arriba no, corre con la biblioteca estandar. Los arneses se corren con `-B`
 para no escribir `__pycache__` dentro del árbol medido.
 
 Cada cifra del manuscrito afirma con **portador declarado** (archivo · blob · líneas · bytes) y
