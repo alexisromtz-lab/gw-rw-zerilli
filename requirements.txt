@@ -1,0 +1,14 @@
+# HUELLA-GW-CI-MANIFIESTO-20261020
+#
+# El codigo de este repositorio es biblioteca estandar pura: no hay dependencias
+# de ejecucion. `numpy` y `scipy` solo aparecen en los arneses numericos de
+# `sim/`, que se invocan a mano y declaran sus flags con --help.
+#
+# `pytest` es la unica dependencia declarada, y es de desarrollo: corre `tests/`,
+# la auditoria que hace exigible cada cifra publicada en el README.
+#
+# Este archivo existe porque la ley de CI v11 es fail-closed: si el aparato
+# invoca pytest y ningun manifiesto lo declara, el runner ya no instala a ciegas
+# y el repo sale ROJO (DEPENDENCIA_NO_DECLARADA). Declarar cuesta una linea.
+
+pytest>=7

@@ -1,5 +1,6 @@
 # HUELLA-GW-DOI-V101-20261020
 # HUELLA-GW-DOI-V102-20261020
+# HUELLA-GW-DOI-V103-20261020
 cff-version: 1.2.0
 message: >-
   Cite la version exacta de este archivo (campo doi). El DOI de concepto, en
@@ -7,13 +8,13 @@ message: >-
 title: >-
   gw-rw-zerilli — Preservacion del orden de convergencia cuadratico O(h^2) y
   absorcion perimetral adiabatica sub-40 dB en esquemas kick-drift 2D
-version: 1.0.2
-doi: 10.5281/zenodo.23525898
+version: 1.0.3
+doi: 10.5281/zenodo.23526184
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.23525898
+    value: 10.5281/zenodo.23526184
     description: >-
-      DOI de version: bytes exactos de v1.0.2. Es el mismo que el campo doi.
+      DOI de version: bytes exactos de v1.0.3. Es el mismo que el campo doi.
   - type: doi
     value: 10.5281/zenodo.23525359
     description: >-
@@ -22,7 +23,7 @@ identifiers:
 date-released: "2026-10-21"
 license: MIT
 repository-code: "https://github.com/alexisromtz-lab/gw-rw-zerilli"
-url: "https://zenodo.org/record/23525898"
+url: "https://zenodo.org/record/23526184"
 type: software
 authors:
   - family-names: Roman Martinez

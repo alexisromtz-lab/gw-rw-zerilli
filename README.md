@@ -15,7 +15,7 @@
 `HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
 · cierre `2026-10-14` · doble licencia: **documentación CC BY 4.0**, **código MIT**.
 
-**DOI (concepto):** [10.5281/zenodo.23525359](https://doi.org/10.5281/zenodo.23525359) · `v1.0.2` → [10.5281/zenodo.23525898](https://doi.org/10.5281/zenodo.23525898)
+**DOI (concepto):** [10.5281/zenodo.23525359](https://doi.org/10.5281/zenodo.23525359) · `v1.0.3` → [10.5281/zenodo.23526184](https://doi.org/10.5281/zenodo.23526184)
 
 **Construido sobre [1,2].** — *Building on the Regge–Wheeler–Zerilli formulation [1,2], we implement the
 leapfrog ringdown driver and add a convergence test (`p = 2.0028629063990215`, within the sealed
@@ -87,11 +87,12 @@ sim/ACTA_* · sim/ERRATA_* · sim/DECLARACION_*  actas de cierre, erratas y coli
 <!-- HUELLA-GW-REPRODUCIBLE-20261020 -->
 
 Primero la auditoria, en un clon limpio y **sin instalar el repositorio** (no hay `pyproject.toml`,
-y no hace falta): los tests son biblioteca estandar, sin `numpy`.
+y no hace falta): los tests son biblioteca estandar, sin `numpy`. La unica dependencia declarada
+esta en `requirements.txt`, y es de desarrollo.
 
 ```sh
 git clone https://github.com/alexisromtz-lab/gw-rw-zerilli.git && cd gw-rw-zerilli
-python3 -m pip install --quiet pytest && python3 -m pytest -q     # 8 tests, ~0,6 s
+python3 -m pip install --quiet -r requirements.txt && python3 -m pytest -q   # 8 tests, ~0,6 s
 ```
 
 Despues el aparato numerico (aqui si hace falta `numpy`, y `scipy` para los polos):
@@ -162,10 +163,11 @@ Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261
 
 <!-- HUELLA-GW-DOI-V101-20261020 -->
 <!-- HUELLA-GW-DOI-V102-20261020 -->
+<!-- HUELLA-GW-DOI-V103-20261020 -->
 
 | para qué | DOI | archivo que lo lleva |
 |---|---|---|
-| **reproducir** una versión exacta (`v1.0.2`) | [`10.5281/zenodo.23525898`](https://doi.org/10.5281/zenodo.23525898) | `CITATION.cff`, campo `doi` |
+| **reproducir** una versión exacta (`v1.0.3`) | [`10.5281/zenodo.23526184`](https://doi.org/10.5281/zenodo.23526184) | `CITATION.cff`, campo `doi` |
 | **atribución** — «esto salió de aquí» | [`10.5281/zenodo.23525359`](https://doi.org/10.5281/zenodo.23525359) | esta sección y `LICENSE-DOCS.md` |
 
 El DOI de **concepto** resuelve siempre a la última versión: es el que no se rompe en cada release
@@ -173,9 +175,12 @@ y por eso es el de la vitrina. El DOI de **versión** no se mueve nunca: es el q
 reproducir los bytes exactos. Copiar el de versión en la vitrina —o el de concepto en
 `CITATION.cff`— es el error que esta tabla existe para impedir.
 
-Depósito `v1.0.2`: registro <https://zenodo.org/record/23525898>, construido con `git archive`
-desde la etiqueta `v1.0.2`. El archivo depositado **se verifica a sí mismo**: extraído en un venv
-limpio sin `numpy`, `python3 -m pytest -q` da `8 passed`. Instancias anteriores, inmutables:
+Depósito `v1.0.3`: registro <https://zenodo.org/record/23526184>, construido con `git archive`
+desde la etiqueta `v1.0.3`. El archivo depositado **se verifica a sí mismo**: extraído en un venv
+limpio sin `numpy`, `python3 -m pip install -r requirements.txt && python3 -m pytest -q` da
+`8 passed`. Instancias anteriores, inmutables:
+`v1.0.2` = <https://zenodo.org/record/23525898>, `gw-rw-zerilli-v1.0.2.zip`, `1024079 B`,
+`sha256 c1e7daf806f16ceb4a8f34b7388f9f8f0d58bc61084a080d36e57d7c708cab8a`;
 `v1.0.1` = <https://zenodo.org/record/23525446>, archivo `gw-rw-zerilli-v1.0.1.zip`,
 `1023363 B`, `sha256 2fd48dd10f60a3ca5b303e6f538c0605e8244be1cd0c41866d63a83a279dcd3d`;
 `v1.0.0` = <https://zenodo.org/record/23525360>, archivo `gw-rw-zerilli-v1.0.0.zip`,
@@ -198,10 +203,17 @@ propio `sha256`, pero **sí puede y debe contener su propio DOI**, porque el DOI
 borrador antes de construir el ZIP— quedó fijada en `v1.0.2`, que lleva el DOI en los tres lugares
 (`CITATION.cff`, `README`, `LICENSE-DOCS.md`) y ninguna frase que lo niegue.
 
+**Defecto declarado de `v1.0.2`.** Su ZIP contiene el flujo de CI (`.github/workflows/ci.yml`) en su
+forma v11 —la que exige que `pytest` esté declarado en un manifiesto bajo pena de
+`DEPENDENCIA_NO_DECLARADA`— pero el ZIP no lleva `requirements.txt`: **el artefacto traía la ley que lo
+declaraba rojo a sí mismo.** Lo detectó el propio CI del repositorio al empujar el siguiente commit, no
+una revisión a ojo. `v1.0.3` añade `requirements.txt` (`pytest>=7`, la única dependencia, de desarrollo;
+el código es biblioteca estándar) y corrige el comando de `## Reproducir` para instalarlo.
+
 **El `sha256` de un archivo no puede vivir dentro de ese archivo.** Por eso aquí se declara el de la
 versión anterior, y el de cada versión vive en el campo `notes` de su propio registro Zenodo, que se
-escribe con el hash ya calculado y antes de publicar. Las filas de `v1.0.0` y `v1.0.1` no se borran al
-publicar `v1.0.2`: se conservan todas.
+escribe con el hash ya calculado y antes de publicar. Las filas de `v1.0.0`, `v1.0.1` y `v1.0.2` no se
+borran al publicar `v1.0.3`: se conservan todas.
 
 El registro declara `related_identifiers` hacia los dos papers (`cites` → `10.1103/PhysRev.108.1063`,
 `10.1103/PhysRevLett.24.737`), que es la vía por la que quien busque esos DOIs encuentra este
