@@ -1,0 +1,12 @@
+# HUELLA-GW-CI-APPARATUS-TESTS-20261020
+# Contrato v7: comando: + mide: + evidencia:. Hasta hoy este repo firmaba verde
+# por DETECCION (el runner encontraba test_*.py y se autodeclaraba mide=tests);
+# el certificado decia "detecte algo y paso", no "declaro que mido esto".
+# Este repo NO tiene manifiesto ni verify_manifest.py: su verificador de
+# procedencia ES el test (tests/test_cifras_publicadas.py contrasta cada cifra
+# publicada del README contra los crudos commiteados en sim/data), asi que un
+# modo compuesto mediria dos veces el mismo objeto. Se declara lo unico que el
+# repo mide —tests— y junitxml lo certifica contando <testcase>, no el texto.
+comando: python -m pytest -q tests --junitxml=/tmp/junit.xml
+mide: tests
+evidencia: junitxml
