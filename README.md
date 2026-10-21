@@ -178,6 +178,15 @@ limpio sin `numpy`, `python3 -m pytest -q` da `8 passed`. Instancia anterior, in
 `v1.0.0` = <https://zenodo.org/record/23525360>, archivo `gw-rw-zerilli-v1.0.0.zip`,
 `1021013 B`, `sha256 29de5f067defae3fe94707b5f305fc4b50fa1d7fbfd0d0ae25c17adc3ff7b917`.
 
+<!-- HUELLA-GW-DOI-V100-DEFECTO-20261020 -->
+
+**Defecto declarado de `v1.0.0`.** Su archivo se construyó de la etiqueta `v1.0.0` (commit
+`108c817`) **antes** de que existiera `CITATION.cff`, así que su `README` interno todavía dice
+«sin DOI» — falso dentro de un artefacto que sí lo tiene. Los bytes publicados son inmutables y no
+se reescriben: la instancia queda como testimonio del orden en que se hicieron las cosas, y `v1.0.1`
+la corrige. La declaración viaja también en el campo `notes` del registro `v1.0.1`; en el de `v1.0.0`
+no se pudo escribir sin republicar, y se prefiere el artefacto intacto a la nota.
+
 **El `sha256` de un archivo no puede vivir dentro de ese archivo.** Por eso aquí se declara el de la
 versión anterior, y el de cada versión vive en el campo `notes` de su propio registro Zenodo, que se
 escribe con el hash ya calculado y antes de publicar. La fila `v1.0.0` no se borra al publicar
