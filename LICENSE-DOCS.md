@@ -22,13 +22,31 @@ no en ejecutarse. El texto de `LICENSE` es el MIT canónico, **sin modificacione
 
 ## Atribución
 
-- **Este repositorio todavía no tiene DOI.** No se designa un identificador que
-  no existe: el blanco de atribución es hoy la URL del repositorio más el commit
-  citado, y su forma exigible es
-  `Roman Martinez, Jose Alexis. gw-rw-zerilli (Platino Labs), commit <sha>, 2026`.
-- Cuando se acuñe el DOI del Manuscrito 2, el blanco de atribución pasa a ser el
-  **DOI de concepto** (resuelve siempre a la última versión y no caduca por
-  Release). Hasta entonces, esta línea es la que vale.
+<!-- HUELLA-GW-LICENSE-DOCS-DOI-CONCEPTO-20261020 -->
+
+El blanco de atribución es el **DOI de concepto** —resuelve siempre a la última
+versión y no caduca por Release—:
+
+| para qué | DOI |
+|---|---|
+| atribución («esto salió de aquí») | [`10.5281/zenodo.23525359`](https://doi.org/10.5281/zenodo.23525359) |
+
+Forma exigible:
+`Roman Martinez, Jose Alexis. gw-rw-zerilli (Platino Labs), 2026. DOI: 10.5281/zenodo.23525359`.
+
+El **DOI de versión** (`v1.0.1` → `10.5281/zenodo.23525446`, `v1.0.0` →
+`10.5281/zenodo.23525360`) **no** se cita aquí: sirve para reproducir los bytes
+exactos y vive en `CITATION.cff`. Copiar el de versión en este archivo —o el de
+concepto en el `CITATION.cff`— es el error que la tabla del README existe para
+impedir.
+
+### Límite histórico, cerrado
+
+- **2026-10-20 · cerrado.** Este archivo decía: «Este repositorio todavía no
+  tiene DOI. No se designa un identificador que no existe: el blanco de
+  atribución es hoy la URL del repositorio más el commit citado». Era verdad
+  hasta la acuñación del concepto `10.5281/zenodo.23525359`; desde entonces el
+  blanco es el DOI. La frase no se reescribe: se cierra con fecha.
 
 ## El campo `license` del depósito
 
