@@ -1,0 +1,80 @@
+# HUELLA-GW-DOI-20261020
+cff-version: 1.2.0
+message: >-
+  Cite la version exacta de este archivo (campo doi). El DOI de concepto, en
+  identifiers, identifica el objeto completo y resuelve siempre a la ultima version.
+title: >-
+  gw-rw-zerilli — Preservacion del orden de convergencia cuadratico O(h^2) y
+  absorcion perimetral adiabatica sub-40 dB en esquemas kick-drift 2D
+version: 1.0.0
+doi: 10.5281/zenodo.23525360
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.23525360
+    description: >-
+      DOI de version: bytes exactos de v1.0.0. Es el mismo que el campo doi.
+  - type: doi
+    value: 10.5281/zenodo.23525359
+    description: >-
+      DOI de concepto: identifica el objeto completo y resuelve siempre a la
+      ultima version publicada.
+date-released: "2026-10-20"
+license: MIT
+repository-code: "https://github.com/alexisromtz-lab/gw-rw-zerilli"
+url: "https://zenodo.org/record/23525360"
+type: software
+authors:
+  - family-names: Roman Martinez
+    given-names: Jose Alexis
+    affiliation: Platino Labs
+keywords:
+  - relatividad numerica
+  - Regge-Wheeler
+  - Zerilli
+  - ringdown
+  - convergencia cuadratica
+  - Richardson extrapolation
+  - kick-drift
+  - capa absorbente
+  - absorcion perimetral
+  - metrologia A2.1
+  - crudo sellado
+  - auditoria de cifras
+abstract: >-
+  Driver leapfrog 1D para las ecuaciones de perturbacion de Regge-Wheeler y
+  Zerilli, y arneses 2D kick-drift con metrologia de procedencia. Se certifica
+  la preservacion del orden de convergencia cuadratico (p = 2.0002312004820553
+  RW, p = 2.000226129020191 Zerilli, escalera 2D de Richardson hasta
+  p = 2.0028629063990215 con tolerancia 0.05) y la absorcion perimetral
+  adiabatica sub-40 dB (R_dB = -45.931354463740675). Se publican tambien los
+  resultados que no salen: el gate F3 es ROJO declarado, C3b es ROJA
+  (p = 0.9857539455144246), C3a es NO MEDIBLE y c4 fue REFUSADA fail-closed por
+  CFL 0.7500000000 mayor que el sellado 0.5000000000. Cada cifra publicada tiene
+  portador declarado y un test hace exigible esa promesa. Licencia doble por
+  naturaleza del objeto: codigo MIT (LICENSE), documentacion CC BY 4.0
+  (LICENSE-DOCS.md).
+references:
+  - type: article
+    title: Stability of a Schwarzschild Singularity
+    authors:
+      - family-names: Regge
+        given-names: Tullio
+      - family-names: Wheeler
+        given-names: John Archibald
+    journal: Physical Review
+    volume: 108
+    start: 1063
+    year: 1957
+    doi: 10.1103/PhysRev.108.1063
+  - type: article
+    title: >-
+      Effective Potential for Even-Parity Regge-Wheeler Gravitational
+      Perturbation Equations
+    authors:
+      - family-names: Zerilli
+        given-names: Frank J.
+    journal: Physical Review Letters
+    volume: 24
+    start: 737
+    year: 1970
+    doi: 10.1103/PhysRevLett.24.737

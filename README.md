@@ -15,6 +15,8 @@
 `HUELLA-MANUSCRITO-ORDEN-CUADRATICO-Y-ABSORCION-PERIMETRAL-20261014` · `manuscrito-2-v1-20261014`
 · cierre `2026-10-14` · doble licencia: **documentación CC BY 4.0**, **código MIT**.
 
+**DOI (concepto):** [10.5281/zenodo.23525359](https://doi.org/10.5281/zenodo.23525359) · `v1.0.0` → [10.5281/zenodo.23525360](https://doi.org/10.5281/zenodo.23525360)
+
 **Construido sobre [1,2].** — *Building on the Regge–Wheeler–Zerilli formulation [1,2], we implement the
 leapfrog ringdown driver and add a convergence test (`p = 2.0028629063990215`, within the sealed
 tolerance `0.05`) that, to our knowledge, was not present in the original papers.*
@@ -134,8 +136,10 @@ atrás: se declaran y se conservan las dos filas.
   no cuenta como resultado.
 - `F11` es VERDE **nominal**; el adjetivo es parte del veredicto, y su única cifra con crudo es
   `−45.931354463740675 dB` (corrida `E1`). La cifra `−44.94 dB` no tiene crudo: es compromiso.
-- Este repositorio **todavía no tiene DOI**. Los metadatos de depósito del Manuscrito 2 están
-  sellados en el árbol, pero no se cita identificador propio.
+- El límite «**sin identificador propio**» **se cerró el `2026-10-20`**: `v1.0.0` acuñó los dos
+  DOIs (ver *Licencia y citación*). Los metadatos de depósito del Manuscrito 2 siguen sellados en
+  el árbol, y el Manuscrito 2 **no** tiene depósito propio: no se cita un identificador separado
+  que todavía no existe.
 - El árbol de trabajo tenía `"license"` cambiado a `cc-by-4.0` sobre el manifiesto:
   la discrepancia **queda adjudicada** por doble licencia (ver *Licencia y citación*).
   El campo del depósito lleva `cc-by-4.0` porque el objeto depositado es un
@@ -153,7 +157,29 @@ atrás: se declaran y se conservan las dos filas.
 
 Metadatos de depósito: [`ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json`](ZENODO_MANUSCRITO_2_ORDEN_CUADRATICO_Y_ABSORCION_20261014.json)
 — su campo `license` es de un solo valor y declara `cc-by-4.0` porque el objeto depositado es un `preprint`.
-**Sin DOI todavía**: el blanco de atribución es la URL del repositorio más el commit citado.
+
+### Identificadores: qué cita cada archivo
+
+<!-- HUELLA-GW-DOI-20261020 -->
+
+| para qué | DOI | archivo que lo lleva |
+|---|---|---|
+| **reproducir** una versión exacta (`v1.0.0`) | [`10.5281/zenodo.23525360`](https://doi.org/10.5281/zenodo.23525360) | `CITATION.cff`, campo `doi` |
+| **atribución** — «esto salió de aquí» | [`10.5281/zenodo.23525359`](https://doi.org/10.5281/zenodo.23525359) | esta sección y `LICENSE-DOCS.md` |
+
+El DOI de **concepto** resuelve siempre a la última versión: es el que no se rompe en cada release
+y por eso es el de la vitrina. El DOI de **versión** no se mueve nunca: es el que hay que citar para
+reproducir los bytes exactos. Copiar el de versión en la vitrina —o el de concepto en
+`CITATION.cff`— es el error que esta tabla existe para impedir.
+
+Depósito `v1.0.0`: registro <https://zenodo.org/record/23525360> · archivo
+`gw-rw-zerilli-v1.0.0.zip` · `1021013 B` · `sha256 29de5f067defae3fe94707b5f305fc4b50fa1d7fbfd0d0ae25c17adc3ff7b917`,
+construido con `git archive` desde la etiqueta `v1.0.0`. El archivo depositado **se verifica a sí
+mismo**: extraído en un venv limpio sin `numpy`, `python3 -m pytest -q` da `8 passed`.
+
+El registro declara `related_identifiers` hacia los dos papers (`cites` → `10.1103/PhysRev.108.1063`,
+`10.1103/PhysRevLett.24.737`), que es la vía por la que quien busque esos DOIs encuentra este
+repositorio.
 
 **Parte del archivo de instrumentos de [alexisromtz-lab](https://github.com/alexisromtz-lab).**
 
